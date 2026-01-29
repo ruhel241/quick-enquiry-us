@@ -18,20 +18,11 @@ jQuery(document).ready(function ($) {
         qeusQuickEnquiryUsInit: function () {
             let that = this;
 
-            // shop page button handler
-            // Add extra body class if homepage
-            //if ($('body').hasClass('home')) { 
-                $('body').addClass('qeus-addons-wrapper-home');
-                // quick cart modal open class
-                // $("body").addClass("qcpu-modal-open");
-           // }
-
+            $('body').addClass('qeus-addons-wrapper-home');
+            
             $('.qeus-addons-wrapper-home .products .product').each(function() {
                 let $parentProduct      = $(this);
-                let $qvpuWrapper  = $parentProduct.find('.qvpu-add-to-cart-wrapper');
-                let $directCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
-                let $enquiryShopBtn = $parentProduct.find('.qeus-quick-enquiry-us-button');
-                // let $addToCart    = $product.find('.button.add_to_cart_button, .wc-block-components-product-button__button');
+                // Detect Add to cart button
                 let $addToCart = $parentProduct.find(
                     'a.button.product_type_simple, a.button.add_to_cart_button, .wc-block-components-product-button__button'
                 ).not('.qvpu-view-button, .ast-on-card-button');
@@ -39,41 +30,47 @@ jQuery(document).ready(function ($) {
                 // Detect View Product button
                 let $viewProduct = $parentProduct.find('.button.product_type_variable, .button.product_type_external, .product_type_grouped');
 
-                /** ---------------------------------------------
-                 * CASE 1: Wrapper already exists quick view
-                 * --------------------------------------------- */
-                if ($qvpuWrapper.length) {
-                    if ($enquiryShopBtn.length) {
-                        $qvpuWrapper.append($enquiryShopBtn);
+                setTimeout(() => {
+                    let $qvpuWrapper       = $parentProduct.find('.qvpu-add-to-cart-wrapper');
+                    let $directCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
+                    let $enquiryShopBtn    = $parentProduct.find('.qeus-quick-enquiry-us-button');
+
+                    /** ---------------------------------------------
+                     * CASE 1: Wrapper already exists quick view
+                     * --------------------------------------------- */
+                    if ($qvpuWrapper.length) {
+                        if ($enquiryShopBtn.length) {
+                            $qvpuWrapper.append($enquiryShopBtn);
+                        }
+                        return;
                     }
-                    return;
-                }
 
-                /** ---------------------------------------------
-                 * CASE 2: Wrapper already exists for direct checkout
-                 * --------------------------------------------- */
+                    /** ---------------------------------------------
+                     * CASE 2: Wrapper already exists for direct checkout
+                     * --------------------------------------------- */
 
-                if ($directCheckoutBtn.length) {
-                    if ($enquiryShopBtn.length) {
-                        $directCheckoutBtn.after($enquiryShopBtn);
+                    if ($directCheckoutBtn.length) {
+                        if ($enquiryShopBtn.length) {
+                            $directCheckoutBtn.after($enquiryShopBtn);
+                        }
+                        return;
                     }
-                    return;
-                }
 
-                /** ---------------------------------------------
-                 * CASE 3: Create new wrapper
-                 * --------------------------------------------- */
+                    /** ---------------------------------------------
+                     * CASE 3: Create new wrapper
+                     * --------------------------------------------- */
 
-                let $newWrapper = $('<div class="qeus-add-to-cart-wrapper"></div>');
+                    let $newWrapper = $('<div class="qeus-add-to-cart-wrapper"></div>');
 
-                if ($addToCart.length) {
-                    $addToCart.add($enquiryShopBtn).wrapAll($newWrapper);
-                } else {
-                    if ($viewProduct.length) {
-                        $viewProduct.insertAfter($enquiryShopBtn);
-                        $viewProduct.add($enquiryShopBtn).wrapAll($newWrapper);
+                    if ($addToCart.length) {
+                        $addToCart.add($enquiryShopBtn).wrapAll($newWrapper);
+                    } else {
+                        if ($viewProduct.length) {
+                            $viewProduct.insertAfter($enquiryShopBtn);
+                            $viewProduct.add($enquiryShopBtn).wrapAll($newWrapper);
+                        }
                     }
-                }
+                }, 10);     
             });
 
 
