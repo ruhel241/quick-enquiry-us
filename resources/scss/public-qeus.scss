@@ -1,0 +1,358 @@
+body.qeus-modal-open {
+    overflow: hidden;
+}
+
+.qeus-quick-enquiry-us-button {
+    background-color: #046bd2;
+    color: #ffffff !important;
+    padding: 10px 20px !important;
+    text-decoration: none !important;
+    // line-height: 20px !important;
+}
+
+// when add to cart button then use
+// .cart .qeus-quick-enquiry-us-button {
+//     margin-left: 10px;
+// }
+
+.qeus-quick-enquiry-us-modal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1100000000 !important;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    // overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    .qeus-modal-content {
+        position: relative;
+        background-color: #fefefe;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-top-right-radius: 20px;
+        border-top-left-radius: 20px;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        .qeus-form-container {
+            width: 100%;
+            border-radius: 10px;
+            .qeus-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 60px;
+                background-color: #3b3bff;
+                border-top-right-radius: 19px;
+                border-top-left-radius: 19px;
+                padding: 0px 20px;
+                .qeus-title {
+                    text-align: center;
+                    margin: 0px;
+                    color: #ffffff;
+                    font-size: 20px;
+                    flex: 1;
+                    font-weight: 600;
+                }
+                .qeus-view-close {
+                    font-size: 22px;
+                    font-weight: bold;
+                    color: #fff;
+                    cursor: pointer;
+                    z-index: 1333333333;
+                    background: #000;
+                    width: 30px;
+                    height: 30px;
+                    line-height: 26px;
+                    text-align: center;
+                    border-radius: 50%;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                    transition: all 0.3s;
+                } 
+            }
+            .qeus-enquire-form {
+                display: block;
+                // padding: 30px;
+                label {
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                    display: block;
+                    color: #333;
+                }
+                input,
+                textarea {
+                    width: 100%;
+                    padding: 12px;
+                    margin-bottom: 15px;
+                    border-radius: 5px;
+                    border: 1px solid #ccc;
+                    font-size: 16px;
+                }
+                textarea {
+                    // resize: none;
+                    height: 150px;
+                }
+            }
+            /* Tabs */
+            .qeus-tabs {
+                display: flex;
+                border-bottom: 1px solid #e5e5e5;
+                background: #fff;
+                .qeus-tab {
+                    flex: 1;
+                    padding: 14px 10px;
+                    border: none;
+                    background: #ffff;
+                    font-size: 15px;
+                    cursor: pointer;
+                    color: #666;
+                    border-bottom: 3px solid transparent;
+                    text-align: center;
+                    &.active {
+                        color: #3b3bff;
+                        border-bottom-color: #3b3bff;
+                        background: #ededed;
+                        font-weight: 600;
+                    }
+                }
+            }
+            /* Tab Content */
+            .qeus-tab-content {
+                display: none;
+                padding: 30px;
+                &.active {
+                    display: block;
+                }
+
+                .qeus-social-numbers {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    .qeus-social-number {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 20px;
+                        p {
+                            margin: 0px;
+                            flex: 1;
+                        }
+                        .qeus-action-btn {
+                            display: inline-block;
+                            padding: 8px 20px;
+                            border-radius: 6px;
+                            color: #fff;
+                            text-decoration: none;
+                            font-weight: 600;
+                            &.whatsapp {
+                                background: #25d366;
+                            }
+                            &.sms {
+                                background: #2196f3;
+                            }
+                        }
+                    }
+                }
+
+                
+            }
+            .qeus-submit {
+                width: 100%;
+                padding: 12px;
+                background: #2196f3;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 18px;
+                cursor: pointer;
+                font-weight: 600;
+            }
+            .qeus-submit:hover {
+                background: #0d8ae0;
+            }
+        }
+        #qeus-loading-view {
+            //border: solid #dddddd;
+            //opacity: 0.6;
+            position: absolute; /* Positions the overlay relative to its parent container */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);  //rgb(0 0 0 / 65%); ///* Semi-transparent black background */
+            display: flex; /* Optional: for centering content within the overlay */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white; /* Optional: for styling overlay content */
+            //height: 850px;
+            .qeus-loading-title {
+                font-size: 15px; /* Slightly larger */
+                color: #fff;
+                text-align: center;
+                margin-top: 15px;
+                font-weight: 500;
+            }
+            .qeus-loading-spinner {
+                width: 35px; /* Fixed width instead of percentage */
+                height: 35px; /* Fixed height instead of percentage */
+                img {
+                    background-color: #ffff;
+                    padding: 5px;
+                    border-radius: 3px;
+                }
+            }
+        }
+        .qeus-notice {
+            display: none;
+            .qeus-response-message {
+                background: #fff;
+                padding: 12px 15px;
+                margin: 0px 0px 20px 0px;
+                border-radius: 5px;
+                font-weight: 600;
+                box-shadow: 0px 4px 15px rgba(100, 100, 111, 0.2);
+            }
+           
+        }
+    }
+    .qeus-enquire-form {
+        .qeus-phone-number {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 15px;
+            select {
+                width: 22%;
+                min-width: 120px;
+                padding: 10px 8px;
+                border: 1px solid #d1d5db;
+                border-radius: 6px;
+                background-color: #fff;
+                font-size: 14px;
+                cursor: pointer;
+                background-image: none !important;
+            }
+            input[type="number"] {
+                flex: 1;
+                padding: 10px 12px;
+                border: 1px solid #d1d5db;
+                border-radius: 6px;
+                font-size: 14px;
+                margin-bottom: 0px !important;
+            }
+        }
+        .queb-required-filed {
+            color: red;
+            margin-left: 3px;
+        }
+        .qeus-subscribe-field {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 30px;
+            input {
+                width: 5% !important;
+                margin: 0px !important;
+            }
+            .qeus-label-subscribe {
+                margin: 0px !important;
+                padding: 0px !important;
+            }
+        } 
+    }
+}
+
+// shop page buttons wrapper
+.qeus-add-to-cart-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: stretch;
+    // justify-content: space-between;
+    margin-top: 10px;
+    a, button {
+        flex: 1 1 calc(50% - 8px); // 2 buttons per row
+        text-align: center;
+        margin: 0 !important;
+        font-size: clamp(13px, 1.2vw, 15px) !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        line-height: 1.2;
+        min-height: 44px; // ✅ ensures equal height
+        white-space: nowrap !important;
+        padding: 0px  !important;
+        background-color: #046bd2;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    // Responsive layout
+    @media (max-width: 600px) {
+        a, button {
+            flex: 1 1 100%;
+            width: 100%;
+            font-size: 14px;
+        }
+    }
+    .qeus-quick-enquiry-us-button {    
+        order: 4;
+    }
+}
+
+// Button in cart product row
+.qeus-cart-product-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    .qeus-enquiry-us-cart-page-btn {
+        background-color: #5467f8;
+        padding: 6px 14px;
+        font-size: 13px;
+        line-height: 1.4;
+        white-space: nowrap;
+    }
+}
+.qeus-shortcode-enquiry-us-btn  {
+    background-color: #5467f8;
+    color: #ffffff !important;
+    padding: 10px 20px !important;
+    text-decoration: none !important;
+}
+
+
+/* Hide only the label (&nbsp;:) for QuickEnquiry button row */
+.wc-block-components-product-details__name:has(+ .wc-block-components-product-details__value .qeus-quick-enquiry-us-button) {
+    display: none !important;
+}
+
+
+/* Hide QuickEnquiry button label in classic cart shortcode */
+dt.variation-nbsp:has(+ dd .qeus-quick-enquiry-us-button){
+    display: none !important;
+}
+
+.qeus-enquiry-us-cart-page-btn {
+    margin: 5px 0px 5px 0px !important;
+}
+
+.qeus-enquiry-us-order-summary-btn {
+    margin: 5px 0px 5px 0px !important;
+}
+
+// when enquiry us button single page
+.single-product {
+    .single_add_to_cart_button {
+        margin-right: 10px !important;
+    }
+}
