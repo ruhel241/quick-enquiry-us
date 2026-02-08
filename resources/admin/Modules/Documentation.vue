@@ -1,0 +1,60 @@
+<template>
+  <div class="qeus-documentation-wrapper qeus-card">
+    <!-- Header -->
+    <div class="qeus_header">
+      <div class="qeus_title qeus_header_title">
+        <h3>Documentation</h3>
+      </div>
+    </div>
+
+    <el-row :gutter="20">
+      <!-- Video Section -->
+      <el-col :span="24">
+        <div class="dashboard-document-youtube">
+          <iframe
+            width="100%"
+            height="450"
+            src="https://www.youtube.com/embed/UPGtOEsY2kI"
+            title="Plugin Documentation Video"
+            frameborder="0"
+            allowfullscreen></iframe>
+        </div>
+        <p class="qeus-subtitle">
+          Learn how to set up and use this plugin step by step.
+        </p>
+      </el-col>
+
+      <!-- Documentation Content -->
+      <el-col :span="24">
+        <div class="qeus-doc-content">
+          <h4>🚀 Getting Started</h4>
+          <ul class="qeus-doc-list">
+            <li>Install and activate the plugin</li>
+            <li>Go to <strong>Quick Enquiry Us Tab Settings</strong></li>
+            <li>Configure required options</li>
+            <li>Save Settings and Save Styles</li>
+          </ul>
+
+          <h4>🔗 Helpful Links</h4>
+          <ul class="qeus-doc-links">
+            <li>
+              <a href="https://wpcreativeidea.com/" target="_blank">
+                📄 Full Documentation
+              </a>
+            </li>
+            <li>
+              <a href="https://wpcreativeidea.com/support" target="_blank">
+                🛠 Support Center
+              </a>
+            </li>
+            <li>
+              <a href="https://wpcreativeidea.com/" target="_blank">
+                ❓ FAQ
+              </a>
+            </li>
+          </ul>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+</template>

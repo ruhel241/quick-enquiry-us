@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
 
                 setTimeout(() => {
                     let $qvpuWrapper       = $parentProduct.find('.qvpu-add-to-cart-wrapper');
-                    let $directCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
+                    let $directCheckoutBtn = $parentProduct.find('.qeus-direct-checkout-button');
                     let $enquiryShopBtn    = $parentProduct.find('.qeus-quick-enquiry-us-button');
 
                     /** ---------------------------------------------

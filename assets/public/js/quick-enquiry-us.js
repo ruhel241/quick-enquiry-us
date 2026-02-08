@@ -30,7 +30,7 @@ jQuery(document).ready(function ($) {
         var $viewProduct = $parentProduct.find('.button.product_type_variable, .button.product_type_external, .product_type_grouped');
         setTimeout(function () {
           var $qvpuWrapper = $parentProduct.find('.qvpu-add-to-cart-wrapper');
-          var $directCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
+          var $directCheckoutBtn = $parentProduct.find('.qeus-direct-checkout-button');
           var $enquiryShopBtn = $parentProduct.find('.qeus-quick-enquiry-us-button');
 
           /** ---------------------------------------------

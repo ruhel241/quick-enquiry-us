@@ -163,7 +163,6 @@ export default class QEUSPlugin {
         });
     }
 
-  
     $get(options) {
         return window.jQuery.get(window.QuickEnquiryUsAdminVars.ajaxurl, options);
     }
@@ -173,11 +172,15 @@ export default class QEUSPlugin {
     }
 
     $put(options) {
-        return window.jQuery.put(window.QuickEnquiryUsAdminVars.ajaxurl, options);
+        return window.jQuery.ajax({
+            url: window.QuickEnquiryUsAdminVars.ajaxurl,
+            type: 'PUT',
+            data: options,
+        });
     }
-   
+
     $del(options) {
-        return window.jQuery.del(window.QuickEnquiryUsAdminVars.ajaxurl, options);
+        return window.jQuery.post(window.QuickEnquiryUsAdminVars.ajaxurl, options);
     }
 
     ucFirst(text) {

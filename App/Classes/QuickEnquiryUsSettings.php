@@ -51,7 +51,7 @@ class QuickEnquiryUsSettings extends WC_Settings_Page
 
             wp_localize_script('qeus_admin_app', 'QuickEnquiryUsAdminVars', array(
                 'assets_url'  => $assetsUrl,
-                'images_url'  => $assetsUrl.'images/',
+                'images_url'  => $assetsUrl.'admin/images/',
                 'ajaxurl'     => admin_url('admin-ajax.php'),
                 'admin_url'   => admin_url('post.php'),
                 'slug'        => 'quick-enquiry-us',

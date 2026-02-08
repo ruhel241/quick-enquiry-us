@@ -862,3 +862,185 @@ body.woocommerce_page_wc-settings p.submit {
 .qeus-app-wrapper .setting-row-repeter-fields .setting-input-repeter .delete-btn i {
   margin: 0 !important;
 }
+
+.text-align-center {
+  text-align: center;
+}
+
+.qeus-license-management .qeus_header .qeus_header_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 10px 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+}
+.qeus-license-management .qeus_header .qeus_header_title button {
+  padding: 0;
+}
+.qeus-license-management .qeus_license_valid .qeus-valid .title {
+  margin-bottom: 10px;
+}
+.qeus-license-management .qeus_license_valid .qeus-valid .license-status-container .info-item {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.qeus-license-management .qeus_license_valid .qeus-valid .license-status-container .info-item .label {
+  width: 150px;
+}
+.qeus-license-management .qeus_license_valid .qeus-valid .license-status-container .info-item .remaining .el-tag {
+  font-size: 13px;
+  font-weight: 600;
+}
+.qeus-license-management .qeus_license_valid .qeus-valid .circle-check-icon {
+  margin-bottom: 20px;
+}
+.qeus-license-management .qeus_license_valid .qeus-valid .circle-check-icon span {
+  color: #67c23a;
+  font-size: 40px;
+}
+.qeus-license-management .qeus_license_valid .qeus-valid .license-valid {
+  color: #67c23a;
+  font-weight: 600;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .title {
+  margin-bottom: 10px;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .license-status-container {
+  margin: 20px 0;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .license-status-container .info-item {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .license-status-container .info-item .label {
+  width: 150px;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .license-status-container .info-item .remaining .el-tag {
+  font-size: 13px;
+  font-weight: 600;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .circle-check-icon {
+  margin-bottom: 20px;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .circle-check-icon span {
+  color: #67c23a;
+  font-size: 40px;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .license-expired-notice {
+  margin: 15px 0px;
+  color: #fc0404;
+  font-weight: 600;
+}
+.qeus-license-management .qeus_license_expired .qeus-expired .expired {
+  color: red;
+  font-weight: 600;
+}
+.qeus-license-management .qeus_license_expired a {
+  text-decoration: none;
+}
+.qeus-license-management .fetching-text {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 100px 100px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.qeus-license-management .qeus-provide-license-key {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 45px 45px 0px 45px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+.qeus-license-management .qeus-provide-license-key h3 {
+  margin: 0px 0px 20px 0px;
+  text-align: center;
+  line-height: 30px;
+}
+.qeus-license-management .qeus-provide-license-key .license-empty-notice {
+  margin: 80px 0px 0px 0px;
+  font-weight: 600;
+  color: #929292;
+}
+
+.qeus-support-wrapper .qeus_header .qeus_header_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 10px 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+}
+.qeus-support-wrapper .qeus_support_block_box {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+.qeus-support-wrapper .qeus_support_block_box .qeus_support_block {
+  border: solid rgba(221, 221, 221, 0.8666666667);
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  width: 33.3333%;
+}
+.qeus-support-wrapper .qeus_support_block_box .qeus_support_block img {
+  width: 100px;
+}
+
+.qeus-documentation-wrapper {
+  padding: 20px;
+}
+.qeus-documentation-wrapper .qeus_header .qeus_header_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 10px 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+}
+.qeus-documentation-wrapper .qeus-subtitle {
+  margin: 6px 0 0;
+  color: #666;
+  font-size: 14px;
+}
+.qeus-documentation-wrapper .dashboard-document-youtube {
+  margin: 10px 0px 20px 0px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  padding: 15px;
+}
+.qeus-documentation-wrapper .qeus-doc-content h4 {
+  margin-top: 20px;
+  font-size: 16px;
+}
+.qeus-documentation-wrapper .qeus-doc-list,
+.qeus-documentation-wrapper .qeus-doc-links {
+  margin: 10px 0;
+  padding-left: 18px;
+}
+.qeus-documentation-wrapper .qeus-doc-list li,
+.qeus-documentation-wrapper .qeus-doc-links li {
+  margin-bottom: 8px;
+  color: #444;
+}
+.qeus-documentation-wrapper .qeus-doc-links a {
+  text-decoration: none;
+  color: #409eff;
+  font-weight: 500;
+}
+.qeus-documentation-wrapper .qeus-doc-links a:hover {
+  text-decoration: underline;
+}

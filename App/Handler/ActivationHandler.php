@@ -11,10 +11,12 @@ class ActivationHandler
         
         update_option('qeus_version', QUICK_ENQUIRY_US_PLUGIN_VERSION, 'no');
 
-        $settings        = (new Settings())->getConfigs();
-        $getActiveModule = (new Settings())->getActiveModule();
+        $settings          = new Settings();
+        $getConfigs        = $settings->getConfigs();
+        $getActiveModule   = $settings->getActiveModule();
+        $qeusLicense       = $settings->qeusLicense();
 
-        foreach ($settings as $key => $value) {
+        foreach ($getConfigs as $key => $value) {
             if (!get_option($key)) {
                 update_option($key, $value);
             }
@@ -22,6 +24,10 @@ class ActivationHandler
 
         if (!get_option('qeus_active_module')) {
             update_option('qeus_active_module', $getActiveModule);
+        }
+
+        if (!get_option('qeus_license')) {
+            update_option('qeus_license', $qeusLicense);
         }
     }
 }

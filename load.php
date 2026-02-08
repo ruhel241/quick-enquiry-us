@@ -28,3 +28,6 @@ spl_autoload_register( function ( $class ) {
 if (!class_exists('ArrayHelper')) {
     require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Helpers/ArrayHelper.php';
 }
+
+require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'app/Models/QuickEnquiryUs.php';
+require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'app/global_functions.php';

@@ -89845,12 +89845,16 @@ var QEUSPlugin = /*#__PURE__*/function () {
   }, {
     key: "$put",
     value: function $put(options) {
-      return window.jQuery.put(window.QuickEnquiryUsAdminVars.ajaxurl, options);
+      return window.jQuery.ajax({
+        url: window.QuickEnquiryUsAdminVars.ajaxurl,
+        type: 'PUT',
+        data: options
+      });
     }
   }, {
     key: "$del",
     value: function $del(options) {
-      return window.jQuery.del(window.QuickEnquiryUsAdminVars.ajaxurl, options);
+      return window.jQuery.post(window.QuickEnquiryUsAdminVars.ajaxurl, options);
     }
   }, {
     key: "ucFirst",

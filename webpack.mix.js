@@ -32,6 +32,7 @@ mix.options({ processCssUrls: false });
 
 mix.js('resources/admin/boot.js', 'assets/admin/js/boot.js').vue({ version: 2 });
 mix.js('resources/admin/start.js', 'assets/admin/js/start.js').vue({ version: 2 });
+mix.copy('resources/admin/images', 'assets/admin/images');
 mix.sass('resources/scss/admin.scss', 'assets/admin/css/admin.css');
 mix.copy('node_modules/element-ui/lib/theme-chalk/fonts', 'assets/admin/css/fonts');
 mix.copy('resources/public/images', 'assets/public/images');

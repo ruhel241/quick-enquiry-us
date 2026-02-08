@@ -29,12 +29,12 @@ class WooQuickEnquiryUsLite
             return;
         }
 
-        include_once 'load.php';
-
         if (!$this->is_woocommerce_active()) {
             add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
             return;
         }
+
+        include_once 'load.php';
 
         $this->setup_hooks();
     }
@@ -44,13 +44,12 @@ class WooQuickEnquiryUsLite
      */
     public function setup_hooks()
     {
-        $this->commonHooks();
-
         if (is_admin()) {
             $this->adminHooks();
         }
 
         $this->publicHooks();
+        $this->commonHooks();
     }
 
     /**
@@ -60,6 +59,12 @@ class WooQuickEnquiryUsLite
     {
        // woocommerce settings page add Quick Enquiry Us settings tab
         add_filter( 'woocommerce_get_settings_pages', array('QuickEnquiryUs\App\Classes\Customization', 'quickEnquiryUsAddSettings'), 15, 1 );
+    
+        $ajaxAdminAjaxHandler = new QuickEnquiryUs\App\Handler\AdminAjaxHandler();
+        $ajaxAdminAjaxHandler->registerEndpoints();
+        
+        $LicenseHandler = new QuickEnquiryUs\App\Handler\LicenseHandler();
+        $LicenseHandler->registerEndpoints();
     }
 
     /**
@@ -67,25 +72,12 @@ class WooQuickEnquiryUsLite
      */
     public function publicHooks()
     {
-        $qeusActiveModule = get_option('qeus_active_module', []);
-
-        // Load the Quick Enquiry Us module
-        if (isset($qeusActiveModule['quick_enquiry_us_module']) && $qeusActiveModule['quick_enquiry_us_module'] == 'yes') {
-            $FrontendHandler = new QuickEnquiryUs\App\Handler\FrontendHandler;
-            $FrontendHandler->register();
-        }   
-
-       require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'app/Models/QuickEnquiryUs.php';
-       require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'app/global_functions.php';
     }
-    
 
 
     public function commonHooks() {
-         add_action('init', function() {
-            $ajaxAdminAjaxHandler = new QuickEnquiryUs\App\Handler\AdminAjaxHandler();
-            $ajaxAdminAjaxHandler->registerEndpoints();
-        });
+       $ActionHandler = new QuickEnquiryUs\App\Handler\ActionHandler();
+       $ActionHandler->register();
     }
 
     /**

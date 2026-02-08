@@ -75,5 +75,16 @@ class Settings
 
         return apply_filters('quick-enquiry-us/active_module', $qeusActiveModule);
     }
+
+    public function qeusLicense() {
+        $qeusLicense = [
+            'license_key' => '',
+            'price_id'    => '',
+            'expires'     => '',
+            'status'      => '',
+        ];
+        
+        return apply_filters('qeus/get_license', $qeusLicense);
+    }
 }
 
