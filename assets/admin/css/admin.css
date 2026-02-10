@@ -179,6 +179,7 @@ body.woocommerce_page_wc-settings p.submit {
   color: #4a5568;
   transition: all 0.2s ease;
   border-bottom: initial;
+  padding-left: 12px;
 }
 .qeus-app-wrapper .qeus-main-navigation .el-menu .el-menu-item i {
   fill: #718096;
@@ -277,6 +278,16 @@ body.woocommerce_page_wc-settings p.submit {
 .qeus-app-wrapper .qeus-settings-wrapper .el-icon-question:hover {
   color: #4361ee;
   background-color: rgba(67, 97, 238, 0.1);
+}
+.qeus-app-wrapper .qeus-settings-wrapper .el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: #4361ee !important;
+  border-color: #4361ee !important;
+}
+.qeus-app-wrapper .qeus-settings-wrapper .el-checkbox__input.is-focus .el-checkbox__inner {
+  border-color: #4361ee !important;
+}
+.qeus-app-wrapper .qeus-settings-wrapper .el-checkbox__input.is-checked + .el-checkbox__label {
+  color: #4361ee;
 }
 .qeus-app-wrapper .qeus-styles-wrapper .qeus-styles-header {
   margin-bottom: 40px;

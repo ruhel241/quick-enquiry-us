@@ -196,6 +196,16 @@ body.woocommerce_page_wc-settings p.submit {
         background-color: rgba(67, 97, 238, 0.1);
       }
     }
+    .el-checkbox__input.is-checked .el-checkbox__inner {
+      background-color: #4361ee !important;
+      border-color: #4361ee !important;
+    }
+    .el-checkbox__input.is-focus .el-checkbox__inner {
+      border-color: #4361ee !important;
+    }
+    .el-checkbox__input.is-checked+.el-checkbox__label {
+      color: #4361ee;
+    }
   }
   // Styles tab
   .qeus-styles-wrapper {
