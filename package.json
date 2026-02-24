@@ -1,7 +1,7 @@
 {
   "name": "quick-enquiry-us",
   "version": "1.0.0",
-  "description": "Add to cart popup for woocommerce.",
+  "description": "Quick enquiry us  for woocommerce.",
   "main": "index.js",
   "scripts": {
     "dev": "mix",
