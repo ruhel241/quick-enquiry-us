@@ -11,13 +11,7 @@
       <!-- Video Section -->
       <el-col :span="24">
         <div class="dashboard-document-youtube">
-          <iframe
-            width="100%"
-            height="450"
-            src="https://www.youtube.com/embed/UPGtOEsY2kI"
-            title="Plugin Documentation Video"
-            frameborder="0"
-            allowfullscreen></iframe>
+          <iframe width="100%" height="550" src="https://www.youtube.com/embed/jhPquLtObTc?si=VH3SLsDmzl_hS4gB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
         <p class="qeus-subtitle">
           Learn how to set up and use this plugin step by step.

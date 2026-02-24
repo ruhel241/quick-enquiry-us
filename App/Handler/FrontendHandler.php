@@ -49,11 +49,11 @@ class FrontendHandler
     // shop page Enquiry Button
     public function addShopPageQuickEnquirysButton() {
         $quickEnquiryUsSettings = get_option('quick_enquiry_us_settings', []);
-        $settings             = $quickEnquiryUsSettings['settings'];
-        $shopPageEnable       = Arr::get($settings, 'shop_page_enable', 'yes' );
-        $inStockButtonText    = Arr::get($settings, 'in_stock_shop_button_text', 'Enquiry Us');
-        $outOfStockButtonText = Arr::get($settings, 'out_of_stock_shop_button_text', 'Email when stock available');
-        $backOrderButtonText  = Arr::get($settings, 'backorder_shop_button_text', 'Pre-order Enquiry');
+        $settings               = $quickEnquiryUsSettings['settings'];
+        $shopPageEnable         = Arr::get($settings, 'shop_page_enable', 'yes' );
+        $inStockButtonText      = Arr::get($settings, 'in_stock_shop_button_text', 'Enquiry Us');
+        $outOfStockButtonText   = Arr::get($settings, 'out_of_stock_shop_button_text', 'Email when stock available');
+        $backOrderButtonText    = Arr::get($settings, 'backorder_shop_button_text', 'Pre-order Enquiry');
 
         if ( $shopPageEnable !== 'yes' ) {
             return;
@@ -101,13 +101,12 @@ class FrontendHandler
 
     // single page Enquiry Button
     public function addSinglePageQuickEnquirysButton() {
-
         $quickEnquiryUsSettings = get_option('quick_enquiry_us_settings', []);
-        $settings             = $quickEnquiryUsSettings['settings'];
-        $singlePageEnable     = Arr::get($settings, 'single_page_enable', 'yes');
-        $inStockButtonText    = Arr::get($settings, 'in_stock_single_button_text', 'QuickEnquiry Us');
-        $outOfStockButtonText = Arr::get($settings, 'out_of_stock_single_button_text', 'Email when stock available');
-        $backOrderButtonText  = Arr::get($settings, 'backorder_single_button_text', 'Pre-order Enquiry');
+        $settings               = $quickEnquiryUsSettings['settings'];
+        $singlePageEnable       = Arr::get($settings, 'single_page_enable', 'yes');
+        $inStockButtonText      = Arr::get($settings, 'in_stock_single_button_text', 'QuickEnquiry Us');
+        $outOfStockButtonText   = Arr::get($settings, 'out_of_stock_single_button_text', 'Email when stock available');
+        $backOrderButtonText    = Arr::get($settings, 'backorder_single_button_text', 'Pre-order Enquiry');
 
         if ( $singlePageEnable !== 'yes' ) {
             return;
@@ -429,7 +428,7 @@ class FrontendHandler
         $inStockFormHeading    = Arr::get($settings, 'in_stock_form_heading', 'QuickEnquiry Us');
         $outOfStockFormHeading = Arr::get($settings, 'out_of_stock_form_heading', 'Email when stock available');
         $backOrderFormHeading  = Arr::get($settings, 'backorder_form_heading', 'Pre-order Enquiry');
-        $enquiryFromTabEnable  = Arr::get($settings, 'enquiry_from_tab_enable', 'no' );
+        $enquiryFormTabEnable  = Arr::get($settings, 'enquiry_form_tab_enable', 'no' );
         $enquirySubmitButtonText = Arr::get($settings, 'enquiry_submit_button_text', 'Submit Enquiry' );
         $whatsappTabEnable     = Arr::get($settings, 'whatsapp_tab_enable', 'no' );
         $smsTabEnable          = Arr::get($settings, 'sms_tab_enable', 'no' );
@@ -458,7 +457,7 @@ class FrontendHandler
         // Decide first active tab (priority order)
         $activeTab = '';
 
-        if ($enquiryFromTabEnable === 'yes') {
+        if ($enquiryFormTabEnable === 'yes') {
             $activeTab = 'email';
         } elseif ($whatsappTabEnable === 'yes') {
             $activeTab = 'whatsapp';
@@ -477,19 +476,45 @@ class FrontendHandler
                 </div>
                  <!-- Tabs -->
                 <div class="qeus-tabs">
-                    <?php if ($enquiryFromTabEnable === 'yes'): ?>
+                    <?php if ($enquiryFormTabEnable === 'yes'): ?>
                         <div class="qeus-tab <?php echo esc_attr( $activeTab === 'email' ? 'active' : '' ); ?>" data-tab="email">
-                            📝 <?php echo esc_html($enquiryTabText); ?>
+                            <svg height="16px" width="16px" fill="#666" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                viewBox="0 0 512 512"  xml:space="preserve">
+                                <g>
+                                    <path class="st0" d="M510.746,110.361c-2.128-10.754-6.926-20.918-13.926-29.463c-1.422-1.794-2.909-3.39-4.535-5.009
+                                        c-12.454-12.52-29.778-19.701-47.531-19.701H67.244c-17.951,0-34.834,7-47.539,19.708c-1.608,1.604-3.099,3.216-4.575,5.067
+                                        c-6.97,8.509-11.747,18.659-13.824,29.428C0.438,114.62,0,119.002,0,123.435v265.137c0,9.224,1.874,18.206,5.589,26.745
+                                        c3.215,7.583,8.093,14.772,14.112,20.788c1.516,1.509,3.022,2.901,4.63,4.258c12.034,9.966,27.272,15.45,42.913,15.45h377.51
+                                        c15.742,0,30.965-5.505,42.967-15.56c1.604-1.298,3.091-2.661,4.578-4.148c5.818-5.812,10.442-12.49,13.766-19.854l0.438-1.05
+                                        c3.646-8.377,5.497-17.33,5.497-26.628V123.435C512,119.06,511.578,114.649,510.746,110.361z M34.823,99.104
+                                        c0.951-1.392,2.165-2.821,3.714-4.382c7.689-7.685,17.886-11.914,28.706-11.914h377.51c10.915,0,21.115,4.236,28.719,11.929
+                                        c1.313,1.327,2.567,2.8,3.661,4.272l2.887,3.88l-201.5,175.616c-6.212,5.446-14.21,8.443-22.523,8.443
+                                        c-8.231,0-16.222-2.99-22.508-8.436L32.19,102.939L34.823,99.104z M26.755,390.913c-0.109-0.722-0.134-1.524-0.134-2.341V128.925
+                                        l156.37,136.411L28.199,400.297L26.755,390.913z M464.899,423.84c-6.052,3.492-13.022,5.344-20.145,5.344H67.244
+                                        c-7.127,0-14.094-1.852-20.142-5.344l-6.328-3.668l159.936-139.379l17.528,15.246c10.514,9.128,23.922,14.16,37.761,14.16
+                                        c13.89,0,27.32-5.032,37.827-14.16l17.521-15.253L471.228,420.18L464.899,423.84z M485.372,388.572
+                                        c0,0.803-0.015,1.597-0.116,2.304l-1.386,9.472L329.012,265.409l156.36-136.418V388.572z"/>
+                                </g>
+                            </svg>
+                            <?php echo esc_html($enquiryTabText); ?>
                         </div>
                     <?php endif; ?>
                     <?php if ($whatsappTabEnable === 'yes'): ?> 
                         <div class="qeus-tab <?php echo esc_attr( $activeTab === 'whatsapp' ? 'active' : '' ); ?>" data-tab="whatsapp">
-                            📞 <?php echo esc_html($whatsappTabText); ?>
+                            <svg width="20px" height="20px" viewBox="-2.73 0 1225.016 1225.016" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#E0E0E0" d="M1041.858 178.02C927.206 63.289 774.753.07 612.325 0 277.617 0 5.232 272.298 5.098 606.991c-.039 106.986 27.915 211.42 81.048 303.476L0 1225.016l321.898-84.406c88.689 48.368 188.547 73.855 290.166 73.896h.258.003c334.654 0 607.08-272.346 607.222-607.023.056-162.208-63.052-314.724-177.689-429.463zm-429.533 933.963h-.197c-90.578-.048-179.402-24.366-256.878-70.339l-18.438-10.93-191.021 50.083 51-186.176-12.013-19.087c-50.525-80.336-77.198-173.175-77.16-268.504.111-278.186 226.507-504.503 504.898-504.503 134.812.056 261.519 52.604 356.814 147.965 95.289 95.36 147.728 222.128 147.688 356.948-.118 278.195-226.522 504.543-504.693 504.543z"/><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="609.77" y1="1190.114" x2="609.77" y2="21.084"><stop offset="0" stop-color="#20b038"/><stop offset="1" stop-color="#60d66a"/></linearGradient><path fill="url(#a)" d="M27.875 1190.114l82.211-300.18c-50.719-87.852-77.391-187.523-77.359-289.602.133-319.398 260.078-579.25 579.469-579.25 155.016.07 300.508 60.398 409.898 169.891 109.414 109.492 169.633 255.031 169.57 409.812-.133 319.406-260.094 579.281-579.445 579.281-.023 0 .016 0 0 0h-.258c-96.977-.031-192.266-24.375-276.898-70.5l-307.188 80.548z"/><image overflow="visible" opacity=".08" width="682" height="639" xlink:href="FCC0802E2AF8A915.png" transform="translate(270.984 291.372)"/><path fill-rule="evenodd" clip-rule="evenodd" fill="#FFF" d="M462.273 349.294c-11.234-24.977-23.062-25.477-33.75-25.914-8.742-.375-18.75-.352-28.742-.352-10 0-26.25 3.758-39.992 18.766-13.75 15.008-52.5 51.289-52.5 125.078 0 73.797 53.75 145.102 61.242 155.117 7.5 10 103.758 166.266 256.203 226.383 126.695 49.961 152.477 40.023 179.977 37.523s88.734-36.273 101.234-71.297c12.5-35.016 12.5-65.031 8.75-71.305-3.75-6.25-13.75-10-28.75-17.5s-88.734-43.789-102.484-48.789-23.75-7.5-33.75 7.516c-10 15-38.727 48.773-47.477 58.773-8.75 10.023-17.5 11.273-32.5 3.773-15-7.523-63.305-23.344-120.609-74.438-44.586-39.75-74.688-88.844-83.438-103.859-8.75-15-.938-23.125 6.586-30.602 6.734-6.719 15-17.508 22.5-26.266 7.484-8.758 9.984-15.008 14.984-25.008 5-10.016 2.5-18.773-1.25-26.273s-32.898-81.67-46.234-111.326z"/><path fill="#FFF" d="M1036.898 176.091C923.562 62.677 772.859.185 612.297.114 281.43.114 12.172 269.286 12.039 600.137 12 705.896 39.633 809.13 92.156 900.13L7 1211.067l318.203-83.438c87.672 47.812 186.383 73.008 286.836 73.047h.255.003c330.812 0 600.109-269.219 600.25-600.055.055-160.343-62.328-311.108-175.649-424.53zm-424.601 923.242h-.195c-89.539-.047-177.344-24.086-253.93-69.531l-18.227-10.805-188.828 49.508 50.414-184.039-11.875-18.867c-49.945-79.414-76.312-171.188-76.273-265.422.109-274.992 223.906-498.711 499.102-498.711 133.266.055 258.516 52 352.719 146.266 94.195 94.266 146.031 219.578 145.992 352.852-.118 274.999-223.923 498.749-498.899 498.749z"/></svg>
+                            <?php echo esc_html($whatsappTabText); ?>
                         </div>
                     <?php endif; ?>
                     <?php if ($smsTabEnable === 'yes'): ?>
                         <div class="qeus-tab <?php echo esc_attr( $activeTab === 'sms' ? 'active' : '' ); ?>" data-tab="sms">
-                            💬 <?php echo esc_html($smsTabText); ?>
+                            <svg fill="#666" height="16px" width="16px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+                                <path d="M448,0H64C28.6,0,0,28.6,0,64v256c0,35.4,28.6,64,64,64h128l-42.7,128l192-128H448c35.4,0,64-28.6,64-64V64
+                                C512,28.6,483.4,0,448,0z M128,234.7c-23.6,0-42.7-19.1-42.7-42.7s19.1-42.7,42.7-42.7s42.7,19.1,42.7,42.7S151.6,234.7,128,234.7z
+                                M256,234.7c-23.6,0-42.7-19.1-42.7-42.7s19.1-42.7,42.7-42.7s42.7,19.1,42.7,42.7S279.6,234.7,256,234.7z M384,234.7
+                                c-23.6,0-42.7-19.1-42.7-42.7s19.1-42.7,42.7-42.7s42.7,19.1,42.7,42.7S407.6,234.7,384,234.7z"/>
+                            </svg>
+                            <?php echo esc_html($smsTabText); ?>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -508,7 +533,8 @@ class FrontendHandler
                                 <div class="qeus-social-number">
                                     <p><?php echo esc_html($receiverName); ?></p>
                                     <a href="<?php echo esc_url( $this->whatsAppApi($receiverName, $receiverNumber, $product, $settings) ); ?>" target="_blank" class="qeus-action-btn whatsapp">
-                                        📞 <?php echo esc_html($whatsappButtonText); ?>
+                                        <svg width="25px" height="25px" viewBox="-2.73 0 1225.016 1225.016" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#E0E0E0" d="M1041.858 178.02C927.206 63.289 774.753.07 612.325 0 277.617 0 5.232 272.298 5.098 606.991c-.039 106.986 27.915 211.42 81.048 303.476L0 1225.016l321.898-84.406c88.689 48.368 188.547 73.855 290.166 73.896h.258.003c334.654 0 607.08-272.346 607.222-607.023.056-162.208-63.052-314.724-177.689-429.463zm-429.533 933.963h-.197c-90.578-.048-179.402-24.366-256.878-70.339l-18.438-10.93-191.021 50.083 51-186.176-12.013-19.087c-50.525-80.336-77.198-173.175-77.16-268.504.111-278.186 226.507-504.503 504.898-504.503 134.812.056 261.519 52.604 356.814 147.965 95.289 95.36 147.728 222.128 147.688 356.948-.118 278.195-226.522 504.543-504.693 504.543z"/><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="609.77" y1="1190.114" x2="609.77" y2="21.084"><stop offset="0" stop-color="#20b038"/><stop offset="1" stop-color="#60d66a"/></linearGradient><path fill="url(#a)" d="M27.875 1190.114l82.211-300.18c-50.719-87.852-77.391-187.523-77.359-289.602.133-319.398 260.078-579.25 579.469-579.25 155.016.07 300.508 60.398 409.898 169.891 109.414 109.492 169.633 255.031 169.57 409.812-.133 319.406-260.094 579.281-579.445 579.281-.023 0 .016 0 0 0h-.258c-96.977-.031-192.266-24.375-276.898-70.5l-307.188 80.548z"/><image overflow="visible" opacity=".08" width="682" height="639" xlink:href="FCC0802E2AF8A915.png" transform="translate(270.984 291.372)"/><path fill-rule="evenodd" clip-rule="evenodd" fill="#FFF" d="M462.273 349.294c-11.234-24.977-23.062-25.477-33.75-25.914-8.742-.375-18.75-.352-28.742-.352-10 0-26.25 3.758-39.992 18.766-13.75 15.008-52.5 51.289-52.5 125.078 0 73.797 53.75 145.102 61.242 155.117 7.5 10 103.758 166.266 256.203 226.383 126.695 49.961 152.477 40.023 179.977 37.523s88.734-36.273 101.234-71.297c12.5-35.016 12.5-65.031 8.75-71.305-3.75-6.25-13.75-10-28.75-17.5s-88.734-43.789-102.484-48.789-23.75-7.5-33.75 7.516c-10 15-38.727 48.773-47.477 58.773-8.75 10.023-17.5 11.273-32.5 3.773-15-7.523-63.305-23.344-120.609-74.438-44.586-39.75-74.688-88.844-83.438-103.859-8.75-15-.938-23.125 6.586-30.602 6.734-6.719 15-17.508 22.5-26.266 7.484-8.758 9.984-15.008 14.984-25.008 5-10.016 2.5-18.773-1.25-26.273s-32.898-81.67-46.234-111.326z"/><path fill="#FFF" d="M1036.898 176.091C923.562 62.677 772.859.185 612.297.114 281.43.114 12.172 269.286 12.039 600.137 12 705.896 39.633 809.13 92.156 900.13L7 1211.067l318.203-83.438c87.672 47.812 186.383 73.008 286.836 73.047h.255.003c330.812 0 600.109-269.219 600.25-600.055.055-160.343-62.328-311.108-175.649-424.53zm-424.601 923.242h-.195c-89.539-.047-177.344-24.086-253.93-69.531l-18.227-10.805-188.828 49.508 50.414-184.039-11.875-18.867c-49.945-79.414-76.312-171.188-76.273-265.422.109-274.992 223.906-498.711 499.102-498.711 133.266.055 258.516 52 352.719 146.266 94.195 94.266 146.031 219.578 145.992 352.852-.118 274.999-223.923 498.749-498.899 498.749z"/></svg>
+                                        <?php echo esc_html($whatsappButtonText); ?>
                                     </a>
                                 </div>
                             <?php endforeach; ?>
@@ -560,7 +586,7 @@ class FrontendHandler
                 <input type="email" name="email"
                     id="qeus-email-<?php echo esc_attr($tab);?>"
                     placeholder="Email Address"
-                    value="<?php echo esc_attr($userEmail); ?>"
+                    value="<?php echo 'admin@gmail.com';//esc_attr($userEmail); ?>"
                     <?php echo ($tab == 'email') ? 'required' : ''; ?>>
             </div>
             <div class="qeus-form-field">
@@ -1143,6 +1169,9 @@ class FrontendHandler
                 .qeus-tabs .qeus-tab.active {
                     color: {$activeTabColor} !important;
                     border-bottom-color: {$activeTabColor} !important;
+                    svg {
+                        fill: {$activeTabColor} !important;
+                    }
                 }
             ";
         }

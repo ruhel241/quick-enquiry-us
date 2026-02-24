@@ -15,7 +15,7 @@ class LicenseManager
         $urlBase = apply_filters('qeus_menu_url_base', admin_url('admin.php?page=page=wc-settings&tab=quick-enquiry-us#/license-management'));
 
         $this->settings = [
-            'item_id'        => 72, // EDD ID for Quick Enquiry Us 
+            'item_id'        => 2200, // EDD ID for Quick Enquiry Us 
             'license_server' => 'https://wpcreativeidea.com/',
             'plugin_file'    =>  QUICK_ENQUIRY_US_PLUGIN_DIR_URL,
             'store_url'      => 'https://wpcreativeidea.com/',
@@ -332,12 +332,12 @@ class LicenseManager
     {
         $errorMessage = 'There was an error activating the license, please verify your license is correct and try again or contact support.';
 
-        if ($licenseData['error'] == 'expired') {
+        if (isset($licenseData['error']) && $licenseData['error'] == 'expired') {
             $renewUrl = $this->getRenewUrl($licenseKey);
             $errorMessage = 'Your license has been expired at, ' . $licenseData['expires'] . ' Please <a target="_blank" href="' . $renewUrl . '">click here</a> to renew your license';
-        } else if ($licenseData['error'] == 'no_activations_left') {
+        } else if (isset($licenseData['error']) && $licenseData['error'] == 'no_activations_left') {
             $errorMessage = 'No Activation Site left: You have activated all the sites that your license offer. Please go to https://wpcreativeidea.com account and review your sites. You may deactivate your unused sites from wpcreativeidea account or you can purchase another license. <a target="_blank" href="' . $this->getVar('purchase_url') . '">' . __('Click Here to purchase another license', 'quick-enquiry-us') . '</a>';
-        } else if ($licenseData['error'] == 'missing') {
+        } else if (isset($licenseData['error']) && $licenseData['error'] == 'missing') {
             $errorMessage = __('The given license key is not valid. Please verify that your license is correct. You may login to https://wpcreativeidea.com account and get your valid license key for your purchase.', 'quick-enquiry-us');
         }
 

@@ -13,7 +13,7 @@
             inactive-value="no"
             @change="(value) => changeHandler('shop_page_enable', value)">
         </el-switch>
-        <el-tooltip content="enable the shop page" placement="top">
+        <el-tooltip content="Enable the shop page" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
@@ -70,7 +70,7 @@
             inactive-value="no"
             @change="(value) => changeHandler('single_page_enable', value)">
         </el-switch>
-        <el-tooltip content="enable the single page" placement="top">
+        <el-tooltip content="Enable the single page" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
@@ -155,15 +155,15 @@
         <h3>Enquiry US Form Tabs Settings</h3>
       </div>
       <div class="setting-row">
-        <span class="setting-label">Enquiry From Tab</span>
+        <span class="setting-label">Enquiry Form Tab</span>
         <el-switch
-            v-model="settings.enquiry_from_tab_enable"
-            active-text="Enable Enquiry From Tab"
+            v-model="settings.enquiry_form_tab_enable"
+            active-text="Enable Enquiry Form Tab"
             active-value="yes"
             inactive-value="no"
-            @change="(value) => changeHandler('enquiry_from_tab_enable', value)">
+            @change="(value) => changeHandler('enquiry_form_tab_enable', value)">
         </el-switch>
-        <el-tooltip content="enable the enquiry from Tab" placement="top">
+        <el-tooltip content="Enable the enquiry from Tab" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
@@ -176,7 +176,7 @@
             inactive-value="no"
             @change="(value) => changeHandler('whatsapp_tab_enable', value)">
         </el-switch>
-        <el-tooltip content="enable the WhatsApp Tab" placement="top">
+        <el-tooltip content="Enable the WhatsApp Tab" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
@@ -189,13 +189,13 @@
             inactive-value="no"
             @change="(value) => changeHandler('sms_tab_enable', value)">
         </el-switch>
-        <el-tooltip content="enable the SMS Tab" placement="top">
+        <el-tooltip content="Enable the SMS Tab" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
     </div>
 
-    <div class="qeus-settings-content" v-if="settings.enquiry_from_tab_enable === 'yes'">
+    <div class="qeus-settings-content" v-if="settings.enquiry_form_tab_enable === 'yes'">
       <div class="setting-title">
         <h3>Enquiry US Form Configure Settings</h3>
       </div>
@@ -307,7 +307,7 @@
             :disabled="whatsappNumbers.length === 1"
             @click="removeLink(index)"
           />
-          <el-tooltip content="Change the text in stock button text" placement="top">
+          <el-tooltip content="Add the receiver name and WhatsApp number" placement="top">
             <i class="el-icon-question"></i>
           </el-tooltip>
         </div>
@@ -319,7 +319,7 @@
             v-model="settings.whatsapp_button_text"
             @change="(value) => changeHandler('whatsapp_button_text', value)"
         />
-        <el-tooltip content="Change the text in stock button text" placement="top">
+        <el-tooltip content="Change the button text" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
@@ -333,7 +333,7 @@
             placeholder="Enter Your WhatsApp Message Here. You can use {receiver_name}, {title}, {url} as a placeholder."
             @change="(value) => changeHandler('whatsapp_message', value)"
         />
-        <el-tooltip content="Change the text in stock button text" placement="top">
+        <el-tooltip content="You can use {receiver_name}, {title}, {url} as a placeholder." placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
@@ -510,7 +510,7 @@
             inactive-value="no"
             @change="(value) => changeHandler('cart_page_enquiry_us_btn_enable', value)">
         </el-switch>
-        <el-tooltip content="enable the cart page" placement="top">
+        <el-tooltip content="Enable the cart page" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
@@ -539,7 +539,7 @@
             inactive-value="no"
             @change="(value) => changeHandler('order_summary_enquiry_us_btn_enable', value)">
         </el-switch>
-        <el-tooltip content="enable the order summary" placement="top">
+        <el-tooltip content="Enable the order summary" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>

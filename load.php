@@ -1,33 +1,23 @@
 <?php
 
-spl_autoload_register( function ( $class ) {
-    $match = 'QuickEnquiryUs';
-    if ( ! preg_match( "/\b{$match}\b/", $class ) ) {
-        return;
-    }
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-    $path = plugin_dir_path( __FILE__ );
-    $file = str_replace(
-        [ 'QuickEnquiryUs', '\\', '/App/' ],
-        [ '', DIRECTORY_SEPARATOR, 'app/' ],
-        $class
-    );
-
-    // Sanitize the file path to prevent directory traversal
-    $file = preg_replace('/[^A-Za-z0-9_\-\/]/', '', $file);
-    $file = str_replace('../', '', $file);
-
-    $filePath = trailingslashit( $path ) . trim( $file, '/' ) . '.php';
-
-    // Verify the file exists and is within the plugin directory
-    if (file_exists($filePath) && strpos($filePath, realpath($path)) === 0) {
-        require($filePath);
-    }
-});
-
-if (!class_exists('ArrayHelper')) {
-    require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Helpers/ArrayHelper.php';
-}
-
-require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'app/Models/QuickEnquiryUs.php';
-require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'app/global_functions.php';
+// Classes
+include 'App/Classes/Customization.php';
+// Handler
+include 'App/Handler/ActionHandler.php';
+include 'App/Handler/ActivationHandler.php';
+include 'App/Handler/AdminAjaxHandler.php';
+include 'App/Handler/LicenseHandler.php';
+// Helpers
+include 'App/Helpers/ArrayHelper.php';
+include 'App/Helpers/sanitizeValidation.php';
+// Settings
+include 'App/Settings.php';
+// Services
+include 'App/Services/PluginManager/LicenseManager.php';
+include 'App/Services/PluginManager/Updater.php';
+// Models
+include 'App/Models/QuickEnquiryUs.php';
+// Global Functions
+include  'App/global_functions.php';

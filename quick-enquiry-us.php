@@ -29,13 +29,13 @@ class WooQuickEnquiryUsLite
             return;
         }
 
+        include_once 'load.php';
+
         if (!$this->is_woocommerce_active()) {
             add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
             return;
         }
-
-        include_once 'load.php';
-
+        
         $this->setup_hooks();
     }
 
@@ -63,8 +63,8 @@ class WooQuickEnquiryUsLite
         $ajaxAdminAjaxHandler = new QuickEnquiryUs\App\Handler\AdminAjaxHandler();
         $ajaxAdminAjaxHandler->registerEndpoints();
         
-        $LicenseHandler = new QuickEnquiryUs\App\Handler\LicenseHandler();
-        $LicenseHandler->registerEndpoints();
+        $licenseHandler = new QuickEnquiryUs\App\Handler\LicenseHandler();
+        $licenseHandler->registerEndpoints();
     }
 
     /**
@@ -73,7 +73,6 @@ class WooQuickEnquiryUsLite
     public function publicHooks()
     {
     }
-
 
     public function commonHooks() {
        $ActionHandler = new QuickEnquiryUs\App\Handler\ActionHandler();
@@ -104,6 +103,9 @@ class WooQuickEnquiryUsLite
 add_action('plugins_loaded', function () {
     $WooQuickEnquiryUsLite = new WooQuickEnquiryUsLite();
     $WooQuickEnquiryUsLite->init();
+
+    // Added textdomain
+    load_plugin_textdomain( 'quick-enquiry-us', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 });
 
 register_activation_hook(__FILE__, function ($network_wide) {

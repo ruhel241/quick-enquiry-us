@@ -560,9 +560,6 @@ body.woocommerce_page_wc-settings p.submit {
 .qeus-app-wrapper .qeus-module-disable-dialog .el-dialog__header {
   padding: 30px 0 0 0 !important;
 }
-.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content {
-  text-align: center;
-}
 .qeus-app-wrapper .qeus-module-disable-dialog .icon-container {
   margin-bottom: 24px;
 }
@@ -726,9 +723,6 @@ body.woocommerce_page_wc-settings p.submit {
 .qeus-app-wrapper .qeus-header {
   display: flex;
   justify-content: end;
-  margin-right: 1px;
-  margin-bottom: 10px;
-  margin-top: 10px;
 }
 .qeus-app-wrapper .qeus-header .el-input__inner {
   border-color: #C0C4CC !important;
@@ -797,9 +791,8 @@ body.woocommerce_page_wc-settings p.submit {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   /* Heading */
-  /* Row spacing */
-  /* Label styling */
-  /* Value styling */
+  padding: 20px;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
 }
 .qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content::before {
   content: "";
@@ -816,22 +809,55 @@ body.woocommerce_page_wc-settings p.submit {
   font-weight: 700;
   color: #0f172a;
 }
-.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .detail-row {
-  margin-top: 10px;
-}
-.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .detail-row .label {
-  font-size: 14px;
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .dialog-text h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
   font-weight: 600;
-  color: #475569;
-  padding: 10px 0;
+  color: #111827;
 }
-.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .detail-row .value {
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table tr {
+  transition: background 0.2s ease;
+}
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table tr:hover {
+  background: #f9fafb;
+}
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table tr:last-child td {
+  border-bottom: none;
+}
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
   font-size: 14px;
-  color: #1e293b;
-  padding: 10px 12px;
-  border-radius: 8px;
+  vertical-align: top;
+}
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table .label {
+  width: 32%;
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table .value {
+  width: 68%;
+  color: #4b5563;
+  line-height: 1.6;
   word-break: break-word;
-  margin-bottom: 10px;
+}
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table .value a {
+  color: #2563eb;
+  text-decoration: none;
+}
+.qeus-app-wrapper .qeus-module-disable-dialog .qeus-module-dialog-content .qeus-table .value a:hover {
+  text-decoration: underline;
 }
 .qeus-app-wrapper .qeus-settings-content .qeus-product-title {
   text-decoration: none !important;

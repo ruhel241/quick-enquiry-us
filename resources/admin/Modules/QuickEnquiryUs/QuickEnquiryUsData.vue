@@ -115,7 +115,7 @@
         <!-- Confirmation Dialog -->
         <el-dialog
           :visible.sync="showDisableDialog"
-          width="40%"
+          width="45%"
           :close-on-click-modal="true"
           :close-on-press-escape="true"
           :show-close="true"
@@ -124,50 +124,51 @@
           <div class="qeus-module-dialog-content">
             <div class="dialog-text">
               <h3>Quick Enquiry US Details</h3>
-              <el-row :gutter="14" class="detail-row">
-                <template v-if="detail.name">
-                  <el-col :span="8" class="label">Name:</el-col>
-                  <el-col :span="16" class="value">{{ detail.name }}</el-col>
-                </template>
-               
-                <template v-if="detail.email">
-                  <el-col :span="8" class="label">Email:</el-col>
-                  <el-col :span="16" class="value">{{ detail.email }}</el-col>
-                </template>
+              <table class="qeus-table">
+                <tbody>
+                  <tr v-if="detail.name">
+                    <td class="label">Name</td>
+                    <td class="value">{{ detail.name }}</td>
+                  </tr>
 
-                <template v-if="detail.enquiry">
-                  <el-col :span="8" class="label">Enquiry:</el-col>
-                  <el-col :span="16" class="value">{{ detail.enquiry }}</el-col>
-                </template>
+                  <tr v-if="detail.email">
+                    <td class="label">Email</td>
+                    <td class="value">{{ detail.email }}</td>
+                  </tr>
 
-                <template v-if="detail.phone_number">
-                  <el-col :span="8" class="label">Phone Number:</el-col>
-                  <el-col :span="16" class="value">{{ detail.phone_number }}</el-col>
-                </template>
+                  <tr v-if="detail.enquiry">
+                    <td class="label">Enquiry</td>
+                    <td class="value">{{ detail.enquiry }}</td>
+                  </tr>
 
-                <template v-if="detail.type">
-                  <el-col :span="8" class="label">Type:</el-col>
-                  <el-col :span="16" class="value">{{ detail.type }}</el-col>
-                </template>
+                  <tr v-if="detail.phone_number">
+                    <td class="label">Phone Number</td>
+                    <td class="value">{{ detail.phone_number }}</td>
+                  </tr>
 
-                <template v-if="detail.status">
-                  <el-col :span="8" class="label">Status:</el-col>
-                  <el-col :span="16" class="value">{{ detail.status }}</el-col>
-                </template>
+                  <tr v-if="detail.type">
+                    <td class="label">Type</td>
+                    <td class="value">{{ detail.type }}</td>
+                  </tr>
 
-                <template v-if="detail.subscribe">
-                  <el-col :span="8" class="label">Subscribe:</el-col>
-                  <el-col :span="16" class="value">{{ detail.subscribe }}</el-col>
-                </template>
+                  <tr v-if="detail.status">
+                    <td class="label">Status</td>
+                    <td class="value">{{ detail.status }}</td>
+                  </tr>
 
-                <template v-if="hasProduct(detail)">
-                  <el-col :span="8" class="label">Product Title:</el-col>
-                  <el-col :span="16" class="value">
-                    <span v-html="getProductHtml(detail)"></span>
-                  </el-col>
-                </template>
+                  <tr v-if="detail.subscribe">
+                    <td class="label">Subscribe</td>
+                    <td class="value">{{ detail.subscribe }}</td>
+                  </tr>
 
-              </el-row>
+                  <tr v-if="hasProduct(detail)">
+                    <td class="label">Product Title</td>
+                    <td class="value">
+                      <span v-html="getProductHtml(detail)"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </el-dialog>
@@ -334,12 +335,7 @@ import TableSelections from './_TableSelectionHandler.vue';
           nonce: window.QuickEnquiryUsAdminVars.nonce,
         })
           .then((response) => {
-            this.$notify({
-              title: "Sucess",
-              message: response.data.message,
-              type: "success",
-              offset: 40,
-            });
+            this.$handleSuccess(response.data.message);
             this.getQuickEnquiryUs();
           })
           .fail((error) => {

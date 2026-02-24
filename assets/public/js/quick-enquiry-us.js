@@ -3,6 +3,7 @@
   !*** ./resources/public/js/qeus.js ***!
   \*************************************/
 jQuery(document).ready(function ($) {
+  var QuickEnquiryUsPublicVarsSettings = QuickEnquiryUsPublicVars.quick_enquiry_us_settings.settings;
   var isLoading = false;
   function showLoading() {
     isLoading = true;
@@ -30,7 +31,7 @@ jQuery(document).ready(function ($) {
         var $viewProduct = $parentProduct.find('.button.product_type_variable, .button.product_type_external, .product_type_grouped');
         setTimeout(function () {
           var $qvpuWrapper = $parentProduct.find('.qvpu-add-to-cart-wrapper');
-          var $directCheckoutBtn = $parentProduct.find('.qeus-direct-checkout-button');
+          var $quickCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
           var $enquiryShopBtn = $parentProduct.find('.qeus-quick-enquiry-us-button');
 
           /** ---------------------------------------------
@@ -47,9 +48,9 @@ jQuery(document).ready(function ($) {
            * CASE 2: Wrapper already exists for direct checkout
            * --------------------------------------------- */
 
-          if ($directCheckoutBtn.length) {
+          if ($quickCheckoutBtn.length) {
             if ($enquiryShopBtn.length) {
-              $directCheckoutBtn.after($enquiryShopBtn);
+              $quickCheckoutBtn.after($enquiryShopBtn);
             }
             return;
           }
@@ -240,6 +241,7 @@ jQuery(document).ready(function ($) {
           setTimeout(function () {
             $('.qeus-notice').fadeOut();
             $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+            $("body").removeClass("qeus-modal-open");
           }, 6000);
         } else {
           $('.qeus-notice .qeus-response-message').text(response.data.message).css({

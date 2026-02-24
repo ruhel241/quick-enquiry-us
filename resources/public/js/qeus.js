@@ -1,4 +1,6 @@
 jQuery(document).ready(function ($) {
+    var QuickEnquiryUsPublicVarsSettings = QuickEnquiryUsPublicVars.quick_enquiry_us_settings.settings;
+
     var isLoading = false;
     function showLoading() {
         isLoading = true;
@@ -31,9 +33,9 @@ jQuery(document).ready(function ($) {
                 let $viewProduct = $parentProduct.find('.button.product_type_variable, .button.product_type_external, .product_type_grouped');
 
                 setTimeout(() => {
-                    let $qvpuWrapper       = $parentProduct.find('.qvpu-add-to-cart-wrapper');
-                    let $directCheckoutBtn = $parentProduct.find('.qeus-direct-checkout-button');
-                    let $enquiryShopBtn    = $parentProduct.find('.qeus-quick-enquiry-us-button');
+                    let $qvpuWrapper      = $parentProduct.find('.qvpu-add-to-cart-wrapper');
+                    let $quickCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
+                    let $enquiryShopBtn   = $parentProduct.find('.qeus-quick-enquiry-us-button');
 
                     /** ---------------------------------------------
                      * CASE 1: Wrapper already exists quick view
@@ -49,9 +51,9 @@ jQuery(document).ready(function ($) {
                      * CASE 2: Wrapper already exists for direct checkout
                      * --------------------------------------------- */
 
-                    if ($directCheckoutBtn.length) {
+                    if ($quickCheckoutBtn.length) {
                         if ($enquiryShopBtn.length) {
-                            $directCheckoutBtn.after($enquiryShopBtn);
+                            $quickCheckoutBtn.after($enquiryShopBtn);
                         }
                         return;
                     }
@@ -59,7 +61,7 @@ jQuery(document).ready(function ($) {
                     /** ---------------------------------------------
                      * CASE 3: Create new wrapper
                      * --------------------------------------------- */
-
+    
                     let $newWrapper = $('<div class="qeus-add-to-cart-wrapper"></div>');
 
                     if ($addToCart.length) {
@@ -257,6 +259,7 @@ jQuery(document).ready(function ($) {
                     setTimeout(function () {
                         $('.qeus-notice').fadeOut();
                         $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+                        $("body").removeClass("qeus-modal-open");
                     }, 6000);
                 } else {
                     $('.qeus-notice .qeus-response-message').text(response.data.message).css({'color': 'red', 'border-left': '4px solid red'});

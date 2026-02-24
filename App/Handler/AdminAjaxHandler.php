@@ -4,6 +4,7 @@ namespace QuickEnquiryUs\App\Handler;
 
 use QuickEnquiryUs\App\Settings;
 use QuickEnquiryUs\App\Models\QuickEnquiryUs;
+use QuickEnquiryUs\App\Helpers\SanitizeValidation;
 
 class AdminAjaxHandler
 {
@@ -25,18 +26,18 @@ class AdminAjaxHandler
 
         $route = sanitize_text_field(wp_unslash($_REQUEST['route'] ?? ''));
 
-        // Sanitize all incoming inputs
-        $validatedData = $this->validateRequestData($_REQUEST);
+        // Sanitize all incoming inputs and route, nonce, data validated to handlers
+        $validatedData = (new SanitizeValidation)->validateRequestData($_REQUEST);
 
         $routes = [
-            'get_settings'            => 'getSettings',
-            'save_settings'           => 'saveSettings',
-            'enable_active_module'    => 'enableActiveModule',
-            'get_active_module'       => 'getActiveModule',
-            'reset_settings'          => 'resetSettings',
-            'get_quick_enquiry_us_details'  => 'getQuickEnquiryUsDetails',
+            'get_settings'                     => 'getSettings',
+            'save_settings'                    => 'saveSettings',
+            'enable_active_module'             => 'enableActiveModule',
+            'get_active_module'                => 'getActiveModule',
+            'reset_settings'                   => 'resetSettings',
+            'get_quick_enquiry_us_details'     => 'getQuickEnquiryUsDetails',
             'get_quick_enquiry_us_detail_view' => 'getDetailView',
-            'maybe_delete_details'    => 'maybeDeleteDetails',
+            'maybe_delete_details'             => 'maybeDeleteDetails',
         ];
 
         if (isset($routes[$route])) {
@@ -45,67 +46,6 @@ class AdminAjaxHandler
         }
 
         do_action('quick-enquiry-us/qeus_public_ajax_handler_catch', $route);
-    }
-
-     /**
-     * Validate and sanitize all request data
-     */
-    private function validateRequestData($requestData)
-    {
-        $validated = [];
-        $skipKeys  = ['nonce', 'route'];
-
-        // ✅ textarea fields ONLY if explicitly sent
-        $textareaFields = isset($requestData['textarea_fields']) && is_array($requestData['textarea_fields']) ? $requestData['textarea_fields'] : [];
-
-        foreach ($requestData as $key => $value) {
-
-            if (in_array($key, $skipKeys, true)) {
-                continue;
-            }
-
-            // ❌ never save textarea_fields itself
-            if ($key === 'textarea_fields') {
-                continue;
-            }
-
-            if (is_array($value)) {
-                $validated[$key] = $this->sanitizeArrayData($value, $textareaFields);
-
-            } elseif (is_numeric($value)) {
-                $validated[$key] = $value + 0;
-
-            } else {
-                // ❌ no textarea_fields → no HTML
-                $validated[$key] = sanitize_text_field(wp_unslash($value));
-            }
-        }
-
-        return $validated;
-    }
-
-    /**
-     * Recursive array sanitization
-     */
-    private function sanitizeArrayData(array $array, array $textareaFields)
-    {
-        $sanitized = [];
-
-        foreach ( $array as $key => $value ) {
-
-            if ( is_array($value) ) {
-                $sanitized[$key] = $this->sanitizeArrayData($value, $textareaFields);
-            } elseif ( is_numeric($value) ) {
-                $sanitized[$key] = $value + 0;
-            } elseif ( !empty($textareaFields) && in_array($key, $textareaFields, true) ) {
-                // ✅ textarea field → allow HTML
-                $sanitized[$key] = wp_kses_post(wp_unslash($value));
-            } else {
-                $sanitized[$key] = sanitize_text_field(wp_unslash($value));
-            }
-        }
-
-        return $sanitized;
     }
 
     public function getSettings($request)

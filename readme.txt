@@ -1,20 +1,30 @@
 === Quick Enquiry Us ===
 Contributors: ruhel241, wpcreativeidea
-Tags: hide add to cart button, woocommerce hide price, add to cart, woocommerce, add to cart.
+Tags: woocommerce enquiry, product enquiry, whatsapp enquiry, sms enquiry, contact form
 Requires at least: 4.5
 Requires PHP: 5.4 or greater
-Tested up to: 6.2
+Tested up to: 6.9
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-Add to cart button customization for woocommerce, button color, button font size, button radius, and added button icon, etc.
-Hide add to cart button on a single product, Hide add to cart button on the shop page, woocommerce price hide on single product and shop page.
-Add to cart button text change in single product and shop page. There are Global Settings options you can set add to cart button hide on the shop page, single page, or global page.
-You can set add an icon on add to cart button text before or after.
+Quick Enquiry Us for WooCommerce allows customers to contact store owners instantly using an Enquiry Form, WhatsApp, or SMS, without adding products to the cart.
 
+This plugin helps WooCommerce store owners receive quick product enquiries, improve customer communication, and increase conversions by making it easier for customers to ask questions before purchase.
+
+
+🔑 Key Features:
+
+* 📩 Product Enquiry Form submission
+* 💬 Contact on WhatsApp
+* 📱 Send SMS option
+* 🧩 WooCommerce compatible
+* 🎨 Clean and modern popup UI
+* ⚡ Easy setup and lightweight
+
+Perfect for stores that want faster customer interaction and better pre-sale support.
 
 == Installation ==
 
@@ -44,50 +54,40 @@ We people behind this plugin provide support through WordPress forums and we pro
 = Why Woocommerce Website owner should use this plugin =
 This is the most advanced and effective pluging in the market.
 
-= Can I hide add to cart button for any specific product? =
-Yes, you can Hide add to cart button without having coding skill.
+= How does the enquiry form work? =
 
-= Can I hide Add to cart button Shop page =
-Yes, You can hide Add to cart button for shop page.
+Customers can submit an enquiry directly from the product page using the enquiry form popup. The enquiry is sent to the admin email.
 
-= Can I hide Add to cart button specific product =
-Yes, You can hide Add to cart button for single product.
+= Does this plugin support WhatsApp and SMS? =
 
-= Can I hide Add to cart button Global product =
-Yes, You can hide Add to cart button for Shop products, Single Product.
+Yes. Customers can contact you instantly via WhatsApp or SMS, based on the options you enable.
 
-= Can I hide Price with this plugin =
-Yes, you can easily Hide price with this plugin
+= Is this plugin compatible with WooCommerce? =
 
-= Can I change the Add to cart button text specific product  =
-Yes, you can change Add to cart button text specific product with this plugin.
+Yes, this plugin is fully compatible with WooCommerce.
 
-= Can I add icon add to cart button  =
-Yes, you can add icon “Add to cart button”.
+= Does this plugin receive regular updates? =
 
-= Can I icon position set  =
-Yes, you can set icon position left or right.
+Yes. We regularly improve the plugin and add new features based on user feedback.
+
+= How do you provide support? =
+
+Support is provided through the WordPress support forum and email support.
 
 
 == Screenshots ==
 
-1. Add to cart Button background color.
-2. Button Hover color.
-3. Added Icon "Add to cart" button & Icon Left side.
-4. Icon Right side
-5. Button border width & radius
-6. Hide "Add to cart" button on Shop Products
-7. Hide "Add to cart" button on Single Product.
-8. Hide Price & Hide Button.
-9. Admin Product Page.
-10. Button Hide Settings
-11. Add to cart button color customization
-
+1. Enquiry Form Popup
+2. WhatsApp & SMS Contact Options
+3. Product Page Enquiry Button
+4. Admin Settings Panel
 
 == Changelog ==
 
 = 1.0.0 =
-
 * Init First version
 
 == Upgrade Notice ==
+
+= 1.0.0 =
+Initial stable release of Quick Enquiry Us for WooCommerce.

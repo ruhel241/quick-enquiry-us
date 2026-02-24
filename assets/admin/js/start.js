@@ -681,12 +681,7 @@ __webpack_require__.r(__webpack_exports__);
         action_type: type,
         nonce: window.QuickEnquiryUsAdminVars.nonce
       }).then(function (response) {
-        _this4.$notify({
-          title: "Sucess",
-          message: response.data.message,
-          type: "success",
-          offset: 40
-        });
+        _this4.$handleSuccess(response.data.message);
         _this4.getQuickEnquiryUs();
       }).fail(function (error) {
         _this4.$handleError(error);
@@ -1057,10 +1052,12 @@ var render = function render() {
   }, [_c("iframe", {
     attrs: {
       width: "100%",
-      height: "450",
-      src: "https://www.youtube.com/embed/UPGtOEsY2kI",
-      title: "Plugin Documentation Video",
+      height: "550",
+      src: "https://www.youtube.com/embed/jhPquLtObTc?si=VH3SLsDmzl_hS4gB",
+      title: "YouTube video player",
       frameborder: "0",
+      allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+      referrerpolicy: "strict-origin-when-cross-origin",
       allowfullscreen: ""
     }
   })]), _vm._v(" "), _c("p", {
@@ -1435,7 +1432,7 @@ var render = function render() {
       }
     }
   }, [_c("div", {
-    staticClass: "qeus-module-dialog-content"
+    staticClass: "qeus-module-dialog-content text-align-center"
   }, [_c("div", {
     staticClass: "icon-container"
   }, [_c("div", {
@@ -1789,7 +1786,7 @@ var render = function render() {
   })], 1), _vm._v(" "), _c("el-dialog", {
     attrs: {
       visible: _vm.showDisableDialog,
-      width: "40%",
+      width: "45%",
       "close-on-click-modal": true,
       "close-on-press-escape": true,
       "show-close": true,
@@ -1805,96 +1802,45 @@ var render = function render() {
     staticClass: "qeus-module-dialog-content"
   }, [_c("div", {
     staticClass: "dialog-text"
-  }, [_c("h3", [_vm._v("Quick Enquiry US Details")]), _vm._v(" "), _c("el-row", {
-    staticClass: "detail-row",
-    attrs: {
-      gutter: 14
-    }
-  }, [_vm.detail.name ? [_c("el-col", {
-    staticClass: "label",
-    attrs: {
-      span: 8
-    }
-  }, [_vm._v("Name:")]), _vm._v(" "), _c("el-col", {
-    staticClass: "value",
-    attrs: {
-      span: 16
-    }
-  }, [_vm._v(_vm._s(_vm.detail.name))])] : _vm._e(), _vm._v(" "), _vm.detail.email ? [_c("el-col", {
-    staticClass: "label",
-    attrs: {
-      span: 8
-    }
-  }, [_vm._v("Email:")]), _vm._v(" "), _c("el-col", {
-    staticClass: "value",
-    attrs: {
-      span: 16
-    }
-  }, [_vm._v(_vm._s(_vm.detail.email))])] : _vm._e(), _vm._v(" "), _vm.detail.enquiry ? [_c("el-col", {
-    staticClass: "label",
-    attrs: {
-      span: 8
-    }
-  }, [_vm._v("Enquiry:")]), _vm._v(" "), _c("el-col", {
-    staticClass: "value",
-    attrs: {
-      span: 16
-    }
-  }, [_vm._v(_vm._s(_vm.detail.enquiry))])] : _vm._e(), _vm._v(" "), _vm.detail.phone_number ? [_c("el-col", {
-    staticClass: "label",
-    attrs: {
-      span: 8
-    }
-  }, [_vm._v("Phone Number:")]), _vm._v(" "), _c("el-col", {
-    staticClass: "value",
-    attrs: {
-      span: 16
-    }
-  }, [_vm._v(_vm._s(_vm.detail.phone_number))])] : _vm._e(), _vm._v(" "), _vm.detail.type ? [_c("el-col", {
-    staticClass: "label",
-    attrs: {
-      span: 8
-    }
-  }, [_vm._v("Type:")]), _vm._v(" "), _c("el-col", {
-    staticClass: "value",
-    attrs: {
-      span: 16
-    }
-  }, [_vm._v(_vm._s(_vm.detail.type))])] : _vm._e(), _vm._v(" "), _vm.detail.status ? [_c("el-col", {
-    staticClass: "label",
-    attrs: {
-      span: 8
-    }
-  }, [_vm._v("Status:")]), _vm._v(" "), _c("el-col", {
-    staticClass: "value",
-    attrs: {
-      span: 16
-    }
-  }, [_vm._v(_vm._s(_vm.detail.status))])] : _vm._e(), _vm._v(" "), _vm.detail.subscribe ? [_c("el-col", {
-    staticClass: "label",
-    attrs: {
-      span: 8
-    }
-  }, [_vm._v("Subscribe:")]), _vm._v(" "), _c("el-col", {
-    staticClass: "value",
-    attrs: {
-      span: 16
-    }
-  }, [_vm._v(_vm._s(_vm.detail.subscribe))])] : _vm._e(), _vm._v(" "), _vm.hasProduct(_vm.detail) ? [_c("el-col", {
-    staticClass: "label",
-    attrs: {
-      span: 8
-    }
-  }, [_vm._v("Product Title:")]), _vm._v(" "), _c("el-col", {
-    staticClass: "value",
-    attrs: {
-      span: 16
-    }
+  }, [_c("h3", [_vm._v("Quick Enquiry US Details")]), _vm._v(" "), _c("table", {
+    staticClass: "qeus-table"
+  }, [_c("tbody", [_vm.detail.name ? _c("tr", [_c("td", {
+    staticClass: "label"
+  }, [_vm._v("Name")]), _vm._v(" "), _c("td", {
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.detail.name))])]) : _vm._e(), _vm._v(" "), _vm.detail.email ? _c("tr", [_c("td", {
+    staticClass: "label"
+  }, [_vm._v("Email")]), _vm._v(" "), _c("td", {
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.detail.email))])]) : _vm._e(), _vm._v(" "), _vm.detail.enquiry ? _c("tr", [_c("td", {
+    staticClass: "label"
+  }, [_vm._v("Enquiry")]), _vm._v(" "), _c("td", {
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.detail.enquiry))])]) : _vm._e(), _vm._v(" "), _vm.detail.phone_number ? _c("tr", [_c("td", {
+    staticClass: "label"
+  }, [_vm._v("Phone Number")]), _vm._v(" "), _c("td", {
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.detail.phone_number))])]) : _vm._e(), _vm._v(" "), _vm.detail.type ? _c("tr", [_c("td", {
+    staticClass: "label"
+  }, [_vm._v("Type")]), _vm._v(" "), _c("td", {
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.detail.type))])]) : _vm._e(), _vm._v(" "), _vm.detail.status ? _c("tr", [_c("td", {
+    staticClass: "label"
+  }, [_vm._v("Status")]), _vm._v(" "), _c("td", {
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.detail.status))])]) : _vm._e(), _vm._v(" "), _vm.detail.subscribe ? _c("tr", [_c("td", {
+    staticClass: "label"
+  }, [_vm._v("Subscribe")]), _vm._v(" "), _c("td", {
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.detail.subscribe))])]) : _vm._e(), _vm._v(" "), _vm.hasProduct(_vm.detail) ? _c("tr", [_c("td", {
+    staticClass: "label"
+  }, [_vm._v("Product Title")]), _vm._v(" "), _c("td", {
+    staticClass: "value"
   }, [_c("span", {
     domProps: {
       innerHTML: _vm._s(_vm.getProductHtml(_vm.detail))
     }
-  })])] : _vm._e()], 2)], 1)])])]], 2)]);
+  })])]) : _vm._e()])])])])])]], 2)]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -1954,7 +1900,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "enable the shop page",
+      content: "Enable the shop page",
       placement: "top"
     }
   }, [_c("i", {
@@ -2069,7 +2015,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "enable the single page",
+      content: "Enable the single page",
       placement: "top"
     }
   }, [_c("i", {
@@ -2232,27 +2178,27 @@ var render = function render() {
     staticClass: "setting-row"
   }, [_c("span", {
     staticClass: "setting-label"
-  }, [_vm._v("Enquiry From Tab")]), _vm._v(" "), _c("el-switch", {
+  }, [_vm._v("Enquiry Form Tab")]), _vm._v(" "), _c("el-switch", {
     attrs: {
-      "active-text": "Enable Enquiry From Tab",
+      "active-text": "Enable Enquiry Form Tab",
       "active-value": "yes",
       "inactive-value": "no"
     },
     on: {
       change: function change(value) {
-        return _vm.changeHandler("enquiry_from_tab_enable", value);
+        return _vm.changeHandler("enquiry_form_tab_enable", value);
       }
     },
     model: {
-      value: _vm.settings.enquiry_from_tab_enable,
+      value: _vm.settings.enquiry_form_tab_enable,
       callback: function callback($$v) {
-        _vm.$set(_vm.settings, "enquiry_from_tab_enable", $$v);
+        _vm.$set(_vm.settings, "enquiry_form_tab_enable", $$v);
       },
-      expression: "settings.enquiry_from_tab_enable"
+      expression: "settings.enquiry_form_tab_enable"
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "enable the enquiry from Tab",
+      content: "Enable the enquiry from Tab",
       placement: "top"
     }
   }, [_c("i", {
@@ -2281,7 +2227,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "enable the WhatsApp Tab",
+      content: "Enable the WhatsApp Tab",
       placement: "top"
     }
   }, [_c("i", {
@@ -2310,12 +2256,12 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "enable the SMS Tab",
+      content: "Enable the SMS Tab",
       placement: "top"
     }
   }, [_c("i", {
     staticClass: "el-icon-question"
-  })])], 1)]), _vm._v(" "), _vm.settings.enquiry_from_tab_enable === "yes" ? _c("div", {
+  })])], 1)]), _vm._v(" "), _vm.settings.enquiry_form_tab_enable === "yes" ? _c("div", {
     staticClass: "qeus-settings-content"
   }, [_vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "setting-row"
@@ -2534,7 +2480,7 @@ var render = function render() {
       }
     }), _vm._v(" "), _c("el-tooltip", {
       attrs: {
-        content: "Change the text in stock button text",
+        content: "Add the receiver name and WhatsApp number",
         placement: "top"
       }
     }, [_c("i", {
@@ -2560,7 +2506,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "Change the text in stock button text",
+      content: "Change the button text",
       placement: "top"
     }
   }, [_c("i", {
@@ -2590,7 +2536,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "Change the text in stock button text",
+      content: "You can use {receiver_name}, {title}, {url} as a placeholder.",
       placement: "top"
     }
   }, [_c("i", {
@@ -2918,7 +2864,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "enable the cart page",
+      content: "Enable the cart page",
       placement: "top"
     }
   }, [_c("i", {
@@ -2974,7 +2920,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "enable the order summary",
+      content: "Enable the order summary",
       placement: "top"
     }
   }, [_c("i", {

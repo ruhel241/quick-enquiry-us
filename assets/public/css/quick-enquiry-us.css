@@ -99,7 +99,7 @@ body.qeus-modal-open {
 }
 .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab {
   flex: 1;
-  padding: 14px 10px;
+  /* padding: 14px 10px; */
   border: none;
   background: white;
   font-size: 15px;
@@ -107,6 +107,14 @@ body.qeus-modal-open {
   color: #666;
   border-bottom: 3px solid transparent;
   text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab.active {
   color: #3b3bff;
@@ -145,7 +153,23 @@ body.qeus-modal-open {
   font-weight: 600;
 }
 .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.whatsapp {
-  background: #25d366;
+  background: #25D366;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.whatsapp:hover {
+  background: #1ebe5d;
+  transform: translateY(-3px);
 }
 .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.sms {
   background: #2196f3;
@@ -329,4 +353,23 @@ dt.variation-nbsp:has(+ dd .qeus-quick-enquiry-us-button) {
 
 .single-product .single_add_to_cart_button {
   margin-right: 10px !important;
+}
+
+@media only screen and (max-width: 600px) {
+  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content {
+    width: 95%;
+  }
+  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs {
+    flex-direction: column;
+  }
+  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab {
+    width: 100%;
+  }
+  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab.active {
+    border-bottom-color: transparent;
+  }
+  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-enquire-form .qeus-subscribe-field {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
 }

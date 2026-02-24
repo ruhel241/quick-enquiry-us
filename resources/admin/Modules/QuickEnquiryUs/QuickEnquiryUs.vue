@@ -20,7 +20,7 @@
         :show-close="true"
         custom-class="qeus-module-disable-dialog"
         center>
-      <div class="qeus-module-dialog-content">
+      <div class="qeus-module-dialog-content text-align-center">
         <!-- Icon Container with Gradient Background -->
         <div class="icon-container">
           <div class="warning-circle">

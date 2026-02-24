@@ -73,6 +73,7 @@ class ActionHandler
         $qeusActiveModule = get_option('qeus_active_module', []);
 
         if (isset($qeusActiveModule['quick_enquiry_us_module']) && $qeusActiveModule['quick_enquiry_us_module'] == 'yes') {
+            include 'FrontendHandler.php';    
             $FrontendHandler = new FrontendHandler;
             $FrontendHandler->register();
         } 
