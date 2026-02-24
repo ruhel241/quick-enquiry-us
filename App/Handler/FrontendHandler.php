@@ -4,6 +4,7 @@ namespace QuickEnquiryUs\App\Handler;
 
 use QuickEnquiryUs\App\Helpers\ArrayHelper as Arr;
 use QuickEnquiryUs\App\Models\QuickEnquiryUs;
+use QuickEnquiryUs\App\Helpers\SanitizeValidation;
 
 class FrontendHandler
 {
@@ -277,8 +278,8 @@ class FrontendHandler
 
         $route = sanitize_text_field(wp_unslash($_REQUEST['route'] ?? ''));
 
-        // Sanitize all incoming inputs
-        $validatedData = $this->validateRequestData($_REQUEST);
+        // Sanitize all incoming inputs and route, nonce, data validated to handlers
+        $validatedData = (new SanitizeValidation)->validateRequestData($_REQUEST);
 
         $routes = [
             'qeus_quick_enquiry_us_details' => 'quickEnquiryUsDetails',
@@ -291,51 +292,6 @@ class FrontendHandler
         }
 
         do_action('quick-enquiry-us/qeus_quick_enquiry_us_public_ajax_handler_catch', $route);
-    }
-
-    /**
-     * Validate and sanitize all request data
-     */
-    private function validateRequestData($requestData)
-    {
-        $validated = [];
-        $skipKeys = ['nonce', 'route'];
-
-        foreach ($requestData as $key => $value) {
-            if (in_array($key, $skipKeys, true)) {
-                continue;
-            }
-
-            if (is_array($value)) {
-                $validated[$key] = $this->sanitizeArrayData($value);
-            } elseif (is_numeric($value)) {
-                $validated[$key] = $value + 0;
-            } else {
-                $validated[$key] = sanitize_text_field(wp_unslash($value));
-            }
-        }
-
-        return $validated;
-    }
-
-    /**
-     * Recursive array sanitization
-     */
-    private function sanitizeArrayData($array)
-    {
-        $sanitized = [];
-
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $sanitized[$key] = $this->sanitizeArrayData($value);
-            } elseif (is_numeric($value)) {
-                $sanitized[$key] = $value + 0;
-            } else {
-                $sanitized[$key] = sanitize_text_field(wp_unslash($value));
-            }
-        }
-
-        return $sanitized;
     }
 
     /**
@@ -586,7 +542,7 @@ class FrontendHandler
                 <input type="email" name="email"
                     id="qeus-email-<?php echo esc_attr($tab);?>"
                     placeholder="Email Address"
-                    value="<?php echo 'admin@gmail.com';//esc_attr($userEmail); ?>"
+                    value="<?php echo esc_attr($userEmail); ?>"
                     <?php echo ($tab == 'email') ? 'required' : ''; ?>>
             </div>
             <div class="qeus-form-field">

@@ -2,7 +2,7 @@
 
 namespace QuickEnquiryUs\App\Helpers;
 
-class sanitizeValidation
+class SanitizeValidation
 {
      /**
      * Validate and sanitize all request data

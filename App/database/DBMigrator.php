@@ -30,7 +30,7 @@ class DBMigrator
 
     private static function migrate()
     {
-        require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'app/Modules/QuickEnquiryUs/database/Migrations/QuickEnquiryUsMigrator.php');
+        require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/database/Migrations/QuickEnquiryUsMigrator.php');
         
         QuickEnquiryUsMigrator::migrate();
     }

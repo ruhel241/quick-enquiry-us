@@ -11,7 +11,7 @@ include 'App/Handler/AdminAjaxHandler.php';
 include 'App/Handler/LicenseHandler.php';
 // Helpers
 include 'App/Helpers/ArrayHelper.php';
-include 'App/Helpers/sanitizeValidation.php';
+include 'App/Helpers/SanitizeValidation.php';
 // Settings
 include 'App/Settings.php';
 // Services
