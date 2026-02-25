@@ -604,7 +604,7 @@ __webpack_require__.r(__webpack_exports__);
     confirmView: function confirmView(id) {
       var _this = this;
       this.showDisableDialog = true;
-      // this.loading = true;
+      this.loading = true;
       this.$get({
         action: "qeus_admin_ajax",
         route: "get_quick_enquiry_us_detail_view",
@@ -615,7 +615,9 @@ __webpack_require__.r(__webpack_exports__);
       }).fail(function (error) {
         _this.$handleError(error);
       }).always(function () {
-        // setTimeout(() => { this.loading = false; }, 500);
+        setTimeout(function () {
+          _this.loading = false;
+        }, 500);
       });
     },
     cancelDisable: function cancelDisable() {
@@ -1441,7 +1443,7 @@ var render = function render() {
     staticClass: "el-icon-warning-outline"
   })])]), _vm._v(" "), _c("div", {
     staticClass: "dialog-text"
-  }, [_c("h3", [_vm._v("Disable Quick Enquiry US?")]), _vm._v(" "), _c("p", [_vm._v("This action will disable the module completely."), _c("br"), _vm._v("Users won't see the enquire us functionality on your frontend.")])]), _vm._v(" "), _c("div", {
+  }, [_c("h3", [_vm._v("Disable Quick Enquiry Us ?")]), _vm._v(" "), _c("p", [_vm._v("This action will disable the module completely."), _c("br"), _vm._v("Users won't see the enquire us functionality on your frontend.")])]), _vm._v(" "), _c("div", {
     staticClass: "dialog-actions"
   }, [_c("el-button", {
     staticClass: "cancel-btn",
@@ -1803,7 +1805,16 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "dialog-text"
   }, [_c("h3", [_vm._v("Quick Enquiry US Details")]), _vm._v(" "), _c("table", {
-    staticClass: "qeus-table"
+    directives: [{
+      name: "loading",
+      rawName: "v-loading",
+      value: _vm.loading,
+      expression: "loading"
+    }],
+    staticClass: "qeus-table",
+    attrs: {
+      "element-loading-spinner": "el-icon-loading"
+    }
   }, [_c("tbody", [_vm.detail.name ? _c("tr", [_c("td", {
     staticClass: "label"
   }, [_vm._v("Name")]), _vm._v(" "), _c("td", {

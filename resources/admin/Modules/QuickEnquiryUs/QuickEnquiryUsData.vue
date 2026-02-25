@@ -124,7 +124,7 @@
           <div class="qeus-module-dialog-content">
             <div class="dialog-text">
               <h3>Quick Enquiry US Details</h3>
-              <table class="qeus-table">
+              <table class="qeus-table" v-loading="loading" element-loading-spinner="el-icon-loading">
                 <tbody>
                   <tr v-if="detail.name">
                     <td class="label">Name</td>
@@ -251,7 +251,7 @@ import TableSelections from './_TableSelectionHandler.vue';
       },
       confirmView(id) {
         this.showDisableDialog = true;
-        // this.loading = true;
+        this.loading = true;
         this.$get({
           action: "qeus_admin_ajax",
           route: "get_quick_enquiry_us_detail_view",
@@ -265,7 +265,7 @@ import TableSelections from './_TableSelectionHandler.vue';
               this.$handleError(error);
             })
             .always(() => {
-              // setTimeout(() => { this.loading = false; }, 500);
+              setTimeout(() => { this.loading = false; }, 500);
             });
       },
       cancelDisable() {

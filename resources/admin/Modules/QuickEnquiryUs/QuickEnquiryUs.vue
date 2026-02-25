@@ -29,7 +29,7 @@
         </div>
         <!-- Content -->
         <div class="dialog-text">
-          <h3>Disable Quick Enquiry US?</h3>
+          <h3>Disable Quick Enquiry Us ?</h3>
           <p>This action will disable the module completely.<br/>Users won't see the enquire us functionality on your frontend.</p>
         </div>
         <!-- Action Buttons -->
