@@ -13,7 +13,7 @@ if (! function_exists('QuickEnquiryUsDB')) {
         if (! $QuickEnquiryUsDB) {
             global $wpdb;
 
-            $connection = new WpFluent\Connection($wpdb, ['prefix' => $wpdb->prefix]);
+            $connection = new \WpFluent\Connection($wpdb, ['prefix' => $wpdb->prefix]);
 
             $QuickEnquiryUsDB = new \WpFluent\QueryBuilder\QueryBuilderHandler($connection);
         }

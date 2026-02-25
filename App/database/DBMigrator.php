@@ -1,9 +1,9 @@
 <?php
 
-namespace QuickEnquiryUs\App\database;
+namespace QuickEnquiryUs\App\Database;
 
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-use QuickEnquiryUs\App\database\Migrations\QuickEnquiryUsMigrator;
+use QuickEnquiryUs\App\Database\Migrations\QuickEnquiryUsMigrator;
 
 class DBMigrator
 {
@@ -30,7 +30,7 @@ class DBMigrator
 
     private static function migrate()
     {
-        require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/database/Migrations/QuickEnquiryUsMigrator.php');
+        require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Database/Migrations/QuickEnquiryUsMigrator.php');
         
         QuickEnquiryUsMigrator::migrate();
     }

@@ -2,14 +2,14 @@
 
 namespace QuickEnquiryUs\App\Handler;
 use QuickEnquiryUs\App\Settings;
-use QuickEnquiryUs\App\database\DBMigrator;
+use QuickEnquiryUs\App\Database\DBMigrator;
 
 class ActivationHandler
 {
     public function activate($network_wide)
     {
         require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Settings.php');
-        require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/database/DBMigrator.php');
+        require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Database/DBMigrator.php');
         
         update_option('qeus_version', QUICK_ENQUIRY_US_PLUGIN_VERSION, 'no');
 

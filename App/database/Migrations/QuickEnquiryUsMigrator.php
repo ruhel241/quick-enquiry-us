@@ -1,6 +1,6 @@
 <?php
 
-namespace QuickEnquiryUs\App\database\Migrations;
+namespace QuickEnquiryUs\App\Database\Migrations;
 
 class QuickEnquiryUsMigrator
 {

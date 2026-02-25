@@ -1,14 +1,16 @@
 <?php
-
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 if (!function_exists('QuickEnquiryUsQuery')) {
     function QuickEnquiryUsQuery()
     {
-        if (!function_exists('QuickEnquiryUsDB')) {
-            require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'app/Libs/wp-fluent/wp-fluent.php';
+        // Load wp-fluent only once
+        if (!class_exists('\WpFluent\QueryBuilder\QueryBuilderHandler')) {
+            require_once QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Libs/wp-fluent/wp-fluent.php';
         }
-       
+
         return QuickEnquiryUsDB();
     }
 }
