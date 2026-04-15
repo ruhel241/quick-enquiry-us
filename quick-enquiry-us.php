@@ -28,8 +28,11 @@ class WooQuickEnquiryUsLite
         if (defined('QUICK_SHOP_BUNDLE_PLUGIN')) {
             return;
         }
+      
+        // Global Functions
+        include 'App/Helpers/global_functions.php';
 
-        include_once 'load.php';
+        require_once __DIR__ . '/vendor/autoload.php';
 
         if (!$this->is_woocommerce_active()) {
             add_action('admin_notices', array($this, 'woocommerce_missing_notice'));

@@ -1,0 +1,17 @@
+{
+  "name": "wpcreativeidea/quick-enquiry-us",
+  "description": "Quick Enquiry Us for WooCommerce",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "wpcreativeidea",
+      "email": "wpcreativeidea@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "QuickEnquiryUs\\App\\": "App/"
+    }
+  }
+}
