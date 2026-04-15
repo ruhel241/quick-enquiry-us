@@ -12,6 +12,9 @@
   "autoload": {
     "psr-4": {
       "QuickEnquiryUs\\App\\": "App/"
-    }
+    },
+    "exclude-from-classmap": [
+      "App/Libs/wp-fluent/"
+    ]
   }
 }
