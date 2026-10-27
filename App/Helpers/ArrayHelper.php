@@ -1,8 +1,8 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs\Helpers;
+namespace Ruhel241\QuickEnquiryUs\Helpers;
 
-//use WPCreativeIdea\QuickEnquiryUs\Helpers\ArrayAccess;
+//use Ruhel241\QuickEnquiryUs\Helpers\ArrayAccess;
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs\Handler;
-use WPCreativeIdea\QuickEnquiryUs\Settings;
-use WPCreativeIdea\QuickEnquiryUs\Database\DBMigrator;
+namespace Ruhel241\QuickEnquiryUs\Handler;
+use Ruhel241\QuickEnquiryUs\Settings;
+use Ruhel241\QuickEnquiryUs\Database\DBMigrator;
 
 class ActivationHandler
 {

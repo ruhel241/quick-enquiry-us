@@ -1,10 +1,10 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs\Handler;
+namespace Ruhel241\QuickEnquiryUs\Handler;
 
-use WPCreativeIdea\QuickEnquiryUs\Settings;
-use WPCreativeIdea\QuickEnquiryUs\Models\QuickEnquiryUs;
-use WPCreativeIdea\QuickEnquiryUs\Helpers\SanitizeValidation;
+use Ruhel241\QuickEnquiryUs\Settings;
+use Ruhel241\QuickEnquiryUs\Models\QuickEnquiryUs;
+use Ruhel241\QuickEnquiryUs\Helpers\SanitizeValidation;
 
 class AdminAjaxHandler
 {

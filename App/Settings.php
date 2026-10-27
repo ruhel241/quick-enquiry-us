@@ -1,6 +1,6 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs;
+namespace Ruhel241\QuickEnquiryUs;
 
 class Settings
 {

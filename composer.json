@@ -1,18 +1,18 @@
 
 {
-    "name": "wpcreativeidea/quick-enquiry-us",
+    "name": "ruhel241/quick-enquiry-us",
     "description": "Quick Enquiry Us for WooCommerce",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "wpcreativeidea",
-            "email": "wpcreativeidea@gmail.com"
+            "name": "ruhel241",
+            "email": "ruhel241@gmail.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "WPCreativeIdea\\QuickEnquiryUs\\": "App/"
+            "Ruhel241\\QuickEnquiryUs\\": "App/"
         },
         "exclude-from-classmap": [
             "App/Libs/wp-fluent/"

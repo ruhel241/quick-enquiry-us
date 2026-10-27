@@ -1,6 +1,6 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs\Models;
+namespace Ruhel241\QuickEnquiryUs\Models;
 
 class QuickEnquiryUs {
 

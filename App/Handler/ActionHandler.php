@@ -1,7 +1,7 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs\Handler;
-use WPCreativeIdea\QuickEnquiryUs\Handler\FrontendHandler;
+namespace Ruhel241\QuickEnquiryUs\Handler;
+use Ruhel241\QuickEnquiryUs\Handler\FrontendHandler;
 
 class ActionHandler
 {

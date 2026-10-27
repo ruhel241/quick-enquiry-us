@@ -1,5 +1,5 @@
 === Quick Enquiry Us ===
-Contributors: ruhel241, wpcreativeidea
+Contributors: ruhel241
 Tags: product enquiry, whatsapp enquiry, sms enquiry, contact form, woocommerce enquiry
 Requires at least: 6.0
 Tested up to: 7.1

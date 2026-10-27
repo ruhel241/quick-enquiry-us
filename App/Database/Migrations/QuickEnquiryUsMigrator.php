@@ -1,6 +1,6 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs\Database\Migrations;
+namespace Ruhel241\QuickEnquiryUs\Database\Migrations;
 
 class QuickEnquiryUsMigrator
 {

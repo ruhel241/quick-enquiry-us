@@ -2,13 +2,13 @@
 
 /*
 Plugin Name: Quick Enquiry Us
-Description: The Best Quick Enquiry Us Plugin for WooCommerce.
+Description: A simple product enquiry plugin for WooCommerce with WhatsApp, SMS, and enquiry form support.
 Version: 1.0.0
 Requires at least: 6.0
 Requires PHP: 7.4
-Author: wpcreativeidea
-Author URI: https://wpcreativeidea.com/home
-Plugin URI: https://wpcreativeidea.com/quick-enquiry-us
+Author: ruhel241
+Author URI: https://wpcreativeidea.com/
+Plugin URI: https://wpcreativeidea.com/quick-enquiry-us-for-woocommerce/
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: quick-enquiry-us
@@ -67,13 +67,13 @@ class WooQuickEnquiryUsLite
     public function adminHooks()
     {
        // woocommerce settings page add Quick Enquiry Us settings tab
-        add_filter( 'woocommerce_get_settings_pages', array('WPCreativeIdea\QuickEnquiryUs\Classes\Customization', 'quickEnquiryUsAddSettings'), 15, 1 );
+        add_filter( 'woocommerce_get_settings_pages', array('Ruhel241\QuickEnquiryUs\Classes\Customization', 'quickEnquiryUsAddSettings'), 15, 1 );
     
-        $ajaxAdminAjaxHandler = new WPCreativeIdea\QuickEnquiryUs\Handler\AdminAjaxHandler();
+        $ajaxAdminAjaxHandler = new Ruhel241\QuickEnquiryUs\Handler\AdminAjaxHandler();
         $ajaxAdminAjaxHandler->registerEndpoints();
         
-        if ( defined('QEUS_PRO') && class_exists( \WPCreativeIdea\QuickEnquiryUsPro\Classes\LicenseController::class ) ) {
-            $licenseController = new \WPCreativeIdea\QuickEnquiryUsPro\Classes\LicenseController();
+        if ( defined('QEUS_PRO') && class_exists( \Ruhel241\QuickEnquiryUsPro\Classes\LicenseController::class ) ) {
+            $licenseController = new \Ruhel241\QuickEnquiryUsPro\Classes\LicenseController();
             $licenseController->registerEndpoints();
 		}
     }
@@ -86,7 +86,7 @@ class WooQuickEnquiryUsLite
     }
 
     public function commonHooks() {
-       $ActionHandler = new WPCreativeIdea\QuickEnquiryUs\Handler\ActionHandler();
+       $ActionHandler = new Ruhel241\QuickEnquiryUs\Handler\ActionHandler();
        $ActionHandler->register();
     }
 
@@ -118,6 +118,6 @@ add_action('plugins_loaded', function () {
 
 register_activation_hook(__FILE__, function ($network_wide) {
     require_once(QEUS_PLUGIN_DIR_PATH . 'App/Handler/ActivationHandler.php');
-    $activate = new WPCreativeIdea\QuickEnquiryUs\Handler\ActivationHandler();
+    $activate = new Ruhel241\QuickEnquiryUs\Handler\ActivationHandler();
     $activate->activate($network_wide);
 });

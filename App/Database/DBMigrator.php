@@ -1,11 +1,11 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs\Database;
+namespace Ruhel241\QuickEnquiryUs\Database;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-use WPCreativeIdea\QuickEnquiryUs\Database\Migrations\QuickEnquiryUsMigrator;
+use Ruhel241\QuickEnquiryUs\Database\Migrations\QuickEnquiryUsMigrator;
 
 class DBMigrator
 {

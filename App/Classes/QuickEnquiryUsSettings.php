@@ -1,6 +1,6 @@
 <?php
 
-namespace WPCreativeIdea\QuickEnquiryUs\Classes;
+namespace Ruhel241\QuickEnquiryUs\Classes;
 
 use WC_Settings_Page;
 
