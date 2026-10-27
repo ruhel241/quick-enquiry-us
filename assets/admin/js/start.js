@@ -101,13 +101,16 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
-    // Computed property that reacts to module status changes
     visibleItems: function visibleItems() {
+      var _window$QuickEnquiryU;
+      var hasPro = !!((_window$QuickEnquiryU = window.QuickEnquiryUsAdminVars) !== null && _window$QuickEnquiryU !== void 0 && _window$QuickEnquiryU.has_pro);
       return this.allMenuItems.filter(function (item) {
-        return item.key;
-        // removed by dead control flow
-{}
-        // return this.$getTypeModule(item.key) === 'yes';
+        // License menu only for Pro version
+        if (item.key === 'license_module') {
+          return hasPro;
+        }
+        // Show all other menu items
+        return true;
       });
     }
   },
@@ -174,13 +177,15 @@ __webpack_require__.r(__webpack_exports__);
   name: 'license-management',
   components: {},
   data: function data() {
+    var _window$QuickEnquiryU;
     return {
       fetching: false,
       verifying: false,
       licenseData: {},
       licenseKey: '',
       showNewLicenseInput: false,
-      errorMessage: ''
+      errorMessage: '',
+      hasPro: !!((_window$QuickEnquiryU = window.QuickEnquiryUsAdminVars) !== null && _window$QuickEnquiryU !== void 0 && _window$QuickEnquiryU.has_pro)
     };
   },
   methods: {
@@ -301,7 +306,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      activeTab: localStorage.getItem('qeus-quick-enquiry-us-active-tab') || 'settings',
+      activeTab: localStorage.getItem('qeus-active-tab') || 'settings',
       configs: {},
       fetching: false,
       activeModule: 'no',
@@ -336,10 +341,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     handleClick: function handleClick(tab, event) {
       this.getSettings();
-      localStorage.setItem('qeus-quick-enquiry-us-active-tab', this.activeTab);
+      localStorage.setItem('qeus-active-tab', this.activeTab);
     },
     //Handle updates from child components
-    updateHandlerpdate: function updateHandlerpdate(field, value) {
+    updateHandler: function updateHandler(field, value) {
       this.configs[field] = value;
     },
     activeChangeHandler: function activeChangeHandler(type, status) {
@@ -372,7 +377,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$get({
         action: "qeus_admin_ajax",
         route: "get_settings",
-        type: 'quick_enquiry_us_settings',
+        type: 'qeus_settings',
         tab: this.activeTab,
         nonce: window.QuickEnquiryUsAdminVars.nonce
       }).then(function (response) {
@@ -400,7 +405,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$post({
         action: "qeus_admin_ajax",
         route: "save_settings",
-        type: 'quick_enquiry_us_settings',
+        type: 'qeus_settings',
         tab: this.activeTab,
         tab_configs: this.configs,
         nonce: window.QuickEnquiryUsAdminVars.nonce
@@ -423,7 +428,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$post({
         action: "qeus_admin_ajax",
         route: "reset_settings",
-        type: 'quick_enquiry_us_settings',
+        type: 'qeus_settings',
         tab: this.activeTab,
         nonce: window.QuickEnquiryUsAdminVars.nonce
       }).then(function (response) {
@@ -464,7 +469,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$get({
         action: "qeus_admin_ajax",
         route: "get_active_module",
-        type: 'quick_enquiry_us_module',
+        type: 'qeus_module',
         nonce: window.QuickEnquiryUsAdminVars.nonce
       }).then(function (response) {
         _this6.activeModule = response.data.active_module;
@@ -505,16 +510,22 @@ __webpack_require__.r(__webpack_exports__);
       return true;
     },
     smsValidation: function smsValidation() {
-      if (this.configs.sms_enable === 'yes') {
-        var missing = [];
-        if (!this.configs.twilio_account_sid) missing.push('Twilio Account SID');
-        if (!this.configs.twilio_auth_token) missing.push('Twilio Auth Token');
-        if (!this.configs.twilio_phone_number) missing.push('Twilio Phone Number');
-        if (missing.length) {
-          this.$handleError("".concat(missing.join(', '), " field is required"));
+      if (this.configs.sms_tab_enable === 'yes') {
+        var numbers = this.configs.sms_numbers || [];
+        var first = numbers[0];
+        // First entry is mandatory
+        if (!first || !first.receiver_name || !first.receiver_number) {
+          this.$handleError('SMS Name and Number are required');
           this.saving = false;
           return false;
         }
+        // Remove empty second+ entries
+        this.configs.sms_numbers = numbers.filter(function (item, index) {
+          if (!item.receiver_name || !item.receiver_number) {
+            return index === 0;
+          }
+          return true;
+        });
       }
       return true;
     }
@@ -607,7 +618,7 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       this.$get({
         action: "qeus_admin_ajax",
-        route: "get_quick_enquiry_us_detail_view",
+        route: "get_qeus_detail_view",
         detail_id: id,
         nonce: window.QuickEnquiryUsAdminVars.nonce
       }).then(function (response) {
@@ -638,7 +649,7 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       this.$get({
         action: "qeus_admin_ajax",
-        route: "get_quick_enquiry_us_details",
+        route: "get_qeus_details",
         search: this.search,
         current_page: this.paginate.current_page,
         per_page: this.paginate.per_page,
@@ -726,9 +737,13 @@ __webpack_require__.r(__webpack_exports__);
         receiver_name: '',
         receiver_number: ''
       }],
-      shortcodeGeneralForm: '[quick_enquiry_us_button]',
-      shortcodeProductId: '[quick_enquiry_us_button product_id="23"]',
-      shortcodeProductSlug: '[quick_enquiry_us_button product_slug="beanie-with-logo"]'
+      smsNumbers: [{
+        receiver_name: '',
+        receiver_number: ''
+      }],
+      shortcodeGeneralForm: '[qeus_button]',
+      shortcodeProductId: '[qeus_button product_id="23"]',
+      shortcodeProductSlug: '[qeus_button product_slug="beanie-with-logo"]'
     };
   },
   watch: {
@@ -746,6 +761,21 @@ __webpack_require__.r(__webpack_exports__);
           }];
         }
       }
+    },
+    // Handle async-loaded settings (WordPress / API)
+    'settings.sms_numbers': {
+      immediate: true,
+      deep: true,
+      handler: function handler(newVal) {
+        if (Array.isArray(newVal) && newVal.length) {
+          this.smsNumbers = JSON.parse(JSON.stringify(newVal));
+        } else {
+          this.smsNumbers = [{
+            receiver_name: '',
+            receiver_number: ''
+          }];
+        }
+      }
     }
   },
   methods: {
@@ -755,19 +785,40 @@ __webpack_require__.r(__webpack_exports__);
     emitWhatsappNumbers: function emitWhatsappNumbers() {
       this.$emit('update', 'whatsapp_numbers', this.whatsappNumbers);
     },
-    addNew: function addNew() {
-      if (this.whatsappNumbers.length >= 5) {
+    emitSmsNumbers: function emitSmsNumbers() {
+      this.$emit('update', 'sms_numbers', this.smsNumbers);
+    },
+    addNew: function addNew(type) {
+      if (type === 'WhatsApp' && this.whatsappNumbers.length >= 5) {
         return; // stop adding more than 5
       }
-      this.whatsappNumbers.push({
-        receiver_name: '',
-        receiver_number: ''
-      });
-      this.emitWhatsappNumbers();
+      if (type === 'SMS' && this.smsNumbers.length >= 5) {
+        return; // stop adding more than 5
+      }
+      if (type === 'WhatsApp') {
+        this.whatsappNumbers.push({
+          receiver_name: '',
+          receiver_number: ''
+        });
+        this.emitWhatsappNumbers();
+      }
+      if (type === 'SMS') {
+        this.smsNumbers.push({
+          receiver_name: '',
+          receiver_number: ''
+        });
+        this.emitSmsNumbers();
+      }
     },
-    removeLink: function removeLink(index) {
-      this.whatsappNumbers.splice(index, 1);
-      this.emitWhatsappNumbers();
+    removeLink: function removeLink(index, type) {
+      if (type === 'WhatsApp') {
+        this.whatsappNumbers.splice(index, 1);
+        this.emitWhatsappNumbers();
+      }
+      if (type === 'SMS') {
+        this.smsNumbers.splice(index, 1);
+        this.emitSmsNumbers();
+      }
     }
   }
 });
@@ -1120,7 +1171,7 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
+  return _vm.hasPro ? _c("div", {
     staticClass: "qeus-license-management qeus-card"
   }, [_c("div", {
     staticClass: "qeus_header"
@@ -1323,7 +1374,7 @@ var render = function render() {
       target: "_blank",
       href: _vm.licenseData.purchase_url
     }
-  }, [_vm._v("Purchase one here")])]), _vm._v(" "), _vm._m(5)], 1)])])]);
+  }, [_vm._v("Purchase one here")])]), _vm._v(" "), _vm._m(5)], 1)])])]) : _vm._e();
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -1408,7 +1459,7 @@ var render = function render() {
     },
     on: {
       change: function change(value) {
-        return _vm.activeChangeHandler("quick_enquiry_us_module", value);
+        return _vm.activeChangeHandler("qeus_module", value);
       }
     },
     model: {
@@ -1482,7 +1533,7 @@ var render = function render() {
       fetching: _vm.fetching
     },
     on: {
-      update: _vm.updateHandlerpdate
+      update: _vm.updateHandler
     }
   })], 1), _vm._v(" "), _c("el-tab-pane", {
     attrs: {
@@ -1495,7 +1546,7 @@ var render = function render() {
       fetching: _vm.fetching
     },
     on: {
-      update: _vm.updateHandlerpdate
+      update: _vm.updateHandler
     }
   })], 1), _vm._v(" "), _c("el-tab-pane", {
     attrs: {
@@ -1508,7 +1559,7 @@ var render = function render() {
       fetching: _vm.fetching
     },
     on: {
-      update: _vm.updateHandlerpdate
+      update: _vm.updateHandler
     }
   })], 1)], 1), _vm._v(" "), _vm.activeTab != "quick-enquiry-us" ? _c("div", {
     staticClass: "qeus-button-group"
@@ -2437,7 +2488,9 @@ var render = function render() {
       type: "primary"
     },
     on: {
-      click: _vm.addNew
+      click: function click($event) {
+        return _vm.addNew("WhatsApp");
+      }
     }
   }, [_vm._v("\n        Add WhatsApp Number "), _c("i", {
     staticClass: "el-icon-circle-plus-outline"
@@ -2486,7 +2539,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.removeLink(index);
+          return _vm.removeLink(index, "WhatsApp");
         }
       }
     }), _vm._v(" "), _c("el-tooltip", {
@@ -2558,27 +2611,23 @@ var render = function render() {
     staticClass: "setting-row"
   }, [_c("span", {
     staticClass: "setting-label"
-  }, [_vm._v("SMS Send")]), _vm._v(" "), _c("el-switch", {
-    attrs: {
-      "active-text": "Enable SMS",
-      "active-value": "yes",
-      "inactive-value": "no"
-    },
+  }, [_vm._v("Title Change")]), _vm._v(" "), _c("el-input", {
+    staticClass: "setting-input",
     on: {
       change: function change(value) {
-        return _vm.changeHandler("sms_enable", value);
+        return _vm.changeHandler("sms_title_text", value);
       }
     },
     model: {
-      value: _vm.settings.sms_enable,
+      value: _vm.settings.sms_title_text,
       callback: function callback($$v) {
-        _vm.$set(_vm.settings, "sms_enable", $$v);
+        _vm.$set(_vm.settings, "sms_title_text", $$v);
       },
-      expression: "settings.sms_enable"
+      expression: "settings.sms_title_text"
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "Enable this option to send enquiry form submissions via SMS.",
+      content: "Change the title text displayed in the SMS section",
       placement: "top"
     }
   }, [_c("i", {
@@ -2603,85 +2652,103 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "Change the text displayed on the sms tab.",
-      placement: "top"
-    }
-  }, [_c("i", {
-    staticClass: "el-icon-question"
-  })])], 1), _vm._v(" "), _vm.settings.sms_enable == "yes" ? _c("div", [_c("div", {
-    staticClass: "setting-row"
-  }, [_vm._m(8), _vm._v(" "), _c("el-input", {
-    staticClass: "setting-input",
-    attrs: {
-      placeholder: "Enter Your Twilio Account SID"
-    },
-    on: {
-      change: function change(value) {
-        return _vm.changeHandler("twilio_account_sid", value);
-      }
-    },
-    model: {
-      value: _vm.settings.twilio_account_sid,
-      callback: function callback($$v) {
-        _vm.$set(_vm.settings, "twilio_account_sid", $$v);
-      },
-      expression: "settings.twilio_account_sid"
-    }
-  }), _vm._v(" "), _c("el-tooltip", {
-    attrs: {
-      content: "Enter your Twilio Account SID. This is required to send SMS messages via Twilio",
+      content: "Change the text displayed on the SMS tab.",
       placement: "top"
     }
   }, [_c("i", {
     staticClass: "el-icon-question"
   })])], 1), _vm._v(" "), _c("div", {
-    staticClass: "setting-row"
-  }, [_vm._m(9), _vm._v(" "), _c("el-input", {
-    staticClass: "setting-input",
+    staticClass: "setting-row-repeter-fields"
+  }, [_c("el-button", {
+    staticClass: "repeter-add-btn",
     attrs: {
-      placeholder: "Enter Your Twilio Auth Token"
+      size: "mini",
+      type: "primary"
     },
     on: {
+      click: function click($event) {
+        return _vm.addNew("SMS");
+      }
+    }
+  }, [_vm._v("\n          Add SMS Number "), _c("i", {
+    staticClass: "el-icon-circle-plus-outline"
+  })]), _vm._v(" "), _vm._l(_vm.smsNumbers, function (item, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "setting-input-repeter"
+    }, [_c("el-input", {
+      staticClass: "setting-input",
+      attrs: {
+        placeholder: "Receiver Name"
+      },
+      on: {
+        input: _vm.emitSmsNumbers
+      },
+      model: {
+        value: item.receiver_name,
+        callback: function callback($$v) {
+          _vm.$set(item, "receiver_name", $$v);
+        },
+        expression: "item.receiver_name"
+      }
+    }), _vm._v(" "), _c("el-input", {
+      staticClass: "setting-input",
+      attrs: {
+        type: "number",
+        placeholder: "SMS Number"
+      },
+      on: {
+        input: _vm.emitSmsNumbers
+      },
+      model: {
+        value: item.receiver_number,
+        callback: function callback($$v) {
+          _vm.$set(item, "receiver_number", $$v);
+        },
+        expression: "item.receiver_number"
+      }
+    }), _vm._v(" "), _c("el-button", {
+      staticClass: "delete-btn",
+      attrs: {
+        type: "danger",
+        icon: "el-icon-delete",
+        circle: "",
+        disabled: _vm.smsNumbers.length === 1
+      },
+      on: {
+        click: function click($event) {
+          return _vm.removeLink(index, "SMS");
+        }
+      }
+    }), _vm._v(" "), _c("el-tooltip", {
+      attrs: {
+        content: "Add the receiver name and SMS number",
+        placement: "top"
+      }
+    }, [_c("i", {
+      staticClass: "el-icon-question"
+    })])], 1);
+  })], 2), _vm._v(" "), _c("div", {
+    staticClass: "setting-row"
+  }, [_c("span", {
+    staticClass: "setting-label"
+  }, [_vm._v("Button Text Change")]), _vm._v(" "), _c("el-input", {
+    staticClass: "setting-input",
+    on: {
       change: function change(value) {
-        return _vm.changeHandler("twilio_auth_token", value);
+        return _vm.changeHandler("sms_button_text", value);
       }
     },
     model: {
-      value: _vm.settings.twilio_auth_token,
+      value: _vm.settings.sms_button_text,
       callback: function callback($$v) {
-        _vm.$set(_vm.settings, "twilio_auth_token", $$v);
+        _vm.$set(_vm.settings, "sms_button_text", $$v);
       },
-      expression: "settings.twilio_auth_token"
+      expression: "settings.sms_button_text"
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "Enter your Twilio Auth Token. This is required to send SMS messages via Twilio",
-      placement: "top"
-    }
-  }, [_c("i", {
-    staticClass: "el-icon-question"
-  })])], 1), _vm._v(" "), _c("div", {
-    staticClass: "setting-row"
-  }, [_vm._m(10), _vm._v(" "), _c("el-input", {
-    staticClass: "setting-input",
-    attrs: {
-      placeholder: "Enter Your Twilio Phone Number"
-    },
-    on: {
-      change: function change(value) {
-        return _vm.changeHandler("twilio_phone_number", value);
-      }
-    },
-    model: {
-      value: _vm.settings.twilio_phone_number,
-      callback: function callback($$v) {
-        _vm.$set(_vm.settings, "twilio_phone_number", $$v);
-      },
-      expression: "settings.twilio_phone_number"
-    }
-  }), _vm._v(" "), _c("el-tooltip", {
-    attrs: {
-      content: "Enter your Twilio Phone Number. This is required to send SMS messages via Twilio",
+      content: "Change the button text",
       placement: "top"
     }
   }, [_c("i", {
@@ -2690,30 +2757,35 @@ var render = function render() {
     staticClass: "setting-row"
   }, [_c("span", {
     staticClass: "setting-label"
-  }, [_vm._v("Submit Button Text")]), _vm._v(" "), _c("el-input", {
+  }, [_vm._v("SMS Message")]), _vm._v(" "), _c("el-input", {
     staticClass: "setting-input",
+    attrs: {
+      type: "textarea",
+      rows: 3,
+      placeholder: "Enter Your SMS Message Here. You can use {receiver_name}, {title}, {url} as a placeholder."
+    },
     on: {
       change: function change(value) {
-        return _vm.changeHandler("sms_submit_button_text", value);
+        return _vm.changeHandler("sms_message", value);
       }
     },
     model: {
-      value: _vm.settings.sms_submit_button_text,
+      value: _vm.settings.sms_message,
       callback: function callback($$v) {
-        _vm.$set(_vm.settings, "sms_submit_button_text", $$v);
+        _vm.$set(_vm.settings, "sms_message", $$v);
       },
-      expression: "settings.sms_submit_button_text"
+      expression: "settings.sms_message"
     }
   }), _vm._v(" "), _c("el-tooltip", {
     attrs: {
-      content: "Change the text displayed on the submit button.",
+      content: "You can use {receiver_name}, {title}, {url} as a placeholder.",
       placement: "top"
     }
   }, [_c("i", {
     staticClass: "el-icon-question"
-  })])], 1)]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c("div", {
+  })])], 1)]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "qeus-settings-content"
-  }, [_vm._m(11), _vm._v(" "), _c("div", {
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
     staticClass: "setting-row"
   }, [_c("span", {
     staticClass: "setting-label"
@@ -2851,7 +2923,7 @@ var render = function render() {
     staticClass: "el-icon-question"
   })])], 1)]), _vm._v(" "), _c("div", {
     staticClass: "qeus-settings-content"
-  }, [_vm._m(12), _vm._v(" "), _c("div", {
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
     staticClass: "setting-row"
   }, [_c("span", {
     staticClass: "setting-label"
@@ -2907,7 +2979,7 @@ var render = function render() {
     staticClass: "el-icon-question"
   })])], 1) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "qeus-settings-content"
-  }, [_vm._m(13), _vm._v(" "), _c("div", {
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
     staticClass: "setting-row"
   }, [_c("span", {
     staticClass: "setting-label"
@@ -3015,36 +3087,6 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "setting-title"
   }, [_c("h3", [_vm._v("SMS Configure Settings")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("span", {
-    staticClass: "setting-label"
-  }, [_vm._v("Twilio Account SID "), _c("span", {
-    staticStyle: {
-      color: "red"
-    }
-  }, [_vm._v("*")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("span", {
-    staticClass: "setting-label"
-  }, [_vm._v("Twilio Auth Token "), _c("span", {
-    staticStyle: {
-      color: "red"
-    }
-  }, [_vm._v("*")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("span", {
-    staticClass: "setting-label"
-  }, [_vm._v("Twilio Phone Number "), _c("span", {
-    staticStyle: {
-      color: "red"
-    }
-  }, [_vm._v("*")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -6754,7 +6796,7 @@ window.QEUSPlugin.Vue.prototype.$del = window.QEUSPlugin.$del;
 window.QEUSPlugin.Vue.prototype.$bus = new window.QEUSPlugin.Vue();
 document.addEventListener('DOMContentLoaded', function () {
   new window.QEUSPlugin.Vue({
-    el: '#wp_quick_enquiry_us_settings_app',
+    el: '#wp_qeus_settings_app',
     render: function render(h) {
       return h((__webpack_require__(/*! ./Application */ "./resources/admin/Application.vue")["default"]));
     },

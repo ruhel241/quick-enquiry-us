@@ -1,17 +1,17 @@
 <?php
 
-namespace QuickEnquiryUs\App\Handler;
-use QuickEnquiryUs\App\Settings;
-use QuickEnquiryUs\App\Database\DBMigrator;
+namespace WPCreativeIdea\QuickEnquiryUs\Handler;
+use WPCreativeIdea\QuickEnquiryUs\Settings;
+use WPCreativeIdea\QuickEnquiryUs\Database\DBMigrator;
 
 class ActivationHandler
 {
     public function activate($network_wide)
     {
-        require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Settings.php');
-        require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Database/DBMigrator.php');
+        require_once(QEUS_PLUGIN_DIR_PATH . 'App/Settings.php');
+        require_once(QEUS_PLUGIN_DIR_PATH . 'App/Database/DBMigrator.php');
         
-        update_option('qeus_version', QUICK_ENQUIRY_US_PLUGIN_VERSION, 'no');
+        update_option('qeus_version', QEUS_PLUGIN_VERSION, 'no');
 
         $settings          = new Settings();
         $getConfigs        = $settings->getConfigs();

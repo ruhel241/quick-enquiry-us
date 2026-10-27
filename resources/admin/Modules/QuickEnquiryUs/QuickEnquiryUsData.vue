@@ -254,7 +254,7 @@ import TableSelections from './_TableSelectionHandler.vue';
         this.loading = true;
         this.$get({
           action: "qeus_admin_ajax",
-          route: "get_quick_enquiry_us_detail_view",
+          route: "get_qeus_detail_view",
           detail_id: id,
           nonce: window.QuickEnquiryUsAdminVars.nonce,
         })
@@ -287,7 +287,7 @@ import TableSelections from './_TableSelectionHandler.vue';
         this.loading = true;
         this.$get({
           action: "qeus_admin_ajax",
-          route: "get_quick_enquiry_us_details",
+          route: "get_qeus_details",
           search: this.search,
           current_page: this.paginate.current_page,
           per_page: this.paginate.per_page,

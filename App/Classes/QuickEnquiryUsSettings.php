@@ -1,6 +1,6 @@
 <?php
 
-namespace QuickEnquiryUs\App\Classes;
+namespace WPCreativeIdea\QuickEnquiryUs\Classes;
 
 use WC_Settings_Page;
 
@@ -36,18 +36,21 @@ class QuickEnquiryUsSettings extends WC_Settings_Page
      */
     public function output()
     {
-        echo wp_kses_post('<div id="wp_quick_enquiry_us_settings_app"></div>');
+        echo wp_kses_post('<div id="wp_qeus_settings_app"></div>');
     }
 
     public function enqueueAdminScripts()
     {
-        if (isset($_GET['tab']) && $_GET['tab'] === $this->id) {
+       // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading the tab name for display only, nothing is saved. 
+        $currentTab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : ''; 
+        
+        if ($currentTab === $this->id) {
 
-            $assetsUrl = QUICK_ENQUIRY_US_PLUGIN_DIR_URL . 'assets/';
+            $assetsUrl = QEUS_PLUGIN_DIR_URL . 'assets/';
 
-            wp_enqueue_script('qeus_admin_boot', $assetsUrl . 'admin/js/boot.js', array('jquery'), QUICK_ENQUIRY_US_PLUGIN_VERSION, false);
-            wp_enqueue_script('qeus_admin_app', $assetsUrl . 'admin/js/start.js', array('jquery'), QUICK_ENQUIRY_US_PLUGIN_VERSION, false);
-            wp_enqueue_style('qeus_admin_css', $assetsUrl . 'admin/css/admin.css', array(), QUICK_ENQUIRY_US_PLUGIN_VERSION);
+            wp_enqueue_script('qeus_admin_boot', $assetsUrl . 'admin/js/boot.js', array('jquery'), QEUS_PLUGIN_VERSION, false);
+            wp_enqueue_script('qeus_admin_app', $assetsUrl . 'admin/js/start.js', array('jquery'), QEUS_PLUGIN_VERSION, false);
+            wp_enqueue_style('qeus_admin_css', $assetsUrl . 'admin/css/admin.css', array(), QEUS_PLUGIN_VERSION);
 
             wp_localize_script('qeus_admin_app', 'QuickEnquiryUsAdminVars', array(
                 'assets_url'  => $assetsUrl,
@@ -58,7 +61,8 @@ class QuickEnquiryUsSettings extends WC_Settings_Page
                 'site_url'    => get_site_url(),
                 'nonce'       => wp_create_nonce('qeus_nonce'),
                 'server_time' => current_time('mysql'),
-                'woo_active'  => defined('WC_VERSION')
+                'woo_active'  => defined('WC_VERSION'),
+                'has_pro'     => defined('QEUS_PRO')
             ));
         }
     }

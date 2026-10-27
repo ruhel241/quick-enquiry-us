@@ -1,6 +1,6 @@
 <?php
 
-namespace QuickEnquiryUs\App\Models;
+namespace WPCreativeIdea\QuickEnquiryUs\Models;
 
 class QuickEnquiryUs {
 
@@ -12,7 +12,7 @@ class QuickEnquiryUs {
         $perPage      = sanitize_text_field($request['per_page']);
         $offset       = $perPage * ($currentPage - 1);
 
-        $detailsQuery = QuickEnquiryUsQuery()->table($this->table)
+        $detailsQuery = QEUS_Query()->table($this->table)
                     ->orderBy('id', 'DESC')
                     ->offset($offset)
                     ->limit($perPage);
@@ -52,29 +52,29 @@ class QuickEnquiryUs {
     public function getDetail($id) {
         $id = sanitize_text_field($id);
 
-        $detail = QuickEnquiryUsQuery()->table($this->table)->where('id', $id)->first();
+        $detail = QEUS_Query()->table($this->table)->where('id', $id)->first();
 
         return $detail;
     }
 
     public function deleteInfo($detailsIds) {
-        $details = QuickEnquiryUsQuery()->table($this->table)->whereIn('id', $detailsIds)->get();
+        $details = QEUS_Query()->table($this->table)->whereIn('id', $detailsIds)->get();
 
         foreach ($details as $detail) {
-            QuickEnquiryUsQuery()->table($this->table)->where('id', $detail->id)->delete();
+            QEUS_Query()->table($this->table)->where('id', $detail->id)->delete();
         }
     }
 
     public function insertGetId($data) {
 
-        $save = QuickEnquiryUsQuery()->table($this->table)->insert($data);
+        $save = QEUS_Query()->table($this->table)->insert($data);
 
         return $save;
     }
 
     public function update($id, $data) {
 
-       $update =  QuickEnquiryUsQuery()->table($this->table)
+       $update =  QEUS_Query()->table($this->table)
                     ->where('id', $id)
                     ->update($data);
        

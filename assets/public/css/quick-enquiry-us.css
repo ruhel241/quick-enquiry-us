@@ -2,14 +2,14 @@ body.qeus-modal-open {
   overflow: hidden;
 }
 
-.qeus-quick-enquiry-us-button {
+.qeus-button {
   background-color: #046bd2;
   color: #ffffff !important;
   padding: 10px 20px !important;
   text-decoration: none !important;
 }
 
-.qeus-quick-enquiry-us-modal-wrapper {
+.qeus-modal-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,8 +21,9 @@ body.qeus-modal-open {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content {
+.qeus-modal-wrapper .qeus-modal-content {
   position: relative;
+  top: 15px;
   background-color: #fefefe;
   border: 1px solid #888;
   width: 80%;
@@ -32,13 +33,13 @@ body.qeus-modal-open {
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container {
   width: 100%;
   border-radius: 10px;
   /* Tabs */
   /* Tab Content */
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-header {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -48,7 +49,7 @@ body.qeus-modal-open {
   border-top-left-radius: 19px;
   padding: 0px 20px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-header .qeus-title {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-header .qeus-title {
   text-align: center;
   margin: 0px;
   color: #ffffff;
@@ -56,7 +57,7 @@ body.qeus-modal-open {
   flex: 1;
   font-weight: 600;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-header .qeus-view-close {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-header .qeus-view-close {
   font-size: 22px;
   font-weight: bold;
   color: #fff;
@@ -71,17 +72,17 @@ body.qeus-modal-open {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-enquire-form {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-form {
   display: block;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-enquire-form label {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-form label {
   font-weight: bold;
   margin-bottom: 5px;
   display: block;
   color: #333;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-enquire-form input,
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-enquire-form textarea {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-form input,
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-form textarea {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
@@ -89,15 +90,15 @@ body.qeus-modal-open {
   border: 1px solid #ccc;
   font-size: 16px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-enquire-form textarea {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-form textarea {
   height: 150px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs {
   display: flex;
   border-bottom: 1px solid #e5e5e5;
   background: #fff;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab {
   flex: 1;
   /* padding: 14px 10px; */
   border: none;
@@ -116,35 +117,35 @@ body.qeus-modal-open {
   padding-left: 5px;
   padding-right: 5px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab.active {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab.active {
   color: #3b3bff;
   border-bottom-color: #3b3bff;
   background: #ededed;
   font-weight: 600;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content {
   display: none;
   padding: 30px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content.active {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content.active {
   display: block;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number p {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number p {
   margin: 0px;
   flex: 1;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn {
   display: inline-block;
   padding: 8px 20px;
   border-radius: 6px;
@@ -152,7 +153,7 @@ body.qeus-modal-open {
   text-decoration: none;
   font-weight: 600;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.whatsapp {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.whatsapp {
   background: #25D366;
   color: #fff;
   padding: 12px 18px;
@@ -163,18 +164,47 @@ body.qeus-modal-open {
   display: flex;
   align-items: center;
   gap: 5px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.25);
   z-index: 9999;
   transition: all 0.3s ease;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.whatsapp:hover {
-  background: #1ebe5d;
-  transform: translateY(-3px);
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.whatsapp:hover {
+  background: #128C7E;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35);
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.sms {
-  background: #2196f3;
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.whatsapp:active {
+  transform: translateY(0);
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-submit {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.sms {
+  background: #2196F3;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 5px 15px rgba(33, 150, 243, 0.25);
+  transition: all 0.3s ease;
+}
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.sms:hover, .qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.sms:focus {
+  background: #1976D2;
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.35);
+}
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.sms:active {
+  transform: translateY(0);
+}
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tab-content .qeus-social-numbers .qeus-social-number .qeus-action-btn.sms svg {
+  margin-top: 4px;
+}
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-submit {
   width: 100%;
   padding: 12px;
   background: #2196f3;
@@ -185,10 +215,10 @@ body.qeus-modal-open {
   cursor: pointer;
   font-weight: 600;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-submit:hover {
+.qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-submit:hover {
   background: #0d8ae0;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content #qeus-loading-view {
+.qeus-modal-wrapper .qeus-modal-content #qeus-loading-view {
   position: absolute; /* Positions the overlay relative to its parent container */
   top: 0;
   left: 0;
@@ -201,26 +231,26 @@ body.qeus-modal-open {
   flex-direction: column;
   color: white; /* Optional: for styling overlay content */
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content #qeus-loading-view .qeus-loading-title {
+.qeus-modal-wrapper .qeus-modal-content #qeus-loading-view .qeus-loading-title {
   font-size: 15px; /* Slightly larger */
   color: #fff;
   text-align: center;
   margin-top: 15px;
   font-weight: 500;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content #qeus-loading-view .qeus-loading-spinner {
+.qeus-modal-wrapper .qeus-modal-content #qeus-loading-view .qeus-loading-spinner {
   width: 35px; /* Fixed width instead of percentage */
   height: 35px; /* Fixed height instead of percentage */
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content #qeus-loading-view .qeus-loading-spinner img {
+.qeus-modal-wrapper .qeus-modal-content #qeus-loading-view .qeus-loading-spinner img {
   background-color: white;
   padding: 5px;
   border-radius: 3px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-notice {
+.qeus-modal-wrapper .qeus-modal-content .qeus-notice {
   display: none;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-notice .qeus-response-message {
+.qeus-modal-wrapper .qeus-modal-content .qeus-notice .qeus-response-message {
   background: #fff;
   padding: 12px 15px;
   margin: 0px 0px 20px 0px;
@@ -228,14 +258,14 @@ body.qeus-modal-open {
   font-weight: 600;
   box-shadow: 0px 4px 15px rgba(100, 100, 111, 0.2);
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-enquire-form .qeus-phone-number {
+.qeus-modal-wrapper .qeus-form .qeus-phone-number {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
   margin-bottom: 15px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-enquire-form .qeus-phone-number select {
+.qeus-modal-wrapper .qeus-form .qeus-phone-number select {
   width: 22%;
   min-width: 120px;
   padding: 10px 8px;
@@ -246,7 +276,7 @@ body.qeus-modal-open {
   cursor: pointer;
   background-image: none !important;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-enquire-form .qeus-phone-number input[type=number] {
+.qeus-modal-wrapper .qeus-form .qeus-phone-number input[type=number] {
   flex: 1;
   padding: 10px 12px;
   border: 1px solid #d1d5db;
@@ -254,21 +284,21 @@ body.qeus-modal-open {
   font-size: 14px;
   margin-bottom: 0px !important;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-enquire-form .queb-required-filed {
+.qeus-modal-wrapper .qeus-form .queb-required-filed {
   color: red;
   margin-left: 3px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-enquire-form .qeus-subscribe-field {
+.qeus-modal-wrapper .qeus-form .qeus-subscribe-field {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 30px;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-enquire-form .qeus-subscribe-field input {
+.qeus-modal-wrapper .qeus-form .qeus-subscribe-field input {
   width: 5% !important;
   margin: 0px !important;
 }
-.qeus-quick-enquiry-us-modal-wrapper .qeus-enquire-form .qeus-subscribe-field .qeus-label-subscribe {
+.qeus-modal-wrapper .qeus-form .qeus-subscribe-field .qeus-label-subscribe {
   margin: 0px !important;
   padding: 0px !important;
 }
@@ -307,7 +337,7 @@ body.qeus-modal-open {
     font-size: 14px;
   }
 }
-.qeus-add-to-cart-wrapper .qeus-quick-enquiry-us-button {
+.qeus-add-to-cart-wrapper .qeus-button {
   order: 4;
 }
 
@@ -318,7 +348,7 @@ body.qeus-modal-open {
   margin-bottom: 6px;
   flex-wrap: wrap;
 }
-.qeus-cart-product-row .qeus-enquiry-us-cart-page-btn {
+.qeus-cart-product-row .qeus-cart-page-btn {
   background-color: #5467f8;
   padding: 6px 14px;
   font-size: 13px;
@@ -326,7 +356,7 @@ body.qeus-modal-open {
   white-space: nowrap;
 }
 
-.qeus-shortcode-enquiry-us-btn {
+.qeus-shortcode-btn {
   background-color: #5467f8;
   color: #ffffff !important;
   padding: 10px 20px !important;
@@ -334,20 +364,20 @@ body.qeus-modal-open {
 }
 
 /* Hide only the label (&nbsp;:) for QuickEnquiry button row */
-.wc-block-components-product-details__name:has(+ .wc-block-components-product-details__value .qeus-quick-enquiry-us-button) {
+.wc-block-components-product-details__name:has(+ .wc-block-components-product-details__value .qeus-button) {
   display: none !important;
 }
 
 /* Hide QuickEnquiry button label in classic cart shortcode */
-dt.variation-nbsp:has(+ dd .qeus-quick-enquiry-us-button) {
+dt.variation-nbsp:has(+ dd .qeus-button) {
   display: none !important;
 }
 
-.qeus-enquiry-us-cart-page-btn {
+.qeus-cart-page-btn {
   margin: 5px 0px 5px 0px !important;
 }
 
-.qeus-enquiry-us-order-summary-btn {
+.qeus-order-summary-btn {
   margin: 5px 0px 5px 0px !important;
 }
 
@@ -356,19 +386,19 @@ dt.variation-nbsp:has(+ dd .qeus-quick-enquiry-us-button) {
 }
 
 @media only screen and (max-width: 600px) {
-  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content {
+  .qeus-modal-wrapper .qeus-modal-content {
     width: 95%;
   }
-  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs {
+  .qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs {
     flex-direction: column;
   }
-  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab {
+  .qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab {
     width: 100%;
   }
-  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab.active {
+  .qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-tabs .qeus-tab.active {
     border-bottom-color: transparent;
   }
-  .qeus-quick-enquiry-us-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-enquire-form .qeus-subscribe-field {
+  .qeus-modal-wrapper .qeus-modal-content .qeus-form-container .qeus-form .qeus-subscribe-field {
     gap: 10px;
     margin-bottom: 10px;
   }

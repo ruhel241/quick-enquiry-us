@@ -3,21 +3,21 @@
 // Autoload plugin.
 require 'autoload.php';
 
-if (! function_exists('QuickEnquiryUsDB')) {
+if (! function_exists('QEUS_DB')) {
     /**
      * @return \WpFluent\QueryBuilder\QueryBuilderHandler
      */
-    function QuickEnquiryUsDB() {
-        static $QuickEnquiryUsDB;
+    function QEUS_DB() {
+        static $QEUS_DB;
 
-        if (! $QuickEnquiryUsDB) {
+        if (! $QEUS_DB) {
             global $wpdb;
 
             $connection = new \WpFluent\Connection($wpdb, ['prefix' => $wpdb->prefix]);
 
-            $QuickEnquiryUsDB = new \WpFluent\QueryBuilder\QueryBuilderHandler($connection);
+            $QEUS_DB = new \WpFluent\QueryBuilder\QueryBuilderHandler($connection);
         }
 
-        return $QuickEnquiryUsDB;
+        return $QEUS_DB;
     }
 }

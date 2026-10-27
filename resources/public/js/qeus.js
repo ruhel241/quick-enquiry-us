@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    var QuickEnquiryUsPublicVarsSettings = QuickEnquiryUsPublicVars.quick_enquiry_us_settings.settings;
+    var QuickEnquiryUsPublicVarsSettings = QuickEnquiryUsPublicVars.qeus_settings.settings;
 
     var isLoading = false;
     function showLoading() {
@@ -35,7 +35,7 @@ jQuery(document).ready(function ($) {
                 setTimeout(() => {
                     let $qvpuWrapper      = $parentProduct.find('.qvpu-add-to-cart-wrapper');
                     let $quickCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
-                    let $enquiryShopBtn   = $parentProduct.find('.qeus-quick-enquiry-us-button');
+                    let $enquiryShopBtn   = $parentProduct.find('.qeus-button');
 
                     /** ---------------------------------------------
                      * CASE 1: Wrapper already exists quick view
@@ -77,11 +77,11 @@ jQuery(document).ready(function ($) {
 
 
             // Click Open modal
-            $(document).on('click', '.qeus-quick-enquiry-us-button', function (e) {
+            $(document).on('click', '.qeus-button', function (e) {
                 e.preventDefault();
 
                 $("body").addClass("qeus-modal-open");
-                $('.qeus-quick-enquiry-us-modal-wrapper').fadeIn();
+                $('.qeus-modal-wrapper').fadeIn();
 
                 let $btn = $(this);
                 let productId = $btn.data('product-id');
@@ -112,8 +112,8 @@ jQuery(document).ready(function ($) {
         enquirUsForm: function (productId, productSlug) {
             showLoading();
 
-            $.post('/?wc-ajax=qeus_quick_enquiry_us_ajax_actions', {
-                route: 'qeus_quick_enquiry_us_form',
+            $.post('/?wc-ajax=qeus_ajax_actions', {
+                route: 'qeus_form',
                 nonce: window.QuickEnquiryUsPublicVars.nonce,
                 product_id: productId,
                 product_slug: productSlug
@@ -135,14 +135,14 @@ jQuery(document).ready(function ($) {
         closeModal: function () {
             // Close button
             $(document).on('click', '.qeus-view-close', function () {
-                $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+                $('.qeus-modal-wrapper').fadeOut();
                 $("body").removeClass("qeus-modal-open");
             });
 
             // Click outside to close
-            $(document).on('click', '.qeus-quick-enquiry-us-modal-wrapper', function (e) {
-                if ($(e.target).hasClass('qeus-quick-enquiry-us-modal-wrapper')) {
-                    $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+            $(document).on('click', '.qeus-modal-wrapper', function (e) {
+                if ($(e.target).hasClass('qeus-modal-wrapper')) {
+                    $('.qeus-modal-wrapper').fadeOut();
                     $("body").removeClass("qeus-modal-open");
                 }
             });
@@ -150,7 +150,7 @@ jQuery(document).ready(function ($) {
             // Escape key close
             $(document).on('keyup', function (e) {
                 if (e.key === "Escape") {
-                    $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+                    $('.qeus-modal-wrapper').fadeOut();
                     $("body").removeClass("qeus-modal-open");
                 }
             });
@@ -170,8 +170,8 @@ jQuery(document).ready(function ($) {
                 let phone_number = $form.find('input[name="phone_number"]').val()?.trim() || '';
                 let country_code = $form.find('select[name="country_code"]').val() || '';
                 let subscribe    = $form.find('input[name="subscribe"]').is(':checked') ? 'yes' : 'no';
-                // get active tab (sms / enquire)
-                let type = $('.qeus-tab.active').data('tab'); // sms | enquire
+                // get active tab (enquire)
+                let type = $('.qeus-tab.active').data('tab'); // enquire
                 let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 // helper function for notice
                 function showError(msg) {
@@ -183,27 +183,6 @@ jQuery(document).ready(function ($) {
                     setTimeout(function () {
                         $('.qeus-notice').fadeOut();
                     }, 4000);
-                }
-                /* ======================
-                SMS TAB VALIDATION
-                ======================= */
-                if (type === 'sms') {
-                    if (!name) {
-                        showError('Name is required');
-                        return;
-                    }   
-                    if (!country_code) {
-                        showError('Country code is required');
-                        return;
-                    }
-                    if (!phone_number) {
-                        showError('Phone number is required');
-                        return;
-                    }
-                    if (!enquiry) {
-                        showError('enquiry is required');
-                        return;
-                    }
                 }
                 /* ======================
                 ENQUIRE FORM VALIDATION
@@ -245,8 +224,8 @@ jQuery(document).ready(function ($) {
         // AJAX request
         enquireUsDetailsAction: function (details) {
             showLoading();
-            jQuery.post('/?wc-ajax=qeus_quick_enquiry_us_ajax_actions', {
-                route: 'qeus_quick_enquiry_us_details',
+            jQuery.post('/?wc-ajax=qeus_ajax_actions', {
+                route: 'qeus_details',
                 nonce: window.QuickEnquiryUsPublicVars.nonce,
                 details: JSON.stringify(details),
             })
@@ -258,7 +237,7 @@ jQuery(document).ready(function ($) {
                     $('.qeus-form-container form')[0].reset();
                     setTimeout(function () {
                         $('.qeus-notice').fadeOut();
-                        $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+                        $('.qeus-modal-wrapper').fadeOut();
                         $("body").removeClass("qeus-modal-open");
                     }, 6000);
                 } else {

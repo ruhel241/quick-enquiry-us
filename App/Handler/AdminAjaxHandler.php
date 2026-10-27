@@ -1,10 +1,10 @@
 <?php
 
-namespace QuickEnquiryUs\App\Handler;
+namespace WPCreativeIdea\QuickEnquiryUs\Handler;
 
-use QuickEnquiryUs\App\Settings;
-use QuickEnquiryUs\App\Models\QuickEnquiryUs;
-use QuickEnquiryUs\App\Helpers\SanitizeValidation;
+use WPCreativeIdea\QuickEnquiryUs\Settings;
+use WPCreativeIdea\QuickEnquiryUs\Models\QuickEnquiryUs;
+use WPCreativeIdea\QuickEnquiryUs\Helpers\SanitizeValidation;
 
 class AdminAjaxHandler
 {
@@ -15,200 +15,364 @@ class AdminAjaxHandler
 
     public function ajaxRoutes()
     {
-        // Validate nonce
-        if (!isset($_REQUEST['nonce'])) {
-            wp_send_json_error(['message' => __('Invalid nonce', 'quick-enquiry-us')], 403);
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
         }
 
-        if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'])), 'qeus_nonce')) {
-            wp_send_json_error(['message' => __('Invalid quick enquiry us nonce', 'quick-enquiry-us')], 403);
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
         }
 
-        $route = sanitize_text_field(wp_unslash($_REQUEST['route'] ?? ''));
+        // Nonce already verified above. POST overrides GET, cookies are excluded.
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+        $rawData = array_merge($_GET, $_POST);
+        // phpcs:enable
 
-        // Sanitize all incoming inputs and route, nonce, data validated to handlers
-        $validatedData = (new SanitizeValidation)->validateRequestData($_REQUEST);
+        $route = sanitize_key(wp_unslash($rawData['route'] ?? ''));
 
-        $routes = [
-            'get_settings'                     => 'getSettings',
-            'save_settings'                    => 'saveSettings',
-            'enable_active_module'             => 'enableActiveModule',
-            'get_active_module'                => 'getActiveModule',
-            'reset_settings'                   => 'resetSettings',
-            'get_quick_enquiry_us_details'     => 'getQuickEnquiryUsDetails',
-            'get_quick_enquiry_us_detail_view' => 'getDetailView',
-            'maybe_delete_details'             => 'maybeDeleteDetails',
+        if (!$route) {
+            wp_send_json_error(['message' => 'Invalid route'], 400);
+        }
+
+        $validRoutes = [
+            'get_settings'         => 'getSettings',
+            'save_settings'        => 'saveSettings',
+            'enable_active_module' => 'enableActiveModule',
+            'get_active_module'    => 'getActiveModule',
+            'reset_settings'       => 'resetSettings',
+            'get_qeus_details'     => 'getQuickEnquiryUsDetails',
+            'get_qeus_detail_view' => 'getDetailView',
+            'maybe_delete_details' => 'maybeDeleteDetails',
         ];
 
-        if (isset($routes[$route])) {
-            do_action('quick-enquiry-us/qeus_doing_ajax_forms_' . $route);
-            $this->{$routes[$route]}($validatedData);
+        if (!isset($validRoutes[$route])) {
+            wp_send_json_error(['message' => 'Invalid route'], 400);
         }
 
-        do_action('quick-enquiry-us/qeus_public_ajax_handler_catch', $route);
+        $validatedData = (new SanitizeValidation)->validateRequestData($rawData);
+
+        do_action('qeus_admin_ajax_handler_catch', $route);
+
+        $this->{$validRoutes[$route]}($validatedData);
+
+        wp_die();
     }
 
     public function getSettings($request)
     {
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        $type = $request['type'] ?? '';
+        $tab  = $request['tab'] ?? '';
+
         $getConfigs = (new Settings())->getConfigs();
 
-        $type       = sanitize_text_field($request['type']);
-        $tab        = sanitize_text_field($request['tab']);
-        $configs    = get_option($type, $getConfigs[$type][$tab]);
+        // Whitelist check
+        if (!isset($getConfigs[$type][$tab])) {
+            wp_send_json_error([
+                'message' => __('Invalid settings type or tab', 'quick-enquiry-us')
+            ], 400);
+        }
 
-        wp_send_json_success(array(
-            'configs' => $configs[$tab]
-        ));
+        $configs = get_option($type, $getConfigs[$type]);
+        
+        wp_send_json_success([
+            'configs' => $configs[$tab] ?? $getConfigs[$type][$tab],
+        ]);
     }
 
-     public function saveSettings($request)
+    public function saveSettings($request)
     {
-        $newSettings = wp_unslash($request['tab_configs']);
-        $type        = sanitize_text_field($request['type']); 
-        $tab         = sanitize_text_field($request['tab']);  
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
+        }
 
-        // Default config structure
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        $type = $request['type'] ?? '';
+        $tab  = $request['tab'] ?? '';
+
         $getConfigs = (new Settings())->getConfigs();
 
-        // Load existing option correctly
+        // Whitelist check
+        if (!isset($getConfigs[$type][$tab])) {
+            wp_send_json_error([
+                'message' => __('Invalid settings type or tab', 'quick-enquiry-us')
+            ], 400);
+        }
+
+        // Already sanitized and unslashed in SanitizeValidation
+        $newSettings = $request['tab_configs'] ?? [];
+
+        if (!is_array($newSettings)) {
+            wp_send_json_error([
+                'message' => __('Invalid settings data', 'quick-enquiry-us')
+            ], 400);
+        }
+
         $currentSettings = get_option($type, $getConfigs[$type]);
 
-        // Ensure tab array exists
         if (!isset($currentSettings[$tab]) || !is_array($currentSettings[$tab])) {
             $currentSettings[$tab] = [];
         }
 
-        // Merge new values
+        // Merge new values into the current tab
         $currentSettings[$tab] = array_merge($currentSettings[$tab], $newSettings);
 
-        // ✅ Save back to SAME option name
         update_option($type, $currentSettings);
 
-        $tabLabel = ucfirst($tab);
-
         wp_send_json_success([
-            'message'  => sprintf(__('%s saved successfully', 'quick-enquiry-us'), $tabLabel),
-            'settings' => get_option($type, $getConfigs),
-        ]);
+			'message'  => sprintf(
+				/* translators: %s: Settings tab name, e.g. "General" or "Email". */
+				__('%s saved successfully', 'quick-enquiry-us'),
+				ucfirst($tab)
+			),
+			'settings' => $currentSettings,
+		]);
     }
 
-    public function enableActiveModule($request) {
-        $type   = sanitize_text_field($request['type']);
-        $status = sanitize_text_field($request['status']);
-
-        $getActiveModule = (new Settings())->getActiveModule();
-
-        $qeusActiveModule = get_option('qeus_active_module', $getActiveModule);
-
-        $message = __('Successfully enabled active module', 'quick-enquiry-us');
-
-        // Update the specific module setting with the new value
-        if (isset($qeusActiveModule[$type])) {
-            $qeusActiveModule[$type] = $status;
-
-            if ($status === 'no') {
-                $message = __('Successfully disabled active module', 'quick-enquiry-us');
-            }
+    public function enableActiveModule($request)
+    {
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
         }
 
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        $type   = $request['type'] ?? '';
+        $status = $request['status'] ?? '';
+
+        // Only yes/no allowed
+        if (!in_array($status, ['yes', 'no'], true)) {
+            wp_send_json_error([
+                'message' => __('Invalid status', 'quick-enquiry-us')
+            ], 400);
+        }
+
+        $defaultModules   = (new Settings())->getActiveModule();
+        $qeusActiveModule = get_option('qeus_active_module', $defaultModules);
+
+        // Whitelist check
+        if (!isset($qeusActiveModule[$type])) {
+            wp_send_json_error([
+                'message' => __('Invalid module type', 'quick-enquiry-us')
+            ], 400);
+        }
+
+        $qeusActiveModule[$type] = $status;
         update_option('qeus_active_module', $qeusActiveModule);
 
-        $qeusActiveModule = get_option('qeus_active_module', $getActiveModule);
+        $message = ($status === 'no')
+            ? __('Successfully disabled active module', 'quick-enquiry-us')
+            : __('Successfully enabled active module', 'quick-enquiry-us');
 
-        wp_send_json_success(array(
-            'message'  => $message,
-            'active_module' => $qeusActiveModule[$type]
-        ));
+        wp_send_json_success([
+            'message'       => $message,
+            'active_module' => $status,
+        ]);
     }
 
     public function getActiveModule($request)
     {
-        $type  = sanitize_text_field($request['type']);
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
+        }
 
-        $getActiveDefaultModule = (new Settings())->getActiveModule();
-        $qeusActiveModule        = get_option('qeus_active_module', $getActiveDefaultModule);
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
+        }
 
-        wp_send_json_success(array(
-            'message'  => __('Enable active module', 'quick-enquiry-us'),
-            'active_module' => $qeusActiveModule[$type]
-        ));
+        $type = $request['type'] ?? '';
+
+        $defaultModules   = (new Settings())->getActiveModule();
+        $qeusActiveModule = get_option('qeus_active_module', $defaultModules);
+
+        if (!isset($qeusActiveModule[$type])) {
+            wp_send_json_error([
+                'message' => __('Invalid module type', 'quick-enquiry-us')
+            ], 400);
+        }
+
+        wp_send_json_success([
+            'message'       => __('Enable active module', 'quick-enquiry-us'),
+            'active_module' => $qeusActiveModule[$type],
+        ]);
     }
 
-    public function resetSettings() {
+    public function resetSettings($request)
+    {
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        $type = $request['type'] ?? '';
+        $tab  = $request['tab'] ?? '';
+
         $getDefaultConfigs = (new Settings())->getConfigs();
 
-        $type = sanitize_text_field($_REQUEST['type']); 
-        $tab  = sanitize_text_field($_REQUEST['tab']);  
-
-        // Load saved option
-        $currentSettings = get_option($type, $getDefaultConfigs[$type]);
-
-        // Ensure tab exists in current settings and defaults
-        if (
-            isset($currentSettings[$tab]) && is_array($currentSettings[$tab]) &&
-            isset($getDefaultConfigs[$type][$tab]) && is_array($getDefaultConfigs[$type][$tab])
-        ) {
-
-            // Reset this tab to default values
-            $currentSettings[$tab] = $getDefaultConfigs[$type][$tab];
-
-            // Save option
-            update_option($type, $currentSettings);
-
-            $tabLabel = ucfirst($tab);
-
-            wp_send_json_success([
-                'message'  => sprintf(__('Reset %s successfully', 'quick-enquiry-us'), $tabLabel),
-                'settings' => get_option($type, $getDefaultConfigs[$type])
-            ]);
-
-        } else {
-
+        // Whitelist check
+        if (!isset($getDefaultConfigs[$type][$tab]) || !is_array($getDefaultConfigs[$type][$tab])) {
             wp_send_json_error([
                 'message' => __('Invalid reset request', 'quick-enquiry-us')
-            ]);
+            ], 400);
         }
+
+        $currentSettings = get_option($type, $getDefaultConfigs[$type]);
+
+        if (!is_array($currentSettings)) {
+            $currentSettings = $getDefaultConfigs[$type];
+        }
+
+        // Reset this tab to default values
+        $currentSettings[$tab] = $getDefaultConfigs[$type][$tab];
+
+        update_option($type, $currentSettings);
+
+       wp_send_json_success([
+			'message'  => sprintf(
+				/* translators: %s: Settings tab name, e.g. "General" or "Email". */
+				__('Reset %s successfully', 'quick-enquiry-us'),
+				ucfirst($tab)
+			),
+			'settings' => $currentSettings,
+		]);
     }
-    
+
     // Get QuickEnquiry Us addon Details
     public function getQuickEnquiryUsDetails($request)
     {
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
+        }
+
         $QuickEnquiryUs = new QuickEnquiryUs();
-        $details   = $QuickEnquiryUs->getDetails($request);
+        $details        = $QuickEnquiryUs->getDetails($request);
 
         wp_send_json_success([
             'message' => __('Quick enquiry us details get successfully.', 'quick-enquiry-us'),
-            'data' => $details,
+            'data'    => $details,
         ], 200);
     }
 
     public function getDetailView($request)
     {
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        $detailId = absint($request['detail_id'] ?? 0);
+
+        if (!$detailId) {
+            wp_send_json_error([
+                'message' => __('Invalid detail id', 'quick-enquiry-us')
+            ], 400);
+        }
+
         $QuickEnquiryUs = new QuickEnquiryUs();
-        $detail   = $QuickEnquiryUs->getDetail($request['detail_id']);
+        $detail         = $QuickEnquiryUs->getDetail($detailId);
 
         wp_send_json_success([
             'message' => __('QuickEnquiry Us detail get successfully.', 'quick-enquiry-us'),
-            'detail' => $detail,
+            'detail'  => $detail,
         ], 200);
     }
 
     public function maybeDeleteDetails($request)
     {
-        $QuickEnquiryUs = new QuickEnquiryUs();
-
-        $detailsIds    = $request['details_ids'];
-        $actionType    = sanitize_text_field($request['action_type']);
-
-        if ($actionType === 'delete') {
-            $QuickEnquiryUs->deleteInfo($detailsIds);
-            wp_send_json_success(array(
-                'message' => __('Selected enquiry successfully deleted', 'quick-enquiry-us')
-            ), 200);
-        } else {
-            wp_send_json_error(array(
-                'message' => __('Invalid action type', 'quick-enquiry-us')
-            ), 400);
+        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
         }
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error([
+                'message' => __('Unauthorized access', 'quick-enquiry-us')
+            ], 403);
+        }
+
+        $actionType = $request['action_type'] ?? '';
+
+        if ($actionType !== 'delete') {
+            wp_send_json_error([
+                'message' => __('Invalid action type', 'quick-enquiry-us')
+            ], 400);
+        }
+
+        $detailsIds = $request['details_ids'] ?? [];
+
+        if (!is_array($detailsIds)) {
+            $detailsIds = [$detailsIds];
+        }
+
+        // Only positive integers, no duplicates, no zeros
+        $detailsIds = array_values(array_unique(array_filter(array_map('absint', $detailsIds))));
+
+        if (empty($detailsIds)) {
+            wp_send_json_error([
+                'message' => __('No enquiry selected', 'quick-enquiry-us')
+            ], 400);
+        }
+
+        $QuickEnquiryUs = new QuickEnquiryUs();
+        $QuickEnquiryUs->deleteInfo($detailsIds);
+
+        wp_send_json_success([
+            'message' => __('Selected enquiry successfully deleted', 'quick-enquiry-us')
+        ], 200);
     }
 }

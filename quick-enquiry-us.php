@@ -1,21 +1,25 @@
 <?php
 
 /*
-Plugin Name: Quick Enquiry Us - WooCommerce
+Plugin Name: Quick Enquiry Us
 Description: The Best Quick Enquiry Us Plugin for WooCommerce.
 Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 7.4
 Author: wpcreativeidea
 Author URI: https://wpcreativeidea.com/home
 Plugin URI: https://wpcreativeidea.com/quick-enquiry-us
 License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: quick-enquiry-us
 Domain Path: /languages
 */
 
 defined("ABSPATH") or die;
-define('QUICK_ENQUIRY_US_PLUGIN_DIR_URL', plugin_dir_url(__FILE__));
-define('QUICK_ENQUIRY_US_PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
-define('QUICK_ENQUIRY_US_PLUGIN_VERSION', '1.0.0');
+define('QEUS_PLUGIN_DIR_URL', plugin_dir_url(__FILE__));
+define('QEUS_PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
+define('QEUS_PLUGIN_VERSION', '1.0.0');
+define('QEUS_LITE', 'quick-enquiry-us');
 
 class WooQuickEnquiryUsLite
 {
@@ -25,7 +29,13 @@ class WooQuickEnquiryUsLite
     public function init()
     {
         // Quick Shop Bundle Plugin is Active
-        if (defined('QUICK_SHOP_BUNDLE_PLUGIN')) {
+        // if (defined('QUICK_SHOP_BUNDLE_PLUGIN')) {
+        //     return;
+        // }
+
+        // Check if WooCommerce is active
+        if (!$this->is_woocommerce_active()) {
+            add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
             return;
         }
       
@@ -34,11 +44,6 @@ class WooQuickEnquiryUsLite
 
         require_once __DIR__ . '/vendor/autoload.php';
 
-        if (!$this->is_woocommerce_active()) {
-            add_action('admin_notices', array($this, 'woocommerce_missing_notice'));
-            return;
-        }
-        
         $this->setup_hooks();
     }
 
@@ -52,6 +57,7 @@ class WooQuickEnquiryUsLite
         }
 
         $this->publicHooks();
+
         $this->commonHooks();
     }
 
@@ -61,13 +67,15 @@ class WooQuickEnquiryUsLite
     public function adminHooks()
     {
        // woocommerce settings page add Quick Enquiry Us settings tab
-        add_filter( 'woocommerce_get_settings_pages', array('QuickEnquiryUs\App\Classes\Customization', 'quickEnquiryUsAddSettings'), 15, 1 );
+        add_filter( 'woocommerce_get_settings_pages', array('WPCreativeIdea\QuickEnquiryUs\Classes\Customization', 'quickEnquiryUsAddSettings'), 15, 1 );
     
-        $ajaxAdminAjaxHandler = new QuickEnquiryUs\App\Handler\AdminAjaxHandler();
+        $ajaxAdminAjaxHandler = new WPCreativeIdea\QuickEnquiryUs\Handler\AdminAjaxHandler();
         $ajaxAdminAjaxHandler->registerEndpoints();
         
-        $licenseHandler = new QuickEnquiryUs\App\Handler\LicenseHandler();
-        $licenseHandler->registerEndpoints();
+        if ( defined('QEUS_PRO') && class_exists( \WPCreativeIdea\QuickEnquiryUsPro\Classes\LicenseController::class ) ) {
+            $licenseController = new \WPCreativeIdea\QuickEnquiryUsPro\Classes\LicenseController();
+            $licenseController->registerEndpoints();
+		}
     }
 
     /**
@@ -78,7 +86,7 @@ class WooQuickEnquiryUsLite
     }
 
     public function commonHooks() {
-       $ActionHandler = new QuickEnquiryUs\App\Handler\ActionHandler();
+       $ActionHandler = new WPCreativeIdea\QuickEnquiryUs\Handler\ActionHandler();
        $ActionHandler->register();
     }
 
@@ -106,13 +114,10 @@ class WooQuickEnquiryUsLite
 add_action('plugins_loaded', function () {
     $WooQuickEnquiryUsLite = new WooQuickEnquiryUsLite();
     $WooQuickEnquiryUsLite->init();
-
-    // Added textdomain
-    load_plugin_textdomain( 'quick-enquiry-us', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 });
 
 register_activation_hook(__FILE__, function ($network_wide) {
-    require_once(QUICK_ENQUIRY_US_PLUGIN_DIR_PATH . 'App/Handler/ActivationHandler.php');
-    $activate = new QuickEnquiryUs\App\Handler\ActivationHandler();
+    require_once(QEUS_PLUGIN_DIR_PATH . 'App/Handler/ActivationHandler.php');
+    $activate = new WPCreativeIdea\QuickEnquiryUs\Handler\ActivationHandler();
     $activate->activate($network_wide);
 });

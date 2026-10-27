@@ -42,13 +42,6 @@ class QueryBuilderHandler
     protected $adapterInstance;
 
     /**
-     * The PDO fetch parameters to use
-     *
-     * @var array
-     */
-    protected $fetchParameters = array(\PDO::FETCH_OBJ);
-
-    /**
      * @param null|\WpFluent\Connection $connection
      *
      * @throws \WpFluent\Exception
@@ -76,33 +69,6 @@ class QueryBuilderHandler
             '\\WpFluent\\QueryBuilder\\Adapters\\' . ucfirst($this->adapter),
             array($this->connection)
         );
-    }
-
-    /**
-     * Set the fetch mode
-     *
-     * @param $mode
-     * @return $this
-     */
-    public function setFetchMode($mode)
-    {
-        $this->fetchParameters = func_get_args();
-
-        return $this;
-    }
-
-    /**
-     * Fetch query results as object of specified type
-     *
-     * @param $className
-     * @param array $constructorArgs
-     * @return QueryBuilderHandler
-     */
-    public function asObject($className, $constructorArgs = array())
-    {
-        var_dump('need to implement this'); die();
-
-        return $this->setFetchMode(\PDO::FETCH_CLASS, $className, $constructorArgs);
     }
 
     /**
@@ -277,9 +243,9 @@ class QueryBuilderHandler
     {
         $allowedTypes = array('select', 'insert', 'insertignore', 'replace', 'delete', 'update', 'criteriaonly');
 
-        if (! in_array(strtolower($type), $allowedTypes)) {
-            throw new Exception($type . ' is not a known type.', 2);
-        }
+        if (! in_array(strtolower($type), $allowedTypes, true)) {
+			throw new Exception(esc_html($type) . ' is not a known type.', 2);
+		}
 
         $queryArr = $this->adapterInstance->$type($this->statements, $dataToBePassed);
         
@@ -832,7 +798,7 @@ class QueryBuilderHandler
     public function transaction(\Closure $callback)
     {
         try {
-            // Begin the PDO transaction
+            // Begin the transaction
             $this->db->query('START TRANSACTION');
 
             // Get the Transaction class
@@ -1104,9 +1070,15 @@ class QueryBuilderHandler
      */
     public function paginate($perPage = null, $columns = array('*'))
     {
-        $currentPage = intval($_GET['page']) ?: 1;
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only pagination parameters, nothing is saved.
+        $currentPage = isset($_GET['page']) ? absint(wp_unslash($_GET['page'])) : 0;
+        $currentPage = $currentPage ?: 1;
 
-        $perPage = $perPage ?: intval($_REQUEST['per_page']) ?: 15;
+        if (! $perPage) {
+            $perPage = isset($_REQUEST['per_page']) ? absint(wp_unslash($_REQUEST['per_page'])) : 0;
+            $perPage = $perPage ?: 15;
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
         $skip = $perPage * ($currentPage - 1);
 

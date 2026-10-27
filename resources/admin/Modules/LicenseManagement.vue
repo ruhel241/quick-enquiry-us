@@ -1,5 +1,5 @@
 <template>
-    <div class="qeus-license-management qeus-card">
+    <div class="qeus-license-management qeus-card" v-if="hasPro">
         <div class="qeus_header">
             <div class="qeus_title qeus_header_title">
                 <h3 style="margin: 0;"> License Management </h3>
@@ -130,6 +130,7 @@ export default {
             licenseKey: '',
             showNewLicenseInput: false,
             errorMessage: '',
+            hasPro: !!window.QuickEnquiryUsAdminVars?.has_pro
         }
     },
     methods: {

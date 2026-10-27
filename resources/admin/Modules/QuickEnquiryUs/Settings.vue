@@ -278,7 +278,7 @@
         </el-tooltip>
       </div>
       <div class="setting-row-repeter-fields">
-        <el-button size="mini" type="primary" @click="addNew" class="repeter-add-btn">
+        <el-button size="mini" type="primary" @click="addNew('WhatsApp')" class="repeter-add-btn">
           Add WhatsApp Number <i class="el-icon-circle-plus-outline"></i>
         </el-button>
         <div
@@ -305,7 +305,7 @@
             circle
             class="delete-btn"
             :disabled="whatsappNumbers.length === 1"
-            @click="removeLink(index)"
+            @click="removeLink(index, 'WhatsApp')"
           />
           <el-tooltip content="Add the receiver name and WhatsApp number" placement="top">
             <i class="el-icon-question"></i>
@@ -341,82 +341,90 @@
 
     <div class="qeus-settings-content" v-if="settings.sms_tab_enable === 'yes'">
       <div class="setting-title">
-        <h3>SMS Configure Settings</h3>
-      </div>
-      <div class="setting-row">
-        <span class="setting-label">SMS Send</span>
-        <el-switch
-            v-model="settings.sms_enable"
-            active-text="Enable SMS"
-            active-value="yes"
-            inactive-value="no"
-            @change="(value) => changeHandler('sms_enable', value)">
-        </el-switch>
-        <el-tooltip content="Enable this option to send enquiry form submissions via SMS." placement="top">
-          <i class="el-icon-question"></i>
-        </el-tooltip>
-      </div>
-      <div class="setting-row">
-        <span class="setting-label">Tab Name Change</span>
-        <el-input
-            class="setting-input"
-            v-model="settings.sms_tab_text"
-            @change="(value) => changeHandler('sms_tab_text', value)"
-        />
-        <el-tooltip content="Change the text displayed on the sms tab." placement="top">
-          <i class="el-icon-question"></i>
-        </el-tooltip>
-      </div>
-
-      <div v-if="settings.sms_enable == 'yes'">
-          <div class="setting-row">
-            <span class="setting-label">Twilio Account SID <span style="color: red">*</span></span>
+          <h3>SMS Configure Settings</h3>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">Title Change</span>
+          <el-input
+              class="setting-input"
+              v-model="settings.sms_title_text"
+              @change="(value) => changeHandler('sms_title_text', value)"
+          />
+          <el-tooltip content="Change the title text displayed in the SMS section" placement="top">
+            <i class="el-icon-question"></i>
+          </el-tooltip>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">Tab Name Change</span>
+          <el-input
+              class="setting-input"
+              v-model="settings.sms_tab_text"
+              @change="(value) => changeHandler('sms_tab_text', value)"
+          />
+          <el-tooltip content="Change the text displayed on the SMS tab." placement="top">
+            <i class="el-icon-question"></i>
+          </el-tooltip>
+        </div>
+        <div class="setting-row-repeter-fields">
+          <el-button size="mini" type="primary" @click="addNew('SMS')" class="repeter-add-btn">
+            Add SMS Number <i class="el-icon-circle-plus-outline"></i>
+          </el-button>
+          <div
+            class="setting-input-repeter"
+            v-for="(item, index) in smsNumbers"
+            :key="index"
+          >
             <el-input
-                class="setting-input"
-                v-model="settings.twilio_account_sid"
-                placeholder="Enter Your Twilio Account SID"
-                @change="(value) => changeHandler('twilio_account_sid', value)"
+              class="setting-input"
+              placeholder="Receiver Name"
+              v-model="item.receiver_name"
+              @input="emitSmsNumbers"
             />
-            <el-tooltip content="Enter your Twilio Account SID. This is required to send SMS messages via Twilio" placement="top">
+            <el-input
+              class="setting-input"
+              type="number"
+              placeholder="SMS Number"
+              v-model="item.receiver_number"
+              @input="emitSmsNumbers"
+            />
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              class="delete-btn"
+              :disabled="smsNumbers.length === 1"
+              @click="removeLink(index, 'SMS')"
+            />
+            <el-tooltip content="Add the receiver name and SMS number" placement="top">
               <i class="el-icon-question"></i>
             </el-tooltip>
           </div>
-          <div class="setting-row">
-            <span class="setting-label">Twilio Auth Token <span style="color: red">*</span></span>
-            <el-input
-                class="setting-input"
-                v-model="settings.twilio_auth_token"
-                placeholder="Enter Your Twilio Auth Token"
-                @change="(value) => changeHandler('twilio_auth_token', value)"
-            />
-            <el-tooltip content="Enter your Twilio Auth Token. This is required to send SMS messages via Twilio" placement="top">
-              <i class="el-icon-question"></i>
-            </el-tooltip>
-          </div>
-          <div class="setting-row">
-            <span class="setting-label">Twilio Phone Number <span style="color: red">*</span></span>
-            <el-input
-                class="setting-input"
-                v-model="settings.twilio_phone_number"
-                placeholder="Enter Your Twilio Phone Number"
-                @change="(value) => changeHandler('twilio_phone_number', value)"
-            />
-            <el-tooltip content="Enter your Twilio Phone Number. This is required to send SMS messages via Twilio" placement="top">
-              <i class="el-icon-question"></i>
-            </el-tooltip>
-          </div>
-          <div class="setting-row">
-            <span class="setting-label">Submit Button Text</span>
-            <el-input
-                class="setting-input"
-                v-model="settings.sms_submit_button_text"
-                @change="(value) => changeHandler('sms_submit_button_text', value)"
-            />
-            <el-tooltip content="Change the text displayed on the submit button." placement="top">
-              <i class="el-icon-question"></i>
-            </el-tooltip>
-          </div>
-      </div>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">Button Text Change</span>
+          <el-input
+              class="setting-input"
+              v-model="settings.sms_button_text"
+              @change="(value) => changeHandler('sms_button_text', value)"
+          />
+          <el-tooltip content="Change the button text" placement="top">
+            <i class="el-icon-question"></i>
+          </el-tooltip>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">SMS Message</span>
+          <el-input
+              class="setting-input"
+              type="textarea"
+              :rows="3"
+              v-model="settings.sms_message"
+              placeholder="Enter Your SMS Message Here. You can use {receiver_name}, {title}, {url} as a placeholder."
+              @change="(value) => changeHandler('sms_message', value)"
+          />
+          <el-tooltip content="You can use {receiver_name}, {title}, {url} as a placeholder." placement="top">
+            <i class="el-icon-question"></i>
+          </el-tooltip>
+        </div>
     </div>
     <div class="qeus-settings-content">
       <div class="setting-title">
@@ -579,9 +587,15 @@
           receiver_number: ''
         }
       ],
-      shortcodeGeneralForm: '[quick_enquiry_us_button]',
-      shortcodeProductId: '[quick_enquiry_us_button product_id="23"]',
-      shortcodeProductSlug: '[quick_enquiry_us_button product_slug="beanie-with-logo"]'
+      smsNumbers: [
+        {
+          receiver_name: '',
+          receiver_number: ''
+        }
+      ],
+      shortcodeGeneralForm: '[qeus_button]',
+      shortcodeProductId: '[qeus_button product_id="23"]',
+      shortcodeProductSlug: '[qeus_button product_slug="beanie-with-logo"]'
     }
   },
   watch: {
@@ -601,6 +615,23 @@
           ]
         }
       }
+    },
+    // Handle async-loaded settings (WordPress / API)
+    'settings.sms_numbers': {
+      immediate: true,
+      deep: true,
+      handler(newVal) {
+        if (Array.isArray(newVal) && newVal.length) {
+          this.smsNumbers = JSON.parse(JSON.stringify(newVal))
+        } else {
+          this.smsNumbers = [
+            {
+              receiver_name: '',
+              receiver_number: ''
+            }
+          ]
+        }
+      }
     }
   },
   methods: {
@@ -612,21 +643,43 @@
       this.$emit('update', 'whatsapp_numbers', this.whatsappNumbers)
     },
 
-    addNew() {
-      if (this.whatsappNumbers.length >= 5) {
+    emitSmsNumbers() {
+      this.$emit('update', 'sms_numbers', this.smsNumbers)
+    },
+
+    addNew(type) {
+      if (type === 'WhatsApp' && this.whatsappNumbers.length >= 5) {
+        return // stop adding more than 5
+      }
+      if (type === 'SMS' && this.smsNumbers.length >= 5) {
         return // stop adding more than 5
       }
 
-      this.whatsappNumbers.push({
-        receiver_name: '',
-        receiver_number: ''
-      })
-      this.emitWhatsappNumbers()
+      if (type === 'WhatsApp') {
+        this.whatsappNumbers.push({
+          receiver_name: '',
+          receiver_number: ''
+        })
+        this.emitWhatsappNumbers()
+      }
+      if (type === 'SMS') {
+        this.smsNumbers.push({
+          receiver_name: '',
+          receiver_number: ''
+        })
+        this.emitSmsNumbers()
+      }
     },
 
-    removeLink(index) {
-      this.whatsappNumbers.splice(index, 1)
-      this.emitWhatsappNumbers()
+    removeLink(index, type) {
+      if (type === 'WhatsApp') {
+        this.whatsappNumbers.splice(index, 1)
+        this.emitWhatsappNumbers()
+      }
+      if (type === 'SMS') {
+        this.smsNumbers.splice(index, 1)
+        this.emitSmsNumbers()
+      }
     }
   }
 }

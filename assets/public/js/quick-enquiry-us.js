@@ -3,7 +3,7 @@
   !*** ./resources/public/js/qeus.js ***!
   \*************************************/
 jQuery(document).ready(function ($) {
-  var QuickEnquiryUsPublicVarsSettings = QuickEnquiryUsPublicVars.quick_enquiry_us_settings.settings;
+  var QuickEnquiryUsPublicVarsSettings = QuickEnquiryUsPublicVars.qeus_settings.settings;
   var isLoading = false;
   function showLoading() {
     isLoading = true;
@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
         setTimeout(function () {
           var $qvpuWrapper = $parentProduct.find('.qvpu-add-to-cart-wrapper');
           var $quickCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
-          var $enquiryShopBtn = $parentProduct.find('.qeus-quick-enquiry-us-button');
+          var $enquiryShopBtn = $parentProduct.find('.qeus-button');
 
           /** ---------------------------------------------
            * CASE 1: Wrapper already exists quick view
@@ -72,10 +72,10 @@ jQuery(document).ready(function ($) {
       });
 
       // Click Open modal
-      $(document).on('click', '.qeus-quick-enquiry-us-button', function (e) {
+      $(document).on('click', '.qeus-button', function (e) {
         e.preventDefault();
         $("body").addClass("qeus-modal-open");
-        $('.qeus-quick-enquiry-us-modal-wrapper').fadeIn();
+        $('.qeus-modal-wrapper').fadeIn();
         var $btn = $(this);
         var productId = $btn.data('product-id');
         var productSlug = $btn.data('product-slug') ? $btn.data('product-slug') : '';
@@ -102,8 +102,8 @@ jQuery(document).ready(function ($) {
     },
     enquirUsForm: function enquirUsForm(productId, productSlug) {
       showLoading();
-      $.post('/?wc-ajax=qeus_quick_enquiry_us_ajax_actions', {
-        route: 'qeus_quick_enquiry_us_form',
+      $.post('/?wc-ajax=qeus_ajax_actions', {
+        route: 'qeus_form',
         nonce: window.QuickEnquiryUsPublicVars.nonce,
         product_id: productId,
         product_slug: productSlug
@@ -120,14 +120,14 @@ jQuery(document).ready(function ($) {
     closeModal: function closeModal() {
       // Close button
       $(document).on('click', '.qeus-view-close', function () {
-        $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+        $('.qeus-modal-wrapper').fadeOut();
         $("body").removeClass("qeus-modal-open");
       });
 
       // Click outside to close
-      $(document).on('click', '.qeus-quick-enquiry-us-modal-wrapper', function (e) {
-        if ($(e.target).hasClass('qeus-quick-enquiry-us-modal-wrapper')) {
-          $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+      $(document).on('click', '.qeus-modal-wrapper', function (e) {
+        if ($(e.target).hasClass('qeus-modal-wrapper')) {
+          $('.qeus-modal-wrapper').fadeOut();
           $("body").removeClass("qeus-modal-open");
         }
       });
@@ -135,7 +135,7 @@ jQuery(document).ready(function ($) {
       // Escape key close
       $(document).on('keyup', function (e) {
         if (e.key === "Escape") {
-          $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+          $('.qeus-modal-wrapper').fadeOut();
           $("body").removeClass("qeus-modal-open");
         }
       });
@@ -154,8 +154,8 @@ jQuery(document).ready(function ($) {
         var phone_number = ((_$form$find$val4 = $form.find('input[name="phone_number"]').val()) === null || _$form$find$val4 === void 0 ? void 0 : _$form$find$val4.trim()) || '';
         var country_code = $form.find('select[name="country_code"]').val() || '';
         var subscribe = $form.find('input[name="subscribe"]').is(':checked') ? 'yes' : 'no';
-        // get active tab (sms / enquire)
-        var type = $('.qeus-tab.active').data('tab'); // sms | enquire
+        // get active tab (enquire)
+        var type = $('.qeus-tab.active').data('tab'); // enquire
         var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         // helper function for notice
         function showError(msg) {
@@ -164,27 +164,6 @@ jQuery(document).ready(function ($) {
           setTimeout(function () {
             $('.qeus-notice').fadeOut();
           }, 4000);
-        }
-        /* ======================
-        SMS TAB VALIDATION
-        ======================= */
-        if (type === 'sms') {
-          if (!name) {
-            showError('Name is required');
-            return;
-          }
-          if (!country_code) {
-            showError('Country code is required');
-            return;
-          }
-          if (!phone_number) {
-            showError('Phone number is required');
-            return;
-          }
-          if (!enquiry) {
-            showError('enquiry is required');
-            return;
-          }
         }
         /* ======================
         ENQUIRE FORM VALIDATION
@@ -225,8 +204,8 @@ jQuery(document).ready(function ($) {
     // AJAX request
     enquireUsDetailsAction: function enquireUsDetailsAction(details) {
       showLoading();
-      jQuery.post('/?wc-ajax=qeus_quick_enquiry_us_ajax_actions', {
-        route: 'qeus_quick_enquiry_us_details',
+      jQuery.post('/?wc-ajax=qeus_ajax_actions', {
+        route: 'qeus_details',
         nonce: window.QuickEnquiryUsPublicVars.nonce,
         details: JSON.stringify(details)
       }).success(function (response) {
@@ -240,7 +219,7 @@ jQuery(document).ready(function ($) {
           $('.qeus-form-container form')[0].reset();
           setTimeout(function () {
             $('.qeus-notice').fadeOut();
-            $('.qeus-quick-enquiry-us-modal-wrapper').fadeOut();
+            $('.qeus-modal-wrapper').fadeOut();
             $("body").removeClass("qeus-modal-open");
           }, 6000);
         } else {

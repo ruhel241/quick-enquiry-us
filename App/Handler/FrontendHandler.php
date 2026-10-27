@@ -1,10 +1,10 @@
 <?php
 
-namespace QuickEnquiryUs\App\Handler;
+namespace WPCreativeIdea\QuickEnquiryUs\Handler;
 
-use QuickEnquiryUs\App\Helpers\ArrayHelper as Arr;
-use QuickEnquiryUs\App\Models\QuickEnquiryUs;
-use QuickEnquiryUs\App\Helpers\SanitizeValidation;
+use WPCreativeIdea\QuickEnquiryUs\Helpers\ArrayHelper as Arr;
+use WPCreativeIdea\QuickEnquiryUs\Models\QuickEnquiryUs;
+use WPCreativeIdea\QuickEnquiryUs\Helpers\SanitizeValidation;
 
 class FrontendHandler
 {
@@ -12,8 +12,8 @@ class FrontendHandler
     {
         add_action('wp_footer', [$this, 'initHook']);
         add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
-        add_action('wc_ajax_qeus_quick_enquiry_us_ajax_actions', [$this, 'ajaxRoutes']);
-        add_action('wc_ajax_nopriv_qeus_quick_enquiry_us_ajax_actions', [$this, 'ajaxRoutes']);
+        add_action('wc_ajax_qeus_ajax_actions', [$this, 'ajaxRoutes']);
+        add_action('wc_ajax_nopriv_qeus_ajax_actions', [$this, 'ajaxRoutes']);
         // shop page add enquiry button
         add_action('woocommerce_after_shop_loop_item', [$this, 'addShopPageQuickEnquirysButton'], 30);
         // single page add enquiry button
@@ -49,7 +49,7 @@ class FrontendHandler
     
     // shop page Enquiry Button
     public function addShopPageQuickEnquirysButton() {
-        $quickEnquiryUsSettings = get_option('quick_enquiry_us_settings', []);
+        $quickEnquiryUsSettings = get_option('qeus_settings', []);
         $settings               = $quickEnquiryUsSettings['settings'];
         $shopPageEnable         = Arr::get($settings, 'shop_page_enable', 'yes' );
         $inStockButtonText      = Arr::get($settings, 'in_stock_shop_button_text', 'Enquiry Us');
@@ -77,7 +77,7 @@ class FrontendHandler
 
         /** OUT OF STOCK */
         if ( $stockStatus === 'outofstock' ) {
-            echo '<a href="#" class="button qeus-quick-enquiry-us-button qeus-enquire-shop-btn-outofstock" data-product-id="' . esc_attr($productId) . '">'
+            echo '<a href="#" class="button qeus-button qeus-shop-btn-outofstock" data-product-id="' . esc_attr($productId) . '">'
                 . esc_html($outOfStockButtonText) .
             '</a>';
             return;
@@ -85,7 +85,7 @@ class FrontendHandler
 
         /** BACKORDER */
         if ( $stockStatus === 'onbackorder' ) {
-            echo '<a href="#" class="button qeus-quick-enquiry-us-button qeus-enquire-shop-btn-backorder" data-product-id="' . esc_attr($productId) . '">'
+            echo '<a href="#" class="button qeus-button qeus-shop-btn-backorder" data-product-id="' . esc_attr($productId) . '">'
                 . esc_html($backOrderButtonText) .
             '</a>';
             return;
@@ -93,7 +93,7 @@ class FrontendHandler
 
         /** IN STOCK */
         if ( $stockStatus === 'instock' ) {
-            echo '<a href="#" class="button qeus-quick-enquiry-us-button qeus-enquire-shop-btn-instock" data-product-id="' . esc_attr($productId) . '">'
+            echo '<a href="#" class="button qeus-button qeus-shop-btn-instock" data-product-id="' . esc_attr($productId) . '">'
                 . esc_html($inStockButtonText) .
             '</a>';
             return;
@@ -102,7 +102,7 @@ class FrontendHandler
 
     // single page Enquiry Button
     public function addSinglePageQuickEnquirysButton() {
-        $quickEnquiryUsSettings = get_option('quick_enquiry_us_settings', []);
+        $quickEnquiryUsSettings = get_option('qeus_settings', []);
         $settings               = $quickEnquiryUsSettings['settings'];
         $singlePageEnable       = Arr::get($settings, 'single_page_enable', 'yes');
         $inStockButtonText      = Arr::get($settings, 'in_stock_single_button_text', 'QuickEnquiry Us');
@@ -131,7 +131,7 @@ class FrontendHandler
         /** OUT OF STOCK */
         if ( $stockStatus === 'outofstock' ) {
             add_filter('woocommerce_get_availability_text', function ($availability) use ($outOfStockButtonText, $productId) {
-                $button = '<br><br><a href="#" class="button qeus-quick-enquiry-us-button qeus-enquire-single-btn-outofstock" data-product-id="' . esc_attr($productId) . '">'
+                $button = '<br><br><a href="#" class="button qeus-button qeus-single-btn-outofstock" data-product-id="' . esc_attr($productId) . '">'
                             . esc_html($outOfStockButtonText) .
                         '</a>';
                 return $availability . $button;
@@ -143,7 +143,7 @@ class FrontendHandler
         /** BACKORDER */
         if ( $stockStatus === 'onbackorder' ) {
             add_action('woocommerce_after_add_to_cart_button', function () use ($backOrderButtonText, $productId) {
-                echo '<a href="#" class="button qeus-quick-enquiry-us-button qeus-enquire-single-btn-backorder" data-product-id="' . esc_attr($productId) . '">'
+                echo '<a href="#" class="button qeus-button qeus-single-btn-backorder" data-product-id="' . esc_attr($productId) . '">'
                         . esc_html($backOrderButtonText) .
                     '</a>';
             }, 20);
@@ -154,7 +154,7 @@ class FrontendHandler
         /** IN STOCK */
         if ( $stockStatus === 'instock' ) {
             add_action('woocommerce_after_add_to_cart_button', function () use ($inStockButtonText, $productId) {
-                echo '<a href="#" class="button qeus-quick-enquiry-us-button qeus-enquire-single-btn-instock" data-product-id="' . esc_attr($productId) . '">'
+                echo '<a href="#" class="button qeus-button qeus-single-btn-instock" data-product-id="' . esc_attr($productId) . '">'
                         . esc_html($inStockButtonText) .
                     '</a>';
             }, 20);
@@ -163,7 +163,7 @@ class FrontendHandler
     }
 
     public function addQuickEnquirysButtonCartPageAndOrderSummary($item_data, $cart_item) {
-        $quickEnquiryUsSettings         = get_option('quick_enquiry_us_settings', []);
+        $quickEnquiryUsSettings         = get_option('qeus_settings', []);
         $settings                       = $quickEnquiryUsSettings['settings'];
         $cartPageEnquiryUsBtnText       = Arr::get($settings, 'cart_page_enquiry_us_button_text', 'QuickEnquiry us' );
         $cartPageEnquiryUsBtnEnable     = Arr::get($settings, 'cart_page_enquiry_us_btn_enable', 'yes' );
@@ -189,7 +189,7 @@ class FrontendHandler
                 return $item_data;
             }
             $buttonText = $cartPageEnquiryUsBtnText;
-            $buttonClass = 'qeus-enquiry-us-cart-page-btn';
+            $buttonClass = 'qeus-cart-page-btn';
         }
 
         // ---- Checkout Page ----
@@ -198,7 +198,7 @@ class FrontendHandler
                 return $item_data;
             }
             $buttonText = $orderSummaryEnquiryUsBtnText;
-            $buttonClass = 'qeus-enquiry-us-order-summary-btn';
+            $buttonClass = 'qeus-order-summary-btn';
         }
 
         // ---- Quick Cart Popup ----
@@ -207,14 +207,14 @@ class FrontendHandler
                 return $item_data;
             }
             $buttonText = $orderSummaryEnquiryUsBtnText;
-            $buttonClass = 'qeus-enquiry-us-order-summary-btn';
+            $buttonClass = 'qeus-order-summary-btn';
         }
 
     
         if ( ! empty($buttonText) ) {
             $item_data[] = [
                 'key'   => __('&nbsp;', 'quick-enquiry-us'),
-                'value' => '<a href="#" class="button qeus-quick-enquiry-us-button '.esc_attr($buttonClass).'" data-product-slug="' . esc_attr($cart_item['data']->get_slug()) . '"> '.wp_kses_post($buttonText). '</a>'
+                'value' => '<a href="#" class="button qeus-button '.esc_attr($buttonClass).'" data-product-slug="' . esc_attr($cart_item['data']->get_slug()) . '"> '.wp_kses_post($buttonText). '</a>'
             ];
         }
 
@@ -231,7 +231,7 @@ class FrontendHandler
 
     public function registerShortcodes()
     {   
-        add_shortcode('quick_enquiry_us_button', function ($attr) {
+        add_shortcode('qeus_button', function ($attr) {
             $builder =  $this->buttonRender($attr);
             return $builder; 
         });
@@ -239,7 +239,7 @@ class FrontendHandler
 
     public function buttonRender($attr)
     {
-        $quickEnquiryUsSettings = get_option('quick_enquiry_us_settings', []);
+        $quickEnquiryUsSettings = get_option('qeus_settings', []);
         $settings      = $quickEnquiryUsSettings['settings'] ?? [];
 
         $buttonText = Arr::get($settings, 'shortcode_enquiry_us_button_text', 'QuickEnquiry us');
@@ -253,7 +253,7 @@ class FrontendHandler
         ob_start();
         ?>
             <a href="#"
-            class="button qeus-quick-enquiry-us-button qeus-shortcode-enquiry-us-btn"
+            class="button qeus-button qeus-shortcode-btn"
             data-product-id="<?php echo intval($attr['product_id']); ?>"
             data-product-slug="<?php echo esc_attr($attr['product_slug']); ?>">
                 <?php echo esc_html($buttonText); ?>
@@ -267,31 +267,39 @@ class FrontendHandler
      */
     public function ajaxRoutes()
     {
-        // Validate nonce
-        if (!isset($_REQUEST['nonce'])) {
-            wp_send_json_error(['message' => __('Invalid nonce', 'quick-enquiry-us')], 403);
+        if (!check_ajax_referer('qeus_public_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
         }
 
-        if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'])), 'quick_enquiry_us_nonce')) {
-            wp_send_json_error(['message' => __('Invalid enquire us nonce', 'quick-enquiry-us')], 403);
+        // Nonce already verified above. POST overrides GET, cookies are excluded.
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
+        $rawData = array_merge($_GET, $_POST);
+        // phpcs:enable
+
+        $route = sanitize_key(wp_unslash($rawData['route'] ?? ''));
+
+        if (!$route) {
+            wp_send_json_error(['message' => 'Invalid route'], 400);
         }
 
-        $route = sanitize_text_field(wp_unslash($_REQUEST['route'] ?? ''));
-
-        // Sanitize all incoming inputs and route, nonce, data validated to handlers
-        $validatedData = (new SanitizeValidation)->validateRequestData($_REQUEST);
-
-        $routes = [
-            'qeus_quick_enquiry_us_details' => 'quickEnquiryUsDetails',
-            'qeus_quick_enquiry_us_form'    => 'quickEnquiryUsModalForm'
+        $validRoutes = [
+            'qeus_details' => 'quickEnquiryUsDetails',
+            'qeus_form'    => 'quickEnquiryUsModalForm'
         ];
 
-        if (isset($routes[$route])) {
-            do_action('quick-enquiry-us/qeus_quick_enquiry_us_doing_ajax_forms_' . $route);
-            $this->{$routes[$route]}($validatedData);
+        if (!isset($validRoutes[$route])) {
+            wp_send_json_error(['message' => 'Invalid route'], 400);
         }
 
-        do_action('quick-enquiry-us/qeus_quick_enquiry_us_public_ajax_handler_catch', $route);
+        $validatedData = (new SanitizeValidation)->validateRequestData($rawData);
+
+        do_action('qeus_public_ajax_handler_catch', $route);
+
+        $this->{$validRoutes[$route]}($validatedData);
+
+        wp_die();
     }
 
     /**
@@ -300,36 +308,42 @@ class FrontendHandler
     public function enqueueScripts()
     {
         wp_enqueue_style(
-            "quick_enquiry_us_css",
-            QUICK_ENQUIRY_US_PLUGIN_DIR_URL . "assets/public/css/quick-enquiry-us.css",
+            "qeus_css",
+            QEUS_PLUGIN_DIR_URL . "assets/public/css/quick-enquiry-us.css",
             [],
-            QUICK_ENQUIRY_US_PLUGIN_VERSION
+            QEUS_PLUGIN_VERSION
         );
 
         wp_enqueue_script(
-            "quick_enquiry_us_js",
-            QUICK_ENQUIRY_US_PLUGIN_DIR_URL . "assets/public/js/quick-enquiry-us.js",
+            "qeus_public_js",
+            QEUS_PLUGIN_DIR_URL . "assets/public/js/quick-enquiry-us.js",
             ['jquery'],
-            QUICK_ENQUIRY_US_PLUGIN_VERSION,
+            QEUS_PLUGIN_VERSION,
             true
         );
 
         $this->styleHandler();
 
-        $settings          = get_option('quick_enquiry_us_settings', []);
+        $settings          = get_option('qeus_settings', []);
         $activeModules     = get_option('qeus_active_module', []);
 
-        wp_localize_script('quick_enquiry_us_js', 'QuickEnquiryUsPublicVars', [
+        wp_localize_script('qeus_public_js', 'QuickEnquiryUsPublicVars', [
             'ajaxurl'            => admin_url('admin-ajax.php'),
             'site_url'           => get_site_url(),
-            'nonce'              => wp_create_nonce('quick_enquiry_us_nonce'),
+            'nonce'              => wp_create_nonce('qeus_public_nonce'),
             'get_active_modules' => $activeModules,
-            'quick_enquiry_us_settings'=> $settings,
+            'qeus_settings'=> $settings,
         ]);
     }
 
     public function quickEnquiryUsModalForm($request)
     {
+        if (!check_ajax_referer('qeus_public_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
+        }
+
         $productId   = $request['product_id'] ?? null;
         $productSlug = $request['product_slug'] ?? null;
 
@@ -349,13 +363,13 @@ class FrontendHandler
     */
     public function enquireUsModalHandler()
     {   ?>
-            <div class="qeus-quick-enquiry-us-modal-wrapper" style="display:none;">
+            <div class="qeus-modal-wrapper" style="display:none;">
                 <div class="qeus-modal-content">
-                    <?php echo $this->enquiryUsHtml(); ?>
+                    <?php echo wp_kses($this->enquiryUsHtml(), $this->allowedHtml()); ?>
                     <!-- loading -->
                     <div id="qeus-loading-view" style="display: none;">
                         <div class="qeus-loading-spinner">
-                            <img src="<?php echo QUICK_ENQUIRY_US_PLUGIN_DIR_URL . 'assets/public/images/loading.gif' ?>" alt="">
+                           <img src="<?php echo esc_url(QEUS_PLUGIN_DIR_URL . 'assets/public/images/loading.gif'); ?>" alt="">
                         </div>
                         <h2 class="qeus-loading-title">Loading...</h2>
                     </div>
@@ -367,7 +381,7 @@ class FrontendHandler
     public function enquiryUsHtml($product = null) 
     {
         
-        $quickEnquiryUsSettings = get_option('quick_enquiry_us_settings', []);
+        $quickEnquiryUsSettings = get_option('qeus_settings', []);
         $settings      =  $quickEnquiryUsSettings['settings'];
 
         // -------- SAFE PRODUCT HANDLING --------
@@ -389,12 +403,17 @@ class FrontendHandler
         $whatsappTabEnable     = Arr::get($settings, 'whatsapp_tab_enable', 'no' );
         $smsTabEnable          = Arr::get($settings, 'sms_tab_enable', 'no' );
         $enquiryTabText        = Arr::get($settings, 'enquiry_tab_text', 'Enquiry Form' );
+        // whatsApp
         $whatsappTabText       = Arr::get($settings, 'whatsapp_tab_text', 'Contact on whatsapp' );
         $whatsappTitleText     = Arr::get($settings, 'whatsapp_title_text', 'Chat with us on WhatsApp' );
         $whatsappButtonText    = Arr::get($settings, 'whatsapp_button_text', 'Chat on WhatsApp' );
         $whatsappNumbers       = Arr::get($settings, 'whatsapp_numbers', []);
-        $smsTabText            = Arr::get($settings, 'sms_tab_text', 'Send SMS' );
-        $smsSubmitButtonText   = Arr::get($settings, 'sms_submit_button_text', 'Send SMS' );
+        //SMS
+        $smsTabText            = Arr::get($settings, 'sms_tab_text', 'Contact on sms' );
+        $smsTitleText          = Arr::get($settings, 'sms_title_text', 'Chat with us on SMS' );
+        $smsButtonText         = Arr::get($settings, 'sms_button_text', 'Send SMS' );
+        $smsMessage            = Arr::get($settings, 'sms_message', 'Hello' );
+        $smsNumbers            = Arr::get($settings, 'sms_numbers', []);
 
         // /** Replace {title} placeholder */
         $inStockFormHeading    = str_replace('{title}', $title, $inStockFormHeading);
@@ -475,7 +494,7 @@ class FrontendHandler
                     <?php endif; ?>
                 </div>
                 <div class="qeus-tab-content <?php echo esc_attr( $activeTab === 'email' ? 'active' : '' ); ?>" id="qeus-tab-email">
-                    <?php echo $this->enquireFormHtml($product, 'email', $enquirySubmitButtonText);?>
+                    <?php echo wp_kses($this->enquireFormHtml($product, 'email', $enquirySubmitButtonText), $this->allowedHtml()); ?>
                 </div>
                 <div class="qeus-tab-content <?php echo esc_attr( $activeTab === 'whatsapp' ? 'active' : '' ); ?>" id="qeus-tab-whatsapp">
                     <div class="qeus-tab-box">
@@ -498,7 +517,29 @@ class FrontendHandler
                     </div>
                 </div>
                 <div class="qeus-tab-content <?php echo $activeTab === 'sms' ? 'active' : ''; ?>" id="qeus-tab-sms">
-                    <?php echo $this->enquireFormHtml($product, 'sms', $smsSubmitButtonText);?>
+                    <div class="qeus-tab-box">
+                        <p><?php echo esc_html($smsTitleText); ?></p>
+                        <div class="qeus-social-numbers">
+                            <?php 
+                                foreach ($smsNumbers as $number) : 
+                                    $receiverName   = isset($number['receiver_name']) ? $number['receiver_name'] : 'Support';
+                                    $receiverNumber = isset($number['receiver_number']) ? $number['receiver_number'] : '';  
+                            ?>
+                                <div class="qeus-social-number">
+                                    <p><?php echo esc_html($receiverName); ?></p>
+                                    <a href="<?php echo esc_url($this->smsLink($receiverName, $receiverNumber, $product, $settings)); ?>" class="qeus-action-btn sms">
+                                       <svg fill="#fff" height="16px" width="16px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+                                            <path d="M448,0H64C28.6,0,0,28.6,0,64v256c0,35.4,28.6,64,64,64h128l-42.7,128l192-128H448c35.4,0,64-28.6,64-64V64
+                                            C512,28.6,483.4,0,448,0z M128,234.7c-23.6,0-42.7-19.1-42.7-42.7s19.1-42.7,42.7-42.7s42.7,19.1,42.7,42.7S151.6,234.7,128,234.7z
+                                            M256,234.7c-23.6,0-42.7-19.1-42.7-42.7s19.1-42.7,42.7-42.7s42.7,19.1,42.7,42.7S279.6,234.7,256,234.7z M384,234.7
+                                            c-23.6,0-42.7-19.1-42.7-42.7s19.1-42.7,42.7-42.7s42.7,19.1,42.7,42.7S407.6,234.7,384,234.7z"></path>
+                                        </svg>
+                                        <?php echo esc_html($smsButtonText); ?>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
                 <div class="qeus-tab-content <?php echo empty($activeTab) ? 'active' : ''; ?>" id="qeus-tab-empty">
                     <p>No enquiry options are available at the moment. Please check back shortly.</p>
@@ -523,7 +564,7 @@ class FrontendHandler
         <div class="qeus-notice">
             <p class="qeus-response-message"></p>
         </div>
-        <form action="#" method="post" class="qeus-enquire-form">
+        <form action="#" method="post" class="qeus-form">
             <div class="qeus-form-field">
                 <label class="qeus-label-name" for="qeus-name-<?php echo esc_attr($tab);?>">Your Name <span class="queb-required-filed">*</span></label>
                 <input type="text" name="name"
@@ -547,10 +588,7 @@ class FrontendHandler
             </div>
             <div class="qeus-form-field">
                 <label class="qeus-label-phone" for="qeus-phone-<?php echo esc_attr($tab);?>">
-                    Phone Number 
-                    <?php if ($tab == 'sms') : ?>
-                        <span class="queb-required-filed">*</span>
-                    <?php endif; ?>
+                    Phone Number
                 </label>
                 <?php
                     $getCountries = $this->getCountries();
@@ -569,16 +607,15 @@ class FrontendHandler
                     <input type="number" name="phone_number"
                         id="qeus-phone-<?php echo esc_attr($tab);?>"
                         placeholder="Enter Your Phone Number"
-                        pattern="[0-9]*"
-                        <?php echo ($tab == 'sms') ? 'required' : ''; ?>>
+                        pattern="[0-9]*">
                 </div>
             </div>
             <div class="qeus-form-field">
                 <input type="hidden" name="product_id" value="<?php echo esc_attr($productId); ?>">
             </div>
             <div class="qeus-form-field">
-                <label class="qeus-label-enquiry" for="qeus-enquiry-<?php echo esc_attr($tab);?>">Enquiry <span class="queb-required-filed">*</span></label>
-                <textarea name="enquiry" id="qeus-enquiry-<?php echo esc_attr($tab);?>" placeholder="Write Your Enquiry..." required></textarea>
+                <label class="qeus-label-enquiry" for="qeus-<?php echo esc_attr($tab);?>">Enquiry <span class="queb-required-filed">*</span></label>
+                <textarea name="enquiry" id="qeus-<?php echo esc_attr($tab);?>" placeholder="Write Your Enquiry..." required></textarea>
             </div>
             <div class="qeus-form-field qeus-subscribe-field">
                 <input type="checkbox" id="subscribe-<?php echo esc_attr($tab);?>" name="subscribe" value="yes">
@@ -592,13 +629,71 @@ class FrontendHandler
         return ob_get_clean();
     }
 
+    // Allowed HTML tags for sanitization                     
+    private function allowedHtml()
+    {
+        $allowed = wp_kses_allowed_html('post');
+
+        // SVG icons
+        $allowed['svg'] = [
+            'width' => true, 'height' => true, 'viewbox' => true, 'fill' => true,
+            'xmlns' => true, 'xmlns:xlink' => true, 'version' => true, 'id' => true,
+            'xml:space' => true, 'enable-background' => true, 'class' => true,
+        ];
+        $allowed['g']    = ['fill' => true, 'class' => true];
+        $allowed['path'] = [
+            'd' => true, 'fill' => true, 'class' => true,
+            'fill-rule' => true, 'clip-rule' => true,
+        ];
+        $allowed['lineargradient'] = [
+            'id' => true, 'gradientunits' => true,
+            'x1' => true, 'y1' => true, 'x2' => true, 'y2' => true,
+        ];
+        $allowed['stop']  = ['offset' => true, 'stop-color' => true];
+        $allowed['image'] = [
+            'overflow' => true, 'opacity' => true, 'width' => true,
+            'height' => true, 'xlink:href' => true, 'transform' => true,
+        ];
+
+        // Tabs
+        $allowed['div']['data-tab'] = true;
+
+        // Form elements
+        $allowed['form'] = [
+            'action' => true, 'method' => true, 'id' => true, 'class' => true,
+        ];
+        $allowed['label'] = ['for' => true, 'class' => true];
+        $allowed['input'] = [
+            'type' => true, 'name' => true, 'id' => true, 'class' => true,
+            'value' => true, 'placeholder' => true, 'required' => true,
+            'pattern' => true, 'checked' => true, 'min' => true, 'max' => true,
+        ];
+        $allowed['select'] = [
+            'name' => true, 'id' => true, 'class' => true, 'required' => true,
+        ];
+        $allowed['option'] = ['value' => true, 'selected' => true];
+        $allowed['textarea'] = [
+            'name' => true, 'id' => true, 'class' => true, 'rows' => true,
+            'placeholder' => true, 'required' => true,
+        ];
+        $allowed['button'] = ['type' => true, 'class' => true];
+
+        return $allowed;
+    }
+
     /**
      * Handle form submission
      */
     public function quickEnquiryUsDetails($request)
     {
+        if (!check_ajax_referer('qeus_public_nonce', 'nonce', false)) {
+            wp_send_json_error([
+                'message' => __('Invalid nonce', 'quick-enquiry-us')
+            ], 403);
+        }
+    
         $QuickEnquiryUs = new QuickEnquiryUs();
-        $quickEnquiryUsSettings = get_option('quick_enquiry_us_settings', []);
+        $quickEnquiryUsSettings = get_option('qeus_settings', []);
         $settings      =  $quickEnquiryUsSettings['settings'];
         
         // If you stringified in JS, decode here
@@ -670,15 +765,6 @@ class FrontendHandler
         // SMS status
         $status = 'not_sent';
 
-        /* SEND SMS */
-        if (Arr::get($settings, 'sms_enable') === 'yes') {
-            if ($type === 'sms') {
-                $smsSent = $this->smsAPI($phonNumberWithCountryCode, $getEnquiry->enquiry, $settings);
-                $status  = $smsSent ? 'sent' : 'failed';
-            }
-        }
-        
-
         /* SEND EMAIL */
         if (Arr::get($settings, 'email_enable') === 'yes') {
             if ($type === 'email') {
@@ -693,14 +779,15 @@ class FrontendHandler
         ]);
 
         /* SUCCESS RESPONSE */
-        $message = sprintf(
-            __('Thank you %s. Your enquiry has been received successfully.', 'quick-enquiry-us'),
-            esc_html($data['name'])
-        );
+		$message = sprintf(
+			/* translators: %s: Name of the person who submitted the enquiry. */
+			__('Thank you %s. Your enquiry has been received successfully.', 'quick-enquiry-us'),
+			esc_html($data['name'])
+		);
 
-        wp_send_json_success([
-            'message'    => $message
-        ], 200);
+		wp_send_json_success([
+			'message' => $message,
+		], 200);
     }
 
     public function normalizePhoneNumber($phoneNumber, $countryCode) {
@@ -730,6 +817,7 @@ class FrontendHandler
         return $countryCode . $phoneNumber;
     }
 
+    // WhatsApp Link Generation
     private function whatsAppApi($receiverName, $whatsAppNumber, $product, $settings)
     {
         // Sanitize WhatsApp number (digits only)
@@ -768,37 +856,46 @@ class FrontendHandler
 
         return "https://wa.me/{$whatsAppNumber}?text=" . rawurlencode($message);
     }
-
-    private function smsAPI($phoneNumber, $enquiry, $settings)
+                            
+    // SMS Link Generation
+    private function smsLink($receiverName, $smsNumber, $product, $settings)
     {
-        $accountSid = Arr::get($settings, 'twilio_account_sid');
-        $authToken  = Arr::get($settings, 'twilio_auth_token');
-        $from       = Arr::get($settings, 'twilio_phone_number');
-        $to         = $phoneNumber; //user phone number
-        $body       = $enquiry; //user enquiry
+        // Sanitize SMS number (digits only)
+        $smsNumber = preg_replace('/\D/', '', $smsNumber);
 
-        $url = "https://api.twilio.com/2010-04-01/Accounts/{$accountSid}/Messages.json";
-
-        $response = wp_remote_post($url, [
-            'headers' => [
-                'Authorization' => 'Basic ' . base64_encode($accountSid . ':' . $authToken),
-            ],
-            'body'    => [
-                'From' => $from,
-                'To'   => $to,
-                'Body' => $body,
-            ],
-            'timeout' => 15,
-        ]);
-
-        if (is_wp_error($response)) {
-            error_log('Twilio Error: ' . $response->get_error_message());
-            return false;
+        if (empty($smsNumber)) {
+            return '';
         }
 
-        $httpCode = wp_remote_retrieve_response_code($response);
+        // Product-safe handling
+        $productTitle = ($product instanceof \WC_Product)
+            ? $product->get_name()
+            : __('General Enquiry', 'quick-enquiry-us');
 
-        return ($httpCode >= 200 && $httpCode < 300);
+        $productUrl = ($product instanceof \WC_Product)
+            ? get_permalink($product->get_id())
+            : get_site_url();
+
+        // Custom message
+        $smsMessage = Arr::get($settings, 'sms_message');
+
+        if (empty($smsMessage)) {
+            $smsMessage =
+                "Hello 👋\n\n" .
+                "I want to enquire about:\n" .
+                "{title}\n\n" .
+                "Link:\n{url}";
+        }
+
+        // Replace placeholders
+        $message = str_replace(
+            ['{receiver_name}', '{title}', '{url}'],
+            [$receiverName, $productTitle, $productUrl],
+            $smsMessage
+        );
+
+      
+        return 'sms:' . $smsNumber . '?body=' . rawurlencode($message);
     }
 
     private function emailAPI($getEnquiry, $product, $settings)
@@ -1047,8 +1144,8 @@ class FrontendHandler
      */
     public function styleHandler()
     {
-        $quickEnquiryUsSettings = get_option('quick_enquiry_us_settings', []);
-        $styles        = $quickEnquiryUsSettings['styles'];
+        $quickEnquiryUsSettings = get_option('qeus_settings', []);
+        $styles                 = $quickEnquiryUsSettings['styles'];
 
         $inStockShopButtonColor           = Arr::get($styles, 'instock_shop_button_color');
         $outOfStockShopButtonColor        = Arr::get($styles, 'out_of_stock_shop_button_color');
@@ -1068,21 +1165,21 @@ class FrontendHandler
         // shop button color
         if (!empty($inStockShopButtonColor)) {
             $custom_css .= "
-                .qeus-enquire-shop-btn-instock {
+                .qeus-shop-btn-instock {
                     background-color: {$inStockShopButtonColor} !important;
                 }
             ";
         }
         if (!empty($outOfStockShopButtonColor)) {
             $custom_css .= "
-                .qeus-enquire-shop-btn-outofstock {
+                .qeus-shop-btn-outofstock {
                     background-color: {$outOfStockShopButtonColor} !important;
                 }
             ";
         }
         if (!empty($backorderShopButtonColor)) {
             $custom_css .= "
-                .qeus-enquire-shop-btn-backorder {
+                .qeus-shop-btn-backorder {
                     background-color: {$backorderShopButtonColor} !important;
                 }
             ";
@@ -1091,21 +1188,21 @@ class FrontendHandler
         // single button color
         if (!empty($inStockSingleButtonColor)) {
             $custom_css .= "
-                .qeus-enquire-single-btn-instock {
+                .qeus-single-btn-instock {
                     background-color: {$inStockSingleButtonColor} !important;
                 }
             ";
         }
         if (!empty($outOfStockSingleButtonColor)) {
             $custom_css .= "
-                .qeus-enquire-single-btn-outofstock {
+                .qeus-single-btn-outofstock {
                     background-color: {$outOfStockSingleButtonColor} !important;
                 }
             ";
         }
         if (!empty($backorderSingleButtonColor)) {
             $custom_css .= "
-                .qeus-enquire-single-btn-backorder {
+                .qeus-single-btn-backorder {
                     background-color: {$backorderSingleButtonColor} !important;
                 }
             ";
@@ -1143,7 +1240,7 @@ class FrontendHandler
         // shortcode enquire us button color
         if (!empty($shortcodeEnquiryUsButtonColor)) {
             $custom_css .= "
-                .qeus-shortcode-enquiry-us-btn  {               
+                .qeus-shortcode-btn  {               
                     background-color: {$shortcodeEnquiryUsButtonColor} !important;
                 }
             ";
@@ -1152,7 +1249,7 @@ class FrontendHandler
         // cart page enquiry us button
         if (!empty($cartPageEnquiryUsButtonColor)) {
             $custom_css .= "
-                .qeus-enquiry-us-cart-page-btn {               
+                .qeus-cart-page-btn {               
                     background-color: {$cartPageEnquiryUsButtonColor} !important;
                 }
             ";
@@ -1161,14 +1258,14 @@ class FrontendHandler
         // order summary page enquiry us button
         if (!empty($orderSummaryEnquiryUsButtonColor)) {
             $custom_css .= "
-                .qeus-enquiry-us-order-summary-btn {               
+                .qeus-order-summary-btn {               
                     background-color: {$orderSummaryEnquiryUsButtonColor} !important;
                 }
             ";
         }
 
         if (!empty($custom_css)) {
-            wp_add_inline_style('quick_enquiry_us_css', $custom_css);
+            wp_add_inline_style('qeus_css', $custom_css);
         }
     }
 }

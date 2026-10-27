@@ -1,61 +1,37 @@
 <?php
 
-namespace QuickEnquiryUs\App\Helpers;
+namespace WPCreativeIdea\QuickEnquiryUs\Helpers;
 
 class SanitizeValidation
 {
-     /**
-     * Validate and sanitize all request data
-     */
-    public function validateRequestData($requestData)
+    public function validateRequestData(array $requestData): array
     {
-        $validated = [];
-        $skipKeys  = ['nonce', 'route'];
+        $skipKeys = ['nonce', 'route', 'action', 'textarea_fields'];
 
-        // ✅ textarea fields ONLY if explicitly sent
-        $textareaFields = isset($requestData['textarea_fields']) && is_array($requestData['textarea_fields']) ? $requestData['textarea_fields'] : [];
+        $textareaFields = (isset($requestData['textarea_fields']) && is_array($requestData['textarea_fields']))
+            ? array_map('sanitize_text_field', wp_unslash($requestData['textarea_fields']))
+            : [];
 
-        foreach ($requestData as $key => $value) {
+        $data = array_diff_key($requestData, array_flip($skipKeys));
 
-            if (in_array($key, $skipKeys, true)) {
-                continue;
-            }
-
-            // ❌ never save textarea_fields itself
-            if ($key === 'textarea_fields') {
-                continue;
-            }
-
-            if (is_array($value)) {
-                $validated[$key] = $this->sanitizeArrayData($value, $textareaFields);
-
-            } elseif (is_numeric($value)) {
-                $validated[$key] = $value + 0;
-
-            } else {
-                // ❌ no textarea_fields → no HTML
-                $validated[$key] = sanitize_text_field(wp_unslash($value));
-            }
-        }
-
-        return $validated;
+        return $this->sanitizeArrayData($data, $textareaFields);
     }
 
-    /**
-     * Recursive array sanitization
-     */
-    public function sanitizeArrayData(array $array, array $textareaFields)
+    public function sanitizeArrayData(array $array, array $textareaFields): array
     {
         $sanitized = [];
 
-        foreach ( $array as $key => $value ) {
+        foreach ($array as $key => $value) {
+            if (is_string($key)) {
+                $key = sanitize_text_field(wp_unslash($key));
+            }
 
-            if ( is_array($value) ) {
+            if (is_array($value)) {
                 $sanitized[$key] = $this->sanitizeArrayData($value, $textareaFields);
-            } elseif ( is_numeric($value) ) {
-                $sanitized[$key] = $value + 0;
-            } elseif ( !empty($textareaFields) && in_array($key, $textareaFields, true) ) {
-                // ✅ textarea field → allow HTML
+            } elseif (!is_scalar($value)) {
+                $sanitized[$key] = '';
+            } elseif (in_array($key, $textareaFields, true)) {
+                // HTML allowed
                 $sanitized[$key] = wp_kses_post(wp_unslash($value));
             } else {
                 $sanitized[$key] = sanitize_text_field(wp_unslash($value));

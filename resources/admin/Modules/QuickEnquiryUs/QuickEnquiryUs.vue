@@ -8,7 +8,7 @@
           active-text="Disable"
           active-value="yes"
           inactive-value="no"
-          @change="(value) => activeChangeHandler('quick_enquiry_us_module', value)">
+          @change="(value) => activeChangeHandler('qeus_module', value)">
       </el-switch>
     </div>
     <!-- Confirmation Dialog -->
@@ -55,19 +55,19 @@
         <Settings
             :settings="configs"
             :fetching="fetching"
-            @update="updateHandlerpdate"/>
+            @update="updateHandler"/>
       </el-tab-pane>
       <el-tab-pane label="Styles" name="styles">
         <Styles
             :styles="configs"
             :fetching="fetching"
-            @update="updateHandlerpdate"/>
+            @update="updateHandler"/>
       </el-tab-pane>
        <el-tab-pane label="Quick Enquiry US" name="quick-enquiry-us">
         <QuickEnquiryUsData
             :enquireDatas="configs"
             :fetching="fetching"
-            @update="updateHandlerpdate"/>
+            @update="updateHandler"/>
       </el-tab-pane>
     </el-tabs>
    
@@ -99,7 +99,7 @@ export default {
   },
   data() {
     return {
-      activeTab: localStorage.getItem('qeus-quick-enquiry-us-active-tab') || 'settings',
+      activeTab: localStorage.getItem('qeus-active-tab') || 'settings',
       configs: {},
       fetching: false,
       activeModule: 'no',
@@ -134,11 +134,11 @@ export default {
 
     handleClick(tab, event) {
       this.getSettings();
-      localStorage.setItem('qeus-quick-enquiry-us-active-tab', this.activeTab);
+      localStorage.setItem('qeus-active-tab', this.activeTab);
     },
 
     //Handle updates from child components
-    updateHandlerpdate(field, value) {
+    updateHandler(field, value) {
       this.configs[field] = value;
     },
 
@@ -174,7 +174,7 @@ export default {
       this.$get({
         action: "qeus_admin_ajax",
         route: "get_settings",
-        type: 'quick_enquiry_us_settings',
+        type: 'qeus_settings',
         tab: this.activeTab,
         nonce: window.QuickEnquiryUsAdminVars.nonce,
       })
@@ -205,7 +205,7 @@ export default {
       this.$post({
         action: "qeus_admin_ajax",
         route: "save_settings",
-        type: 'quick_enquiry_us_settings',
+        type: 'qeus_settings',
         tab: this.activeTab,
         tab_configs: this.configs,
         nonce: window.QuickEnquiryUsAdminVars.nonce,
@@ -229,7 +229,7 @@ export default {
       this.$post({
         action: "qeus_admin_ajax",
         route: "reset_settings",
-        type: 'quick_enquiry_us_settings',
+        type: 'qeus_settings',
         tab: this.activeTab,
         nonce: window.QuickEnquiryUsAdminVars.nonce,
       })
@@ -274,7 +274,7 @@ export default {
       this.$get({
         action: "qeus_admin_ajax",
         route: "get_active_module",
-        type: 'quick_enquiry_us_module',
+        type: 'qeus_module',
         nonce: window.QuickEnquiryUsAdminVars.nonce,
       })
           .then((response) => {
@@ -317,18 +317,22 @@ export default {
       return true;
     },
     smsValidation() {
-      if (this.configs.sms_enable === 'yes') {
-        const missing = [];
-
-        if (!this.configs.twilio_account_sid) missing.push('Twilio Account SID');
-        if (!this.configs.twilio_auth_token) missing.push('Twilio Auth Token');
-        if (!this.configs.twilio_phone_number) missing.push('Twilio Phone Number');
-
-        if (missing.length) {
-          this.$handleError(`${missing.join(', ')} field is required`);
+      if (this.configs.sms_tab_enable === 'yes') {
+        const numbers = this.configs.sms_numbers || [];
+        const first = numbers[0];
+        // First entry is mandatory
+        if (!first || !first.receiver_name || !first.receiver_number) {
+          this.$handleError('SMS Name and Number are required');
           this.saving = false;
           return false;
         }
+        // Remove empty second+ entries
+        this.configs.sms_numbers = numbers.filter((item, index) => {
+          if (!item.receiver_name || !item.receiver_number) {
+            return index === 0;
+          }
+          return true;
+        });
       }
       return true;
     }

@@ -12,7 +12,7 @@ window.QEUSPlugin.Vue.prototype.$bus = new window.QEUSPlugin.Vue();
 
 document.addEventListener('DOMContentLoaded', () => {
     new window.QEUSPlugin.Vue({
-        el: '#wp_quick_enquiry_us_settings_app',
+        el: '#wp_qeus_settings_app',
         render: h => h(require('./Application').default),
         router: vueRouter,
         mounted() {
