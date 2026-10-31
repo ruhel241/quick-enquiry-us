@@ -1,6 +1,6 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Helpers;
+namespace Ruhel241\QuickProductEnquiry\Helpers;
 
 class SanitizeValidation
 {

@@ -1,12 +1,12 @@
 <template>
-  <div class="qeus-app-wrapper">
+  <div class="qpefw-app-wrapper">
     <el-row>
       <el-col :span="4">
         <Navigation/>
       </el-col>
       <el-col :span="20">
-        <div class="qeus-header"></div>
-        <div class="qeus-body">
+        <div class="qpefw-header"></div>
+        <div class="qpefw-body">
           <router-view :key="$route.fullPath"></router-view>
         </div>
       </el-col>

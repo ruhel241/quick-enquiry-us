@@ -1,14 +1,14 @@
 <template>
-  <div class="qeus-card">
+  <div class="qpefw-card">
     <!-- {{configs}} -->
-    <div class="qeus-settings-header">
-      <h2>Enquiry US</h2>
+    <div class="qpefw-settings-header">
+      <h2>Enquiry</h2>
       <el-switch
           v-model="activeModule"
           active-text="Disable"
           active-value="yes"
           inactive-value="no"
-          @change="(value) => activeChangeHandler('qeus_module', value)">
+          @change="(value) => activeChangeHandler('qpefw_module', value)">
       </el-switch>
     </div>
     <!-- Confirmation Dialog -->
@@ -18,9 +18,9 @@
         :close-on-click-modal="true"
         :close-on-press-escape="true"
         :show-close="true"
-        custom-class="qeus-module-disable-dialog"
+        custom-class="qpefw-module-disable-dialog"
         center>
-      <div class="qeus-module-dialog-content text-align-center">
+      <div class="qpefw-module-dialog-content text-align-center">
         <!-- Icon Container with Gradient Background -->
         <div class="icon-container">
           <div class="warning-circle">
@@ -29,8 +29,8 @@
         </div>
         <!-- Content -->
         <div class="dialog-text">
-          <h3>Disable Quick Enquiry Us ?</h3>
-          <p>This action will disable the module completely.<br/>Users won't see the enquire us functionality on your frontend.</p>
+          <h3>Disable Quick Product Enquiry?</h3>
+          <p>This action will disable the module completely.<br/>Users won't see the enquiry functionality on your frontend.</p>
         </div>
         <!-- Action Buttons -->
         <div class="dialog-actions">
@@ -63,15 +63,15 @@
             :fetching="fetching"
             @update="updateHandler"/>
       </el-tab-pane>
-       <el-tab-pane label="Quick Enquiry US" name="quick-enquiry-us">
-        <QuickEnquiryUsData
+       <el-tab-pane label="Quick Product Enquiry" name="quick-product-enquiry-for-woocommerce">
+        <QuickProductEnquiryData
             :enquireDatas="configs"
             :fetching="fetching"
             @update="updateHandler"/>
       </el-tab-pane>
     </el-tabs>
    
-    <div class="qeus-button-group" v-if="activeTab !='quick-enquiry-us'">
+    <div class="qpefw-button-group" v-if="activeTab !='quick-product-enquiry-for-woocommerce'">
       <el-button type="primary" @click="saveSettings">
         <i :class="!saving ? 'el-icon-circle-check': 'el-icon-loading'"></i>
         Save {{currentTab}}
@@ -88,18 +88,18 @@
 <script>
 import Settings from "./Settings.vue";
 import Styles from "./Styles.vue";
-import QuickEnquiryUsData from "./QuickEnquiryUsData.vue";
+import QuickProductEnquiryData from "./QuickProductEnquiryData.vue";
 
 export default {
-  name: 'quick-enquiry-us',
+  name: 'quick-product-enquiry',
   components: {
     Settings,
     Styles,
-    QuickEnquiryUsData
+    QuickProductEnquiryData
   },
   data() {
     return {
-      activeTab: localStorage.getItem('qeus-active-tab') || 'settings',
+      activeTab: localStorage.getItem('qpefw-active-tab') || 'settings',
       configs: {},
       fetching: false,
       activeModule: 'no',
@@ -134,7 +134,7 @@ export default {
 
     handleClick(tab, event) {
       this.getSettings();
-      localStorage.setItem('qeus-active-tab', this.activeTab);
+      localStorage.setItem('qpefw-active-tab', this.activeTab);
     },
 
     //Handle updates from child components
@@ -172,11 +172,11 @@ export default {
     getSettings() {
       this.fetching = true;
       this.$get({
-        action: "qeus_admin_ajax",
+        action: "qpefw_admin_ajax",
         route: "get_settings",
-        type: 'qeus_settings',
+        type: 'qpefw_settings',
         tab: this.activeTab,
-        nonce: window.QuickEnquiryUsAdminVars.nonce,
+        nonce: window.QuickProductEnquiryAdminVars.nonce,
       })
           .then((response) => {
             if (!this.configs) {
@@ -203,12 +203,12 @@ export default {
       if (!this.whatsappNumberValidation()) return;
 
       this.$post({
-        action: "qeus_admin_ajax",
+        action: "qpefw_admin_ajax",
         route: "save_settings",
-        type: 'qeus_settings',
+        type: 'qpefw_settings',
         tab: this.activeTab,
         tab_configs: this.configs,
-        nonce: window.QuickEnquiryUsAdminVars.nonce,
+        nonce: window.QuickProductEnquiryAdminVars.nonce,
       })
           .then((response) => {
             setTimeout(() => {
@@ -227,11 +227,11 @@ export default {
     resetSettings() {
       this.resetting = true;
       this.$post({
-        action: "qeus_admin_ajax",
+        action: "qpefw_admin_ajax",
         route: "reset_settings",
-        type: 'qeus_settings',
+        type: 'qpefw_settings',
         tab: this.activeTab,
-        nonce: window.QuickEnquiryUsAdminVars.nonce,
+        nonce: window.QuickProductEnquiryAdminVars.nonce,
       })
           .then((response) => {
             setTimeout(() => {
@@ -250,11 +250,11 @@ export default {
     enableActiveModule(type, status) {
       this.saving = true;
       this.$post({
-        action: "qeus_admin_ajax",
+        action: "qpefw_admin_ajax",
         route: "enable_active_module",
         type: type,
         status: status,
-        nonce: window.QuickEnquiryUsAdminVars.nonce,
+        nonce: window.QuickProductEnquiryAdminVars.nonce,
       })
           .then((response) => {
             this.getEnableModule();
@@ -272,10 +272,10 @@ export default {
     getEnableModule() {
       this.fetching = true;
       this.$get({
-        action: "qeus_admin_ajax",
+        action: "qpefw_admin_ajax",
         route: "get_active_module",
-        type: 'qeus_module',
-        nonce: window.QuickEnquiryUsAdminVars.nonce,
+        type: 'qpefw_module',
+        nonce: window.QuickProductEnquiryAdminVars.nonce,
       })
           .then((response) => {
             this.activeModule = response.data.active_module;

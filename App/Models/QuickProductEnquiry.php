@@ -1,10 +1,10 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Models;
+namespace Ruhel241\QuickProductEnquiry\Models;
 
-class QuickEnquiryUs {
+class QuickProductEnquiry {
 
-    protected $table = 'qeus_quick_enquiry_us';
+    protected $table = 'qpefw_quick_product_enquiry';
    
     public function getDetails($request) {
         $search       = sanitize_text_field($request['search']);
@@ -12,7 +12,7 @@ class QuickEnquiryUs {
         $perPage      = sanitize_text_field($request['per_page']);
         $offset       = $perPage * ($currentPage - 1);
 
-        $detailsQuery = QEUS_Query()->table($this->table)
+        $detailsQuery = QPEFW_Query()->table($this->table)
                     ->orderBy('id', 'DESC')
                     ->offset($offset)
                     ->limit($perPage);
@@ -52,29 +52,29 @@ class QuickEnquiryUs {
     public function getDetail($id) {
         $id = sanitize_text_field($id);
 
-        $detail = QEUS_Query()->table($this->table)->where('id', $id)->first();
+        $detail = QPEFW_Query()->table($this->table)->where('id', $id)->first();
 
         return $detail;
     }
 
     public function deleteInfo($detailsIds) {
-        $details = QEUS_Query()->table($this->table)->whereIn('id', $detailsIds)->get();
+        $details = QPEFW_Query()->table($this->table)->whereIn('id', $detailsIds)->get();
 
         foreach ($details as $detail) {
-            QEUS_Query()->table($this->table)->where('id', $detail->id)->delete();
+            QPEFW_Query()->table($this->table)->where('id', $detail->id)->delete();
         }
     }
 
     public function insertGetId($data) {
 
-        $save = QEUS_Query()->table($this->table)->insert($data);
+        $save = QPEFW_Query()->table($this->table)->insert($data);
 
         return $save;
     }
 
     public function update($id, $data) {
 
-       $update =  QEUS_Query()->table($this->table)
+       $update =  QPEFW_Query()->table($this->table)
                     ->where('id', $id)
                     ->update($data);
        

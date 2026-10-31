@@ -1,8 +1,8 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Helpers;
+namespace Ruhel241\QuickProductEnquiry\Helpers;
 
-//use Ruhel241\QuickEnquiryUs\Helpers\ArrayAccess;
+//use Ruhel241\QuickProductEnquiry\Helpers\ArrayAccess;
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 

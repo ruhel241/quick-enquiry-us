@@ -1,10 +1,10 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Database\Migrations;
+namespace Ruhel241\QuickProductEnquiry\Database\Migrations;
 
-class QuickEnquiryUsMigrator
+class QuickProductEnquiryMigrator
 {
-    static $tableName = 'qeus_quick_enquiry_us';
+    static $tableName = 'qpefw_quick_product_enquiry';
 
     public static function migrate()
     {

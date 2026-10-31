@@ -1,3 +1,3 @@
-import QEUSPlugin from './Bits/QEUSPlugin.js';
+import QPEFWPlugin from './Bits/QPEFWPlugin.js';
 
-window.QEUSPlugin = new QEUSPlugin();
+window.QPEFWPlugin = new QPEFWPlugin();

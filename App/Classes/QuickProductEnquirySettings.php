@@ -1,6 +1,6 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Classes;
+namespace Ruhel241\QuickProductEnquiry\Classes;
 
 use WC_Settings_Page;
 
@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  *
  * @since 1.0.0
  */
-class QuickEnquiryUsSettings extends WC_Settings_Page
+class QuickProductEnquirySettings extends WC_Settings_Page
 {
     /**
      * Setup settings class
@@ -19,8 +19,8 @@ class QuickEnquiryUsSettings extends WC_Settings_Page
      */
     public function __construct()
     {
-        $this->id = 'quick-enquiry-us';
-        $this->label = __('Quick Enquiry Us', 'quick-enquiry-us');
+        $this->id = 'quick-product-enquiry';
+        $this->label = __('Quick Product Enquiry', 'quick-product-enquiry-for-woocommerce');
 
         add_filter('woocommerce_settings_tabs_array', array($this, 'add_settings_page'), 20);
         add_action('woocommerce_settings_' . $this->id, array($this, 'output'));
@@ -36,7 +36,7 @@ class QuickEnquiryUsSettings extends WC_Settings_Page
      */
     public function output()
     {
-        echo wp_kses_post('<div id="wp_qeus_settings_app"></div>');
+        echo wp_kses_post('<div id="wp_qpefw_settings_app"></div>');
     }
 
     public function enqueueAdminScripts()
@@ -46,26 +46,26 @@ class QuickEnquiryUsSettings extends WC_Settings_Page
         
         if ($currentTab === $this->id) {
 
-            $assetsUrl = QEUS_PLUGIN_DIR_URL . 'assets/';
+            $assetsUrl = QPEFW_PLUGIN_DIR_URL . 'assets/';
 
-            wp_enqueue_script('qeus_admin_boot', $assetsUrl . 'admin/js/boot.js', array('jquery'), QEUS_PLUGIN_VERSION, false);
-            wp_enqueue_script('qeus_admin_app', $assetsUrl . 'admin/js/start.js', array('jquery'), QEUS_PLUGIN_VERSION, false);
-            wp_enqueue_style('qeus_admin_css', $assetsUrl . 'admin/css/admin.css', array(), QEUS_PLUGIN_VERSION);
+            wp_enqueue_script('qpefw_admin_boot', $assetsUrl . 'admin/js/boot.js', array('jquery'), QPEFW_PLUGIN_VERSION, false);
+            wp_enqueue_script('qpefw_admin_app', $assetsUrl . 'admin/js/start.js', array('jquery'), QPEFW_PLUGIN_VERSION, false);
+            wp_enqueue_style('qpefw_admin_css', $assetsUrl . 'admin/css/admin.css', array(), QPEFW_PLUGIN_VERSION);
 
-            wp_localize_script('qeus_admin_app', 'QuickEnquiryUsAdminVars', array(
+            wp_localize_script('qpefw_admin_app', 'QuickProductEnquiryAdminVars', array(
                 'assets_url'  => $assetsUrl,
                 'images_url'  => $assetsUrl.'admin/images/',
                 'ajaxurl'     => admin_url('admin-ajax.php'),
                 'admin_url'   => admin_url('post.php'),
-                'slug'        => 'quick-enquiry-us',
+                'slug'        => 'quick-product-enquiry-for-woocommerce',
                 'site_url'    => get_site_url(),
-                'nonce'       => wp_create_nonce('qeus_nonce'),
+                'nonce'       => wp_create_nonce('qpefw_nonce'),
                 'server_time' => current_time('mysql'),
                 'woo_active'  => defined('WC_VERSION'),
-                'has_pro'     => defined('QEUS_PRO')
+                'has_pro'     => defined('QPEFW_PRO')
             ));
         }
     }
 }
 
-return new QuickEnquiryUsSettings();
+return new QuickProductEnquirySettings();

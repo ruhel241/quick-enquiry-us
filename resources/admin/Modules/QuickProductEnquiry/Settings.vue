@@ -1,8 +1,8 @@
 <template>
-  <div class="qeus-settings-wrapper" v-loading="fetching" element-loading-spinner="el-icon-loading">
-    <div class="qeus-settings-content">
+  <div class="qpefw-settings-wrapper" v-loading="fetching" element-loading-spinner="el-icon-loading">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Enquiry US Shop Page Button Settings</h3>
+        <h3>Enquiry Shop Page Button Settings</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">Shop Page</span>
@@ -23,7 +23,7 @@
             <el-input
                 class="setting-input"
                 v-model="settings.in_stock_shop_button_text"
-                placeholder="Enquiry Us {title}"
+                placeholder="Enquiry {title}"
                 @change="(value) => changeHandler('in_stock_shop_button_text', value)"
             />
             <el-tooltip content="This text is used for the in-stock button on the shop page. You can use {title} to automatically display the product name." placement="top">
@@ -57,9 +57,9 @@
       </div>
     </div>
 
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Enquiry US Single Page Button Settings</h3>
+        <h3>Enquiry Single Page Button Settings</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">Single Page</span>
@@ -111,9 +111,9 @@
       </div>
     </div>
 
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Enquiry US Form Heading</h3>
+        <h3>Enquiry Form Heading</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">In-Stock Form Heading</span>
@@ -150,9 +150,9 @@
       </div>
     </div>
 
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Enquiry US Form Tabs Settings</h3>
+        <h3>Enquiry Form Tabs Settings</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">Enquiry Form Tab</span>
@@ -195,9 +195,9 @@
       </div>
     </div>
 
-    <div class="qeus-settings-content" v-if="settings.enquiry_form_tab_enable === 'yes'">
+    <div class="qpefw-settings-content" v-if="settings.enquiry_form_tab_enable === 'yes'">
       <div class="setting-title">
-        <h3>Enquiry US Form Configure Settings</h3>
+        <h3>Enquiry Form Configure Settings</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">Email Send</span>
@@ -251,7 +251,7 @@
       </div>
     </div>
 
-    <div class="qeus-settings-content" v-if="settings.whatsapp_tab_enable === 'yes'">
+    <div class="qpefw-settings-content" v-if="settings.whatsapp_tab_enable === 'yes'">
       <div class="setting-title">
         <h3>WhatsApp Configure Settings</h3>
       </div>
@@ -339,7 +339,7 @@
       </div>
     </div>
 
-    <div class="qeus-settings-content" v-if="settings.sms_tab_enable === 'yes'">
+    <div class="qpefw-settings-content" v-if="settings.sms_tab_enable === 'yes'">
       <div class="setting-title">
           <h3>SMS Configure Settings</h3>
         </div>
@@ -426,16 +426,16 @@
           </el-tooltip>
         </div>
     </div>
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>ShortCode Enquiry Us Button Settings</h3>
+        <h3>ShortCode Enquiry Button Settings</h3>
       </div>
       <div class="setting-row">
-        <span class="setting-label">Enquiry Us Button Text</span>
+        <span class="setting-label">Enquiry Button Text</span>
         <el-input
             class="setting-input"
-            v-model="settings.shortcode_enquiry_us_button_text"
-            @change="(value) => changeHandler('shortcode_enquiry_us_button_text', value)"
+            v-model="settings.shortcode_enquiry_button_text"
+            @change="(value) => changeHandler('shortcode_enquiry_button_text', value)"
         />
         <el-tooltip content="Change the text displayed on the shortcode button." placement="top">
           <i class="el-icon-question"></i>
@@ -505,58 +505,58 @@
         </el-tooltip>
       </div>
     </div>   
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Cart Page Enquiry Us Button Settings</h3>
+        <h3>Cart Page Enquiry Button Settings</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">Cart Page</span>
         <el-switch
-            v-model="settings.cart_page_enquiry_us_btn_enable"
+            v-model="settings.cart_page_enquiry_btn_enable"
             active-text="Enable Cart Page"
             active-value="yes"
             inactive-value="no"
-            @change="(value) => changeHandler('cart_page_enquiry_us_btn_enable', value)">
+            @change="(value) => changeHandler('cart_page_enquiry_btn_enable', value)">
         </el-switch>
         <el-tooltip content="Enable the cart page" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
-      <div class="setting-row" v-if="settings.cart_page_enquiry_us_btn_enable == 'yes'">
-        <span class="setting-label">Enquiry Us Button Text</span>
+      <div class="setting-row" v-if="settings.cart_page_enquiry_btn_enable == 'yes'">
+        <span class="setting-label">Enquiry Button Text</span>
         <el-input
             class="setting-input"
-            v-model="settings.cart_page_enquiry_us_button_text"
-            @change="(value) => changeHandler('cart_page_enquiry_us_button_text', value)"
+            v-model="settings.cart_page_enquiry_button_text"
+            @change="(value) => changeHandler('cart_page_enquiry_button_text', value)"
         />
         <el-tooltip content="Change the text displayed on the cart button." placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
     </div> 
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Order Summary Enquiry Us Button Settings</h3>
+        <h3>Order Summary Enquiry Button Settings</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">Order Summary</span>
         <el-switch
-            v-model="settings.order_summary_enquiry_us_btn_enable"
+            v-model="settings.order_summary_enquiry_btn_enable"
             active-text="Enable Order Summary"
             active-value="yes"
             inactive-value="no"
-            @change="(value) => changeHandler('order_summary_enquiry_us_btn_enable', value)">
+            @change="(value) => changeHandler('order_summary_enquiry_btn_enable', value)">
         </el-switch>
         <el-tooltip content="Enable the order summary" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
       </div>
-      <div class="setting-row" v-if="settings.order_summary_enquiry_us_btn_enable == 'yes'">
-        <span class="setting-label">Enquiry Us Button Text</span>
+      <div class="setting-row" v-if="settings.order_summary_enquiry_btn_enable == 'yes'">
+        <span class="setting-label">Enquiry Button Text</span>
         <el-input
             class="setting-input"
-            v-model="settings.order_summary_enquiry_us_button_text"
-            @change="(value) => changeHandler('order_summary_enquiry_us_button_text', value)"
+            v-model="settings.order_summary_enquiry_button_text"
+            @change="(value) => changeHandler('order_summary_enquiry_button_text', value)"
         />
         <el-tooltip content="Change the text displayed on the cart button." placement="top">
           <i class="el-icon-question"></i>
@@ -593,9 +593,9 @@
           receiver_number: ''
         }
       ],
-      shortcodeGeneralForm: '[qeus_button]',
-      shortcodeProductId: '[qeus_button product_id="23"]',
-      shortcodeProductSlug: '[qeus_button product_slug="beanie-with-logo"]'
+      shortcodeGeneralForm: '[qpefw_button]',
+      shortcodeProductId: '[qpefw_button product_id="23"]',
+      shortcodeProductSlug: '[qpefw_button product_slug="beanie-with-logo"]'
     }
   },
   watch: {

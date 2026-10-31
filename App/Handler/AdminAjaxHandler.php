@@ -1,29 +1,29 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Handler;
+namespace Ruhel241\QuickProductEnquiry\Handler;
 
-use Ruhel241\QuickEnquiryUs\Settings;
-use Ruhel241\QuickEnquiryUs\Models\QuickEnquiryUs;
-use Ruhel241\QuickEnquiryUs\Helpers\SanitizeValidation;
+use Ruhel241\QuickProductEnquiry\Settings;
+use Ruhel241\QuickProductEnquiry\Models\QuickProductEnquiry;
+use Ruhel241\QuickProductEnquiry\Helpers\SanitizeValidation;
 
 class AdminAjaxHandler
 {
     public function registerEndpoints()
     {
-        add_action('wp_ajax_qeus_admin_ajax', array($this, 'ajaxRoutes'));
+        add_action('wp_ajax_qpefw_admin_ajax', array($this, 'ajaxRoutes'));
     }
 
     public function ajaxRoutes()
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
@@ -44,8 +44,8 @@ class AdminAjaxHandler
             'enable_active_module' => 'enableActiveModule',
             'get_active_module'    => 'getActiveModule',
             'reset_settings'       => 'resetSettings',
-            'get_qeus_details'     => 'getQuickEnquiryUsDetails',
-            'get_qeus_detail_view' => 'getDetailView',
+            'get_qpefw_details'     => 'getQuickProductEnquiryDetails',
+            'get_qpefw_detail_view' => 'getDetailView',
             'maybe_delete_details' => 'maybeDeleteDetails',
         ];
 
@@ -55,7 +55,7 @@ class AdminAjaxHandler
 
         $validatedData = (new SanitizeValidation)->validateRequestData($rawData);
 
-        do_action('qeus_admin_ajax_handler_catch', $route);
+        do_action('qpefw_admin_ajax_handler_catch', $route);
 
         $this->{$validRoutes[$route]}($validatedData);
 
@@ -64,15 +64,15 @@ class AdminAjaxHandler
 
     public function getSettings($request)
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
@@ -84,7 +84,7 @@ class AdminAjaxHandler
         // Whitelist check
         if (!isset($getConfigs[$type][$tab])) {
             wp_send_json_error([
-                'message' => __('Invalid settings type or tab', 'quick-enquiry-us')
+                'message' => __('Invalid settings type or tab', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
@@ -97,15 +97,15 @@ class AdminAjaxHandler
 
     public function saveSettings($request)
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
@@ -117,7 +117,7 @@ class AdminAjaxHandler
         // Whitelist check
         if (!isset($getConfigs[$type][$tab])) {
             wp_send_json_error([
-                'message' => __('Invalid settings type or tab', 'quick-enquiry-us')
+                'message' => __('Invalid settings type or tab', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
@@ -126,7 +126,7 @@ class AdminAjaxHandler
 
         if (!is_array($newSettings)) {
             wp_send_json_error([
-                'message' => __('Invalid settings data', 'quick-enquiry-us')
+                'message' => __('Invalid settings data', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
@@ -144,7 +144,7 @@ class AdminAjaxHandler
         wp_send_json_success([
 			'message'  => sprintf(
 				/* translators: %s: Settings tab name, e.g. "General" or "Email". */
-				__('%s saved successfully', 'quick-enquiry-us'),
+				__('%s saved successfully', 'quick-product-enquiry-for-woocommerce'),
 				ucfirst($tab)
 			),
 			'settings' => $currentSettings,
@@ -153,15 +153,15 @@ class AdminAjaxHandler
 
     public function enableActiveModule($request)
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
@@ -171,26 +171,26 @@ class AdminAjaxHandler
         // Only yes/no allowed
         if (!in_array($status, ['yes', 'no'], true)) {
             wp_send_json_error([
-                'message' => __('Invalid status', 'quick-enquiry-us')
+                'message' => __('Invalid status', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
         $defaultModules   = (new Settings())->getActiveModule();
-        $qeusActiveModule = get_option('qeus_active_module', $defaultModules);
+        $qpefwActiveModule = get_option('qpefw_active_module', $defaultModules);
 
         // Whitelist check
-        if (!isset($qeusActiveModule[$type])) {
+        if (!isset($qpefwActiveModule[$type])) {
             wp_send_json_error([
-                'message' => __('Invalid module type', 'quick-enquiry-us')
+                'message' => __('Invalid module type', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
-        $qeusActiveModule[$type] = $status;
-        update_option('qeus_active_module', $qeusActiveModule);
+        $qpefwActiveModule[$type] = $status;
+        update_option('qpefw_active_module', $qpefwActiveModule);
 
         $message = ($status === 'no')
-            ? __('Successfully disabled active module', 'quick-enquiry-us')
-            : __('Successfully enabled active module', 'quick-enquiry-us');
+            ? __('Successfully disabled active module', 'quick-product-enquiry-for-woocommerce')
+            : __('Successfully enabled active module', 'quick-product-enquiry-for-woocommerce');
 
         wp_send_json_success([
             'message'       => $message,
@@ -200,46 +200,46 @@ class AdminAjaxHandler
 
     public function getActiveModule($request)
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         $type = $request['type'] ?? '';
 
         $defaultModules   = (new Settings())->getActiveModule();
-        $qeusActiveModule = get_option('qeus_active_module', $defaultModules);
+        $qpefwActiveModule = get_option('qpefw_active_module', $defaultModules);
 
-        if (!isset($qeusActiveModule[$type])) {
+        if (!isset($qpefwActiveModule[$type])) {
             wp_send_json_error([
-                'message' => __('Invalid module type', 'quick-enquiry-us')
+                'message' => __('Invalid module type', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
         wp_send_json_success([
-            'message'       => __('Enable active module', 'quick-enquiry-us'),
-            'active_module' => $qeusActiveModule[$type],
+            'message'       => __('Enable active module', 'quick-product-enquiry-for-woocommerce'),
+            'active_module' => $qpefwActiveModule[$type],
         ]);
     }
 
     public function resetSettings($request)
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
@@ -251,7 +251,7 @@ class AdminAjaxHandler
         // Whitelist check
         if (!isset($getDefaultConfigs[$type][$tab]) || !is_array($getDefaultConfigs[$type][$tab])) {
             wp_send_json_error([
-                'message' => __('Invalid reset request', 'quick-enquiry-us')
+                'message' => __('Invalid reset request', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
@@ -269,7 +269,7 @@ class AdminAjaxHandler
        wp_send_json_success([
 			'message'  => sprintf(
 				/* translators: %s: Settings tab name, e.g. "General" or "Email". */
-				__('Reset %s successfully', 'quick-enquiry-us'),
+				__('Reset %s successfully', 'quick-product-enquiry-for-woocommerce'),
 				ucfirst($tab)
 			),
 			'settings' => $currentSettings,
@@ -277,40 +277,40 @@ class AdminAjaxHandler
     }
 
     // Get QuickEnquiry Us addon Details
-    public function getQuickEnquiryUsDetails($request)
+    public function getQuickProductEnquiryDetails($request)
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
-        $QuickEnquiryUs = new QuickEnquiryUs();
-        $details        = $QuickEnquiryUs->getDetails($request);
+        $QuickProductEnquiry = new QuickProductEnquiry();
+        $details        = $QuickProductEnquiry->getDetails($request);
 
         wp_send_json_success([
-            'message' => __('Quick enquiry us details get successfully.', 'quick-enquiry-us'),
+            'message' => __('Quick Product Enquiry for WooCommerce details get successfully.', 'quick-product-enquiry-for-woocommerce'),
             'data'    => $details,
         ], 200);
     }
 
     public function getDetailView($request)
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
@@ -318,30 +318,30 @@ class AdminAjaxHandler
 
         if (!$detailId) {
             wp_send_json_error([
-                'message' => __('Invalid detail id', 'quick-enquiry-us')
+                'message' => __('Invalid detail id', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
-        $QuickEnquiryUs = new QuickEnquiryUs();
-        $detail         = $QuickEnquiryUs->getDetail($detailId);
+        $QuickProductEnquiry = new QuickProductEnquiry();
+        $detail         = $QuickProductEnquiry->getDetail($detailId);
 
         wp_send_json_success([
-            'message' => __('QuickEnquiry Us detail get successfully.', 'quick-enquiry-us'),
+            'message' => __('QuickEnquiry Us detail get successfully.', 'quick-product-enquiry-for-woocommerce'),
             'detail'  => $detail,
         ], 200);
     }
 
     public function maybeDeleteDetails($request)
     {
-        if (!check_ajax_referer('qeus_nonce', 'nonce', false)) {
+        if (!check_ajax_referer('qpefw_nonce', 'nonce', false)) {
             wp_send_json_error([
-                'message' => __('Invalid nonce', 'quick-enquiry-us')
+                'message' => __('Invalid nonce', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error([
-                'message' => __('Unauthorized access', 'quick-enquiry-us')
+                'message' => __('Unauthorized access', 'quick-product-enquiry-for-woocommerce')
             ], 403);
         }
 
@@ -349,7 +349,7 @@ class AdminAjaxHandler
 
         if ($actionType !== 'delete') {
             wp_send_json_error([
-                'message' => __('Invalid action type', 'quick-enquiry-us')
+                'message' => __('Invalid action type', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
@@ -364,15 +364,15 @@ class AdminAjaxHandler
 
         if (empty($detailsIds)) {
             wp_send_json_error([
-                'message' => __('No enquiry selected', 'quick-enquiry-us')
+                'message' => __('No enquiry selected', 'quick-product-enquiry-for-woocommerce')
             ], 400);
         }
 
-        $QuickEnquiryUs = new QuickEnquiryUs();
-        $QuickEnquiryUs->deleteInfo($detailsIds);
+        $QuickProductEnquiry = new QuickProductEnquiry();
+        $QuickProductEnquiry->deleteInfo($detailsIds);
 
         wp_send_json_success([
-            'message' => __('Selected enquiry successfully deleted', 'quick-enquiry-us')
+            'message' => __('Selected enquiry successfully deleted', 'quick-product-enquiry-for-woocommerce')
         ], 200);
     }
 }

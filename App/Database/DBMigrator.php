@@ -1,11 +1,11 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Database;
+namespace Ruhel241\QuickProductEnquiry\Database;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-use Ruhel241\QuickEnquiryUs\Database\Migrations\QuickEnquiryUsMigrator;
+use Ruhel241\QuickProductEnquiry\Database\Migrations\QuickProductEnquiryMigrator;
 
 class DBMigrator
 {
@@ -32,8 +32,8 @@ class DBMigrator
 
     private static function migrate()
     {
-        require_once(QEUS_PLUGIN_DIR_PATH . 'App/Database/Migrations/QuickEnquiryUsMigrator.php');
+        require_once(QPEFW_PLUGIN_DIR_PATH . 'App/Database/Migrations/QuickProductEnquiryMigrator.php');
 
-        QuickEnquiryUsMigrator::migrate();
+        QuickProductEnquiryMigrator::migrate();
     }
 }

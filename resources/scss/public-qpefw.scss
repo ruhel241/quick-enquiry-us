@@ -1,8 +1,8 @@
-body.qeus-modal-open {
+body.qpefw-modal-open {
     overflow: hidden;
 }
 
-.qeus-button {
+.qpefw-button {
     background-color: #046bd2;
     color: #ffffff !important;
     padding: 10px 20px !important;
@@ -11,11 +11,11 @@ body.qeus-modal-open {
 }
 
 // when add to cart button then use
-// .cart .qeus-button {
+// .cart .qpefw-button {
 //     margin-left: 10px;
 // }
 
-.qeus-modal-wrapper {
+.qpefw-modal-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,7 +27,7 @@ body.qeus-modal-open {
     height: 100%;
     // overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
-    .qeus-modal-content {
+    .qpefw-modal-content {
         position: relative;
         top: 15px;
         background-color: #fefefe;
@@ -38,10 +38,10 @@ body.qeus-modal-open {
         border-top-left-radius: 20px;
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
-        .qeus-form-container {
+        .qpefw-form-container {
             width: 100%;
             border-radius: 10px;
-            .qeus-header {
+            .qpefw-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -50,7 +50,7 @@ body.qeus-modal-open {
                 border-top-right-radius: 19px;
                 border-top-left-radius: 19px;
                 padding: 0px 20px;
-                .qeus-title {
+                .qpefw-title {
                     text-align: center;
                     margin: 0px;
                     color: #ffffff;
@@ -58,7 +58,7 @@ body.qeus-modal-open {
                     flex: 1;
                     font-weight: 600;
                 }
-                .qeus-view-close {
+                .qpefw-view-close {
                     font-size: 22px;
                     font-weight: bold;
                     color: #fff;
@@ -74,7 +74,7 @@ body.qeus-modal-open {
                     transition: all 0.3s;
                 } 
             }
-            .qeus-form {
+            .qpefw-form {
                 display: block;
                 // padding: 30px;
                 label {
@@ -98,11 +98,11 @@ body.qeus-modal-open {
                 }
             }
             /* Tabs */
-            .qeus-tabs {
+            .qpefw-tabs {
                 display: flex;
                 border-bottom: 1px solid #e5e5e5;
                 background: #fff;
-                .qeus-tab {
+                .qpefw-tab {
                     // flex: 1;
                     // padding: 14px 10px;
                     // border: none;
@@ -138,17 +138,17 @@ body.qeus-modal-open {
                 }
             }
             /* Tab Content */
-            .qeus-tab-content {
+            .qpefw-tab-content {
                 display: none;
                 padding: 30px;
                 &.active {
                     display: block;
                 }
-                .qeus-social-numbers {
+                .qpefw-social-numbers {
                     display: flex;
                     flex-direction: column;
                     gap: 20px;
-                    .qeus-social-number {
+                    .qpefw-social-number {
                         display: flex;
                         justify-content: center;
                         align-items: center;
@@ -157,7 +157,7 @@ body.qeus-modal-open {
                             margin: 0px;
                             flex: 1;
                         }
-                        .qeus-action-btn {
+                        .qpefw-action-btn {
                             display: inline-block;
                             padding: 8px 20px;
                             border-radius: 6px;
@@ -220,7 +220,7 @@ body.qeus-modal-open {
                     }
                 }
             }
-            .qeus-submit {
+            .qpefw-submit {
                 width: 100%;
                 padding: 12px;
                 background: #2196f3;
@@ -231,11 +231,11 @@ body.qeus-modal-open {
                 cursor: pointer;
                 font-weight: 600;
             }
-            .qeus-submit:hover {
+            .qpefw-submit:hover {
                 background: #0d8ae0;
             }
         }
-        #qeus-loading-view {
+        #qpefw-loading-view {
             //border: solid #dddddd;
             //opacity: 0.6;
             position: absolute; /* Positions the overlay relative to its parent container */
@@ -250,14 +250,14 @@ body.qeus-modal-open {
             flex-direction: column;
             color: white; /* Optional: for styling overlay content */
             //height: 850px;
-            .qeus-loading-title {
+            .qpefw-loading-title {
                 font-size: 15px; /* Slightly larger */
                 color: #fff;
                 text-align: center;
                 margin-top: 15px;
                 font-weight: 500;
             }
-            .qeus-loading-spinner {
+            .qpefw-loading-spinner {
                 width: 35px; /* Fixed width instead of percentage */
                 height: 35px; /* Fixed height instead of percentage */
                 img {
@@ -267,9 +267,9 @@ body.qeus-modal-open {
                 }
             }
         }
-        .qeus-notice {
+        .qpefw-notice {
             display: none;
-            .qeus-response-message {
+            .qpefw-response-message {
                 background: #fff;
                 padding: 12px 15px;
                 margin: 0px 0px 20px 0px;
@@ -280,8 +280,8 @@ body.qeus-modal-open {
            
         }
     }
-    .qeus-form {
-        .qeus-phone-number {
+    .qpefw-form {
+        .qpefw-phone-number {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -311,7 +311,7 @@ body.qeus-modal-open {
             color: red;
             margin-left: 3px;
         }
-        .qeus-subscribe-field {
+        .qpefw-subscribe-field {
             display: flex;
             justify-content: flex-start;
             align-items: center;
@@ -320,7 +320,7 @@ body.qeus-modal-open {
                 width: 5% !important;
                 margin: 0px !important;
             }
-            .qeus-label-subscribe {
+            .qpefw-label-subscribe {
                 margin: 0px !important;
                 padding: 0px !important;
             }
@@ -329,7 +329,7 @@ body.qeus-modal-open {
 }
 
 // shop page buttons wrapper
-.qeus-add-to-cart-wrapper {
+.qpefw-add-to-cart-wrapper {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -364,19 +364,19 @@ body.qeus-modal-open {
             font-size: 14px;
         }
     }
-    .qeus-button {    
+    .qpefw-button {    
         order: 4;
     }
 }
 
 // Button in cart product row
-.qeus-cart-product-row {
+.qpefw-cart-product-row {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 6px;
     flex-wrap: wrap;
-    .qeus-cart-page-btn {
+    .qpefw-cart-page-btn {
         background-color: #5467f8;
         padding: 6px 14px;
         font-size: 13px;
@@ -384,7 +384,7 @@ body.qeus-modal-open {
         white-space: nowrap;
     }
 }
-.qeus-shortcode-btn  {
+.qpefw-shortcode-btn  {
     background-color: #5467f8;
     color: #ffffff !important;
     padding: 10px 20px !important;
@@ -392,21 +392,21 @@ body.qeus-modal-open {
 }
 
 /* Hide only the label (&nbsp;:) for QuickEnquiry button row */
-.wc-block-components-product-details__name:has(+ .wc-block-components-product-details__value .qeus-button) {
+.wc-block-components-product-details__name:has(+ .wc-block-components-product-details__value .qpefw-button) {
     display: none !important;
 }
 
 
 /* Hide QuickEnquiry button label in classic cart shortcode */
-dt.variation-nbsp:has(+ dd .qeus-button){
+dt.variation-nbsp:has(+ dd .qpefw-button){
     display: none !important;
 }
 
-.qeus-cart-page-btn {
+.qpefw-cart-page-btn {
     margin: 5px 0px 5px 0px !important;
 }
 
-.qeus-order-summary-btn {
+.qpefw-order-summary-btn {
     margin: 5px 0px 5px 0px !important;
 }
 
@@ -418,21 +418,21 @@ dt.variation-nbsp:has(+ dd .qeus-button){
 }
 
 @media only screen and (max-width: 600px) {
-    .qeus-modal-wrapper {
-        .qeus-modal-content {
+    .qpefw-modal-wrapper {
+        .qpefw-modal-content {
             width: 95%;
-            .qeus-form-container {
-                .qeus-tabs {
+            .qpefw-form-container {
+                .qpefw-tabs {
                     flex-direction: column;
-                    .qeus-tab {
+                    .qpefw-tab {
                         width: 100%;
                         &.active {
                             border-bottom-color: transparent;
                         }
                     }
                 }
-                .qeus-form {
-                    .qeus-subscribe-field {
+                .qpefw-form {
+                    .qpefw-subscribe-field {
                         gap: 10px;
                         margin-bottom: 10px;
                     }

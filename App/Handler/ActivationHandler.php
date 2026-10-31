@@ -1,22 +1,22 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Handler;
-use Ruhel241\QuickEnquiryUs\Settings;
-use Ruhel241\QuickEnquiryUs\Database\DBMigrator;
+namespace Ruhel241\QuickProductEnquiry\Handler;
+use Ruhel241\QuickProductEnquiry\Settings;
+use Ruhel241\QuickProductEnquiry\Database\DBMigrator;
 
 class ActivationHandler
 {
     public function activate($network_wide)
     {
-        require_once(QEUS_PLUGIN_DIR_PATH . 'App/Settings.php');
-        require_once(QEUS_PLUGIN_DIR_PATH . 'App/Database/DBMigrator.php');
+        require_once(QPEFW_PLUGIN_DIR_PATH . 'App/Settings.php');
+        require_once(QPEFW_PLUGIN_DIR_PATH . 'App/Database/DBMigrator.php');
         
-        update_option('qeus_version', QEUS_PLUGIN_VERSION, 'no');
+        update_option('qpefw_version', QPEFW_PLUGIN_VERSION, 'no');
 
         $settings          = new Settings();
         $getConfigs        = $settings->getConfigs();
         $getActiveModule   = $settings->getActiveModule();
-        $qeusLicense       = $settings->qeusLicense();
+        $qpefwLicense       = $settings->qpefwLicense();
 
         foreach ($getConfigs as $key => $value) {
             if (!get_option($key)) {
@@ -24,12 +24,12 @@ class ActivationHandler
             }
         }
 
-        if (!get_option('qeus_active_module')) {
-            update_option('qeus_active_module', $getActiveModule);
+        if (!get_option('qpefw_active_module')) {
+            update_option('qpefw_active_module', $getActiveModule);
         }
 
-        if (!get_option('qeus_license')) {
-            update_option('qeus_license', $qeusLicense);
+        if (!get_option('qpefw_license')) {
+            update_option('qpefw_license', $qpefwLicense);
         }
 
         // Run DB Migrations

@@ -12,7 +12,7 @@ import {
 
 Vue.use(Router);
 
-export default class QEUSPlugin {
+export default class QPEFWPlugin {
     constructor() {
         // this.Router = new Router({
         //     mode: 'history',
@@ -24,11 +24,11 @@ export default class QEUSPlugin {
         this.addAction = addAction;
         this.applyFilters = applyFilters;
         this.removeAllActions = removeAllActions;
-        this.appVars = window.QuickEnquiryUsAdminVars;
+        this.appVars = window.QuickProductEnquiryAdminVars;
         
         // Create a reactive data object for module status
         // this.moduleStatus = Vue.observable({
-        //     ...window.QuickEnquiryUsAdminVars.get_active_modules
+        //     ...window.QuickProductEnquiryAdminVars.get_active_modules
         // });
         
         this.Vue = this.extendVueConstructor();
@@ -38,7 +38,7 @@ export default class QEUSPlugin {
     // updateModuleStatus(type, status) {
     //     Vue.set(this.moduleStatus, type, status);
     //     // Also trigger a custom event for components that might need it
-    //     this.doAction('qeus_module_status_changed', type, status);
+    //     this.doAction('qpefw_module_status_changed', type, status);
     // }
 
     extendVueConstructor() {
@@ -84,7 +84,7 @@ export default class QEUSPlugin {
                 },
 
                 // $t(string) {
-                //     return window.QuickEnquiryUsAdminVars.i18n[string] || string;
+                //     return window.QuickProductEnquiryAdminVars.i18n[string] || string;
                 // },
 
                 // Updated method to use reactive module status
@@ -123,7 +123,7 @@ export default class QEUSPlugin {
             return;
         }
 
-        this.addFilter('qeus_top_menus', this.appVars.slug, function (menus) {
+        this.addFilter('qpefw_top_menus', this.appVars.slug, function (menus) {
             menus = menus.filter(m => m.route !== route.name);
             menus.push({
                 route: route.name,
@@ -132,7 +132,7 @@ export default class QEUSPlugin {
             return menus;
         });
 
-        this.addFilter('qeus_global_routes', this.appVars.slug, function (routes) {
+        this.addFilter('qpefw_global_routes', this.appVars.slug, function (routes) {
             routes = routes.filter(r => r.name !== route.name);
             routes.push(route);
             return routes;
@@ -140,9 +140,9 @@ export default class QEUSPlugin {
     }
 
     request(method, route, data = {}) {
-        const url = `${window.QuickEnquiryUsAdminVars.rest.url}/${route}`;
+        const url = `${window.QuickProductEnquiryAdminVars.rest.url}/${route}`;
 
-        const headers = { 'X-WP-Nonce': window.QuickEnquiryUsAdminVars.rest.nonce };
+        const headers = { 'X-WP-Nonce': window.QuickProductEnquiryAdminVars.rest.nonce };
 
         if (['PUT', 'PATCH', 'DELETE'].indexOf(method.toUpperCase()) !== -1) {
             headers['X-HTTP-Method-Override'] = method;
@@ -164,23 +164,23 @@ export default class QEUSPlugin {
     }
 
     $get(options) {
-        return window.jQuery.get(window.QuickEnquiryUsAdminVars.ajaxurl, options);
+        return window.jQuery.get(window.QuickProductEnquiryAdminVars.ajaxurl, options);
     }
 
     $post(options) {
-        return window.jQuery.post(window.QuickEnquiryUsAdminVars.ajaxurl, options);
+        return window.jQuery.post(window.QuickProductEnquiryAdminVars.ajaxurl, options);
     }
 
     $put(options) {
         return window.jQuery.ajax({
-            url: window.QuickEnquiryUsAdminVars.ajaxurl,
+            url: window.QuickProductEnquiryAdminVars.ajaxurl,
             type: 'PUT',
             data: options,
         });
     }
 
     $del(options) {
-        return window.jQuery.post(window.QuickEnquiryUsAdminVars.ajaxurl, options);
+        return window.jQuery.post(window.QuickProductEnquiryAdminVars.ajaxurl, options);
     }
 
     ucFirst(text) {

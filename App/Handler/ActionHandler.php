@@ -1,7 +1,7 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs\Handler;
-use Ruhel241\QuickEnquiryUs\Handler\FrontendHandler;
+namespace Ruhel241\QuickProductEnquiry\Handler;
+use Ruhel241\QuickProductEnquiry\Handler\FrontendHandler;
 
 class ActionHandler
 {
@@ -11,9 +11,9 @@ class ActionHandler
 
     public function activationAddons() {
       
-        $qeusActiveModule = get_option('qeus_active_module', []);
+        $qpefwActiveModule = get_option('qpefw_active_module', []);
 
-        if (isset($qeusActiveModule['qeus_module']) && $qeusActiveModule['qeus_module'] === 'yes') {
+        if (isset($qpefwActiveModule['qpefw_module']) && $qpefwActiveModule['qpefw_module'] === 'yes') {
             $frontendHandler = new FrontendHandler();
             $frontendHandler->register();
         } 

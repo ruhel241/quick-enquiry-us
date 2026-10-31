@@ -1,27 +1,27 @@
 <?php
 
 /*
-Plugin Name: Quick Enquiry Us
+Plugin Name: Quick Product Enquiry For WooCommerce
 Description: A simple product enquiry plugin for WooCommerce with WhatsApp, SMS, and enquiry form support.
 Version: 1.0.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Author: ruhel241
 Author URI: https://wpcreativeidea.com/
-Plugin URI: https://wpcreativeidea.com/quick-enquiry-us-for-woocommerce/
+Plugin URI: https://wpcreativeidea.com/quick-product-enquiry-for-woocommerce-for-woocommerce/
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: quick-enquiry-us
+Text Domain: quick-product-enquiry-for-woocommerce
 Domain Path: /languages
 */
 
 defined("ABSPATH") or die;
-define('QEUS_PLUGIN_DIR_URL', plugin_dir_url(__FILE__));
-define('QEUS_PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
-define('QEUS_PLUGIN_VERSION', '1.0.0');
-define('QEUS_LITE', 'quick-enquiry-us');
+define('QPEFW_PLUGIN_DIR_URL', plugin_dir_url(__FILE__));
+define('QPEFW_PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
+define('QPEFW_PLUGIN_VERSION', '1.0.0');
+define('QPEFW_LITE', 'quick-product-enquiry-for-woocommerce');
 
-class WooQuickEnquiryUsLite
+class QuickProductEnquiryLite
 {
     /**
      * Initialize the plugin
@@ -66,14 +66,14 @@ class WooQuickEnquiryUsLite
      */
     public function adminHooks()
     {
-       // woocommerce settings page add Quick Enquiry Us settings tab
-        add_filter( 'woocommerce_get_settings_pages', array('Ruhel241\QuickEnquiryUs\Classes\Customization', 'quickEnquiryUsAddSettings'), 15, 1 );
+       // woocommerce settings page add Quick Product Enquiry for WooCommerce settings tab
+        add_filter( 'woocommerce_get_settings_pages', array('Ruhel241\QuickProductEnquiry\Classes\Customization', 'quickProductEnquiryAddSettings'), 15, 1 );
     
-        $ajaxAdminAjaxHandler = new Ruhel241\QuickEnquiryUs\Handler\AdminAjaxHandler();
+        $ajaxAdminAjaxHandler = new Ruhel241\QuickProductEnquiry\Handler\AdminAjaxHandler();
         $ajaxAdminAjaxHandler->registerEndpoints();
         
-        if ( defined('QEUS_PRO') && class_exists( \Ruhel241\QuickEnquiryUsPro\Classes\LicenseController::class ) ) {
-            $licenseController = new \Ruhel241\QuickEnquiryUsPro\Classes\LicenseController();
+        if ( defined('QPEFW_PRO') && class_exists( \Ruhel241\QuickProductEnquiryPro\Classes\LicenseController::class ) ) {
+            $licenseController = new \Ruhel241\QuickProductEnquiryPro\Classes\LicenseController();
             $licenseController->registerEndpoints();
 		}
     }
@@ -86,7 +86,7 @@ class WooQuickEnquiryUsLite
     }
 
     public function commonHooks() {
-       $ActionHandler = new Ruhel241\QuickEnquiryUs\Handler\ActionHandler();
+       $ActionHandler = new Ruhel241\QuickProductEnquiry\Handler\ActionHandler();
        $ActionHandler->register();
     }
 
@@ -105,19 +105,19 @@ class WooQuickEnquiryUsLite
     {
         ?>
         <div class="notice notice-error">
-            <p><?php esc_html_e('WooCommerce Quick Enquiry Us requires WooCommerce to be installed and active.', 'quick-enquiry-us'); ?></p>
+            <p><?php esc_html_e('WooCommerce Quick Product Enquiry for WooCommerce requires WooCommerce to be installed and active.', 'quick-product-enquiry-for-woocommerce'); ?></p>
         </div>
         <?php
     }
 };
 
 add_action('plugins_loaded', function () {
-    $WooQuickEnquiryUsLite = new WooQuickEnquiryUsLite();
-    $WooQuickEnquiryUsLite->init();
+    $quickProductEnquiryLite = new QuickProductEnquiryLite();
+    $quickProductEnquiryLite->init();
 });
 
 register_activation_hook(__FILE__, function ($network_wide) {
-    require_once(QEUS_PLUGIN_DIR_PATH . 'App/Handler/ActivationHandler.php');
-    $activate = new Ruhel241\QuickEnquiryUs\Handler\ActivationHandler();
+    require_once(QPEFW_PLUGIN_DIR_PATH . 'App/Handler/ActivationHandler.php');
+    $activate = new Ruhel241\QuickProductEnquiry\Handler\ActivationHandler();
     $activate->activate($network_wide);
 });

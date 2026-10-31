@@ -1,8 +1,8 @@
 <template>
-  <div class="qeus-documentation-wrapper qeus-card">
+  <div class="qpefw-documentation-wrapper qpefw-card">
     <!-- Header -->
-    <div class="qeus_header">
-      <div class="qeus_title qeus_header_title">
+    <div class="qpefw_header">
+      <div class="qpefw_title qpefw_header_title">
         <h3>Documentation</h3>
       </div>
     </div>
@@ -13,24 +13,24 @@
         <div class="dashboard-document-youtube">
           <iframe width="100%" height="550" src="https://www.youtube.com/embed/jhPquLtObTc?si=VH3SLsDmzl_hS4gB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
-        <p class="qeus-subtitle">
+        <p class="qpefw-subtitle">
           Learn how to set up and use this plugin step by step.
         </p>
       </el-col>
 
       <!-- Documentation Content -->
       <el-col :span="24">
-        <div class="qeus-doc-content">
+        <div class="qpefw-doc-content">
           <h4>🚀 Getting Started</h4>
-          <ul class="qeus-doc-list">
+          <ul class="qpefw-doc-list">
             <li>Install and activate the plugin</li>
-            <li>Go to <strong>Quick Enquiry Us Tab Settings</strong></li>
+            <li>Go to <strong>Quick Product Enquiry Tab Settings</strong></li>
             <li>Configure required options</li>
             <li>Save Settings and Save Styles</li>
           </ul>
 
           <h4>🔗 Helpful Links</h4>
-          <ul class="qeus-doc-links">
+          <ul class="qpefw-doc-links">
             <li>
               <a href="https://wpcreativeidea.com/" target="_blank">
                 📄 Full Documentation

@@ -1,8 +1,8 @@
 <template>
-  <div class="qeus-settings-wrapper" v-loading="fetching" element-loading-spinner="el-icon-loading">
-    <div class="qeus-settings-content">
+  <div class="qpefw-settings-wrapper" v-loading="fetching" element-loading-spinner="el-icon-loading">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Enquiry US Shop Page Button Styles</h3>
+        <h3>Enquiry Shop Page Button Styles</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">In-Stock Button Color</span>
@@ -26,9 +26,9 @@
         />
       </div>
     </div>
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Enquiry US Single Page Button Styles</h3>
+        <h3>Enquiry Single Page Button Styles</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">In-Stock Button Color</span>
@@ -52,9 +52,9 @@
         />
       </div>
     </div>
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Enquiry US Form Styles</h3>
+        <h3>Enquiry Form Styles</h3>
       </div>
       <div class="setting-row">
         <span class="setting-label">Header Background Color</span>
@@ -78,40 +78,40 @@
         />
       </div>
     </div>
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3> ShortCode Enquiry Us Button Style</h3>
+        <h3> ShortCode Enquiry Button Style</h3>
       </div>
       <div class="setting-row">
-        <span class="setting-label">Enquiry Us Button Color</span>
+        <span class="setting-label">Enquiry Button Color</span>
         <color-select
-            v-model="styles.shortcode_enquiry_us_button_color"
-            @input="(value) => changeHandler('shortcode_enquiry_us_button_color', value)"
+            v-model="styles.shortcode_enquiry_button_color"
+            @input="(value) => changeHandler('shortcode_enquiry_button_color', value)"
         />
       </div>
     </div>
    
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Cart Page Enquiry Us Button Style</h3>
+        <h3>Cart Page Enquiry Button Style</h3>
       </div>
       <div class="setting-row">
-        <span class="setting-label">Enquiry Us Button Color</span>
+        <span class="setting-label">Enquiry Button Color</span>
         <color-select
-            v-model="styles.cart_page_enquiry_us_button_color"
-            @input="(value) => changeHandler('cart_page_enquiry_us_button_color', value)"
+            v-model="styles.cart_page_enquiry_button_color"
+            @input="(value) => changeHandler('cart_page_enquiry_button_color', value)"
         />
       </div>
     </div>
-    <div class="qeus-settings-content">
+    <div class="qpefw-settings-content">
       <div class="setting-title">
-        <h3>Order Summary Enquiry Us Button Style</h3>
+        <h3>Order Summary Enquiry Button Style</h3>
       </div>
       <div class="setting-row">
-        <span class="setting-label">Enquiry Us Button Color</span>
+        <span class="setting-label">Enquiry Button Color</span>
         <color-select
-            v-model="styles.order_summary_enquiry_us_button_color"
-            @input="(value) => changeHandler('order_summary_enquiry_us_button_color', value)"
+            v-model="styles.order_summary_enquiry_button_color"
+            @input="(value) => changeHandler('order_summary_enquiry_button_color', value)"
         />
       </div>
     </div>

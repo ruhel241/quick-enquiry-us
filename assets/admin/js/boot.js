@@ -1,743 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/@wordpress/hooks/build-module/createAddHook.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/createAddHook.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _validateNamespace_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validateNamespace.js */ "./node_modules/@wordpress/hooks/build-module/validateNamespace.js");
-/* harmony import */ var _validateHookName_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateHookName.js */ "./node_modules/@wordpress/hooks/build-module/validateHookName.js");
-/**
- * Internal dependencies
- */
-
-
-
-/**
- * @callback AddHook
- *
- * Adds the hook to the appropriate hooks container.
- *
- * @param {string}               hookName      Name of hook to add
- * @param {string}               namespace     The unique namespace identifying the callback in the form `vendor/plugin/function`.
- * @param {import('.').Callback} callback      Function to call when the hook is run
- * @param {number}               [priority=10] Priority of this hook
- */
-
-/**
- * Returns a function which, when invoked, will add a hook.
- *
- * @param {import('.').Hooks}    hooks    Hooks instance.
- * @param {import('.').StoreKey} storeKey
- *
- * @return {AddHook} Function that adds a new hook.
- */
-function createAddHook(hooks, storeKey) {
-  return function addHook(hookName, namespace, callback, priority = 10) {
-    const hooksStore = hooks[storeKey];
-    if (!(0,_validateHookName_js__WEBPACK_IMPORTED_MODULE_1__["default"])(hookName)) {
-      return;
-    }
-    if (!(0,_validateNamespace_js__WEBPACK_IMPORTED_MODULE_0__["default"])(namespace)) {
-      return;
-    }
-    if ('function' !== typeof callback) {
-      // eslint-disable-next-line no-console
-      console.error('The hook callback must be a function.');
-      return;
-    }
-
-    // Validate numeric priority
-    if ('number' !== typeof priority) {
-      // eslint-disable-next-line no-console
-      console.error('If specified, the hook priority must be a number.');
-      return;
-    }
-    const handler = {
-      callback,
-      priority,
-      namespace
-    };
-    if (hooksStore[hookName]) {
-      // Find the correct insert index of the new hook.
-      const handlers = hooksStore[hookName].handlers;
-
-      /** @type {number} */
-      let i;
-      for (i = handlers.length; i > 0; i--) {
-        if (priority >= handlers[i - 1].priority) {
-          break;
-        }
-      }
-      if (i === handlers.length) {
-        // If append, operate via direct assignment.
-        handlers[i] = handler;
-      } else {
-        // Otherwise, insert before index via splice.
-        handlers.splice(i, 0, handler);
-      }
-
-      // We may also be currently executing this hook.  If the callback
-      // we're adding would come after the current callback, there's no
-      // problem; otherwise we need to increase the execution index of
-      // any other runs by 1 to account for the added element.
-      hooksStore.__current.forEach(hookInfo => {
-        if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
-          hookInfo.currentIndex++;
-        }
-      });
-    } else {
-      // This is the first hook of its type.
-      hooksStore[hookName] = {
-        handlers: [handler],
-        runs: 0
-      };
-    }
-    if (hookName !== 'hookAdded') {
-      hooks.doAction('hookAdded', hookName, namespace, callback, priority);
-    }
-  };
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createAddHook);
-//# sourceMappingURL=createAddHook.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/createCurrentHook.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/createCurrentHook.js ***!
-  \*************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/**
- * Returns a function which, when invoked, will return the name of the
- * currently running hook, or `null` if no hook of the given type is currently
- * running.
- *
- * @param {import('.').Hooks}    hooks    Hooks instance.
- * @param {import('.').StoreKey} storeKey
- *
- * @return {() => string | null} Function that returns the current hook name or null.
- */
-function createCurrentHook(hooks, storeKey) {
-  return function currentHook() {
-    var _currentArray$at$name;
-    const hooksStore = hooks[storeKey];
-    const currentArray = Array.from(hooksStore.__current);
-    return (_currentArray$at$name = currentArray.at(-1)?.name) !== null && _currentArray$at$name !== void 0 ? _currentArray$at$name : null;
-  };
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createCurrentHook);
-//# sourceMappingURL=createCurrentHook.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/createDidHook.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/createDidHook.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _validateHookName_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validateHookName.js */ "./node_modules/@wordpress/hooks/build-module/validateHookName.js");
-/**
- * Internal dependencies
- */
-
-
-/**
- * @callback DidHook
- *
- * Returns the number of times an action has been fired.
- *
- * @param {string} hookName The hook name to check.
- *
- * @return {number | undefined} The number of times the hook has run.
- */
-
-/**
- * Returns a function which, when invoked, will return the number of times a
- * hook has been called.
- *
- * @param {import('.').Hooks}    hooks    Hooks instance.
- * @param {import('.').StoreKey} storeKey
- *
- * @return {DidHook} Function that returns a hook's call count.
- */
-function createDidHook(hooks, storeKey) {
-  return function didHook(hookName) {
-    const hooksStore = hooks[storeKey];
-    if (!(0,_validateHookName_js__WEBPACK_IMPORTED_MODULE_0__["default"])(hookName)) {
-      return;
-    }
-    return hooksStore[hookName] && hooksStore[hookName].runs ? hooksStore[hookName].runs : 0;
-  };
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createDidHook);
-//# sourceMappingURL=createDidHook.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/createDoingHook.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/createDoingHook.js ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/**
- * @callback DoingHook
- * Returns whether a hook is currently being executed.
- *
- * @param {string} [hookName] The name of the hook to check for.  If
- *                            omitted, will check for any hook being executed.
- *
- * @return {boolean} Whether the hook is being executed.
- */
-
-/**
- * Returns a function which, when invoked, will return whether a hook is
- * currently being executed.
- *
- * @param {import('.').Hooks}    hooks    Hooks instance.
- * @param {import('.').StoreKey} storeKey
- *
- * @return {DoingHook} Function that returns whether a hook is currently
- *                     being executed.
- */
-function createDoingHook(hooks, storeKey) {
-  return function doingHook(hookName) {
-    const hooksStore = hooks[storeKey];
-
-    // If the hookName was not passed, check for any current hook.
-    if ('undefined' === typeof hookName) {
-      return hooksStore.__current.size > 0;
-    }
-
-    // Find if the `hookName` hook is in `__current`.
-    return Array.from(hooksStore.__current).some(hook => hook.name === hookName);
-  };
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createDoingHook);
-//# sourceMappingURL=createDoingHook.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/createHasHook.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/createHasHook.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/**
- * @callback HasHook
- *
- * Returns whether any handlers are attached for the given hookName and optional namespace.
- *
- * @param {string} hookName    The name of the hook to check for.
- * @param {string} [namespace] Optional. The unique namespace identifying the callback
- *                             in the form `vendor/plugin/function`.
- *
- * @return {boolean} Whether there are handlers that are attached to the given hook.
- */
-/**
- * Returns a function which, when invoked, will return whether any handlers are
- * attached to a particular hook.
- *
- * @param {import('.').Hooks}    hooks    Hooks instance.
- * @param {import('.').StoreKey} storeKey
- *
- * @return {HasHook} Function that returns whether any handlers are
- *                   attached to a particular hook and optional namespace.
- */
-function createHasHook(hooks, storeKey) {
-  return function hasHook(hookName, namespace) {
-    const hooksStore = hooks[storeKey];
-
-    // Use the namespace if provided.
-    if ('undefined' !== typeof namespace) {
-      return hookName in hooksStore && hooksStore[hookName].handlers.some(hook => hook.namespace === namespace);
-    }
-    return hookName in hooksStore;
-  };
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createHasHook);
-//# sourceMappingURL=createHasHook.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/createHooks.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/createHooks.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   _Hooks: () => (/* binding */ _Hooks),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _createAddHook__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createAddHook */ "./node_modules/@wordpress/hooks/build-module/createAddHook.js");
-/* harmony import */ var _createRemoveHook__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createRemoveHook */ "./node_modules/@wordpress/hooks/build-module/createRemoveHook.js");
-/* harmony import */ var _createHasHook__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createHasHook */ "./node_modules/@wordpress/hooks/build-module/createHasHook.js");
-/* harmony import */ var _createRunHook__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./createRunHook */ "./node_modules/@wordpress/hooks/build-module/createRunHook.js");
-/* harmony import */ var _createCurrentHook__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./createCurrentHook */ "./node_modules/@wordpress/hooks/build-module/createCurrentHook.js");
-/* harmony import */ var _createDoingHook__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./createDoingHook */ "./node_modules/@wordpress/hooks/build-module/createDoingHook.js");
-/* harmony import */ var _createDidHook__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./createDidHook */ "./node_modules/@wordpress/hooks/build-module/createDidHook.js");
-/**
- * Internal dependencies
- */
-
-
-
-
-
-
-
-
-/**
- * Internal class for constructing hooks. Use `createHooks()` function
- *
- * Note, it is necessary to expose this class to make its type public.
- *
- * @private
- */
-class _Hooks {
-  constructor() {
-    /** @type {import('.').Store} actions */
-    this.actions = Object.create(null);
-    this.actions.__current = new Set();
-
-    /** @type {import('.').Store} filters */
-    this.filters = Object.create(null);
-    this.filters.__current = new Set();
-    this.addAction = (0,_createAddHook__WEBPACK_IMPORTED_MODULE_0__["default"])(this, 'actions');
-    this.addFilter = (0,_createAddHook__WEBPACK_IMPORTED_MODULE_0__["default"])(this, 'filters');
-    this.removeAction = (0,_createRemoveHook__WEBPACK_IMPORTED_MODULE_1__["default"])(this, 'actions');
-    this.removeFilter = (0,_createRemoveHook__WEBPACK_IMPORTED_MODULE_1__["default"])(this, 'filters');
-    this.hasAction = (0,_createHasHook__WEBPACK_IMPORTED_MODULE_2__["default"])(this, 'actions');
-    this.hasFilter = (0,_createHasHook__WEBPACK_IMPORTED_MODULE_2__["default"])(this, 'filters');
-    this.removeAllActions = (0,_createRemoveHook__WEBPACK_IMPORTED_MODULE_1__["default"])(this, 'actions', true);
-    this.removeAllFilters = (0,_createRemoveHook__WEBPACK_IMPORTED_MODULE_1__["default"])(this, 'filters', true);
-    this.doAction = (0,_createRunHook__WEBPACK_IMPORTED_MODULE_3__["default"])(this, 'actions', false, false);
-    this.doActionAsync = (0,_createRunHook__WEBPACK_IMPORTED_MODULE_3__["default"])(this, 'actions', false, true);
-    this.applyFilters = (0,_createRunHook__WEBPACK_IMPORTED_MODULE_3__["default"])(this, 'filters', true, false);
-    this.applyFiltersAsync = (0,_createRunHook__WEBPACK_IMPORTED_MODULE_3__["default"])(this, 'filters', true, true);
-    this.currentAction = (0,_createCurrentHook__WEBPACK_IMPORTED_MODULE_4__["default"])(this, 'actions');
-    this.currentFilter = (0,_createCurrentHook__WEBPACK_IMPORTED_MODULE_4__["default"])(this, 'filters');
-    this.doingAction = (0,_createDoingHook__WEBPACK_IMPORTED_MODULE_5__["default"])(this, 'actions');
-    this.doingFilter = (0,_createDoingHook__WEBPACK_IMPORTED_MODULE_5__["default"])(this, 'filters');
-    this.didAction = (0,_createDidHook__WEBPACK_IMPORTED_MODULE_6__["default"])(this, 'actions');
-    this.didFilter = (0,_createDidHook__WEBPACK_IMPORTED_MODULE_6__["default"])(this, 'filters');
-  }
-}
-
-/** @typedef {_Hooks} Hooks */
-
-/**
- * Returns an instance of the hooks object.
- *
- * @return {Hooks} A Hooks instance.
- */
-function createHooks() {
-  return new _Hooks();
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createHooks);
-//# sourceMappingURL=createHooks.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/createRemoveHook.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/createRemoveHook.js ***!
-  \************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _validateNamespace_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validateNamespace.js */ "./node_modules/@wordpress/hooks/build-module/validateNamespace.js");
-/* harmony import */ var _validateHookName_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateHookName.js */ "./node_modules/@wordpress/hooks/build-module/validateHookName.js");
-/**
- * Internal dependencies
- */
-
-
-
-/**
- * @callback RemoveHook
- * Removes the specified callback (or all callbacks) from the hook with a given hookName
- * and namespace.
- *
- * @param {string} hookName  The name of the hook to modify.
- * @param {string} namespace The unique namespace identifying the callback in the
- *                           form `vendor/plugin/function`.
- *
- * @return {number | undefined} The number of callbacks removed.
- */
-
-/**
- * Returns a function which, when invoked, will remove a specified hook or all
- * hooks by the given name.
- *
- * @param {import('.').Hooks}    hooks             Hooks instance.
- * @param {import('.').StoreKey} storeKey
- * @param {boolean}              [removeAll=false] Whether to remove all callbacks for a hookName,
- *                                                 without regard to namespace. Used to create
- *                                                 `removeAll*` functions.
- *
- * @return {RemoveHook} Function that removes hooks.
- */
-function createRemoveHook(hooks, storeKey, removeAll = false) {
-  return function removeHook(hookName, namespace) {
-    const hooksStore = hooks[storeKey];
-    if (!(0,_validateHookName_js__WEBPACK_IMPORTED_MODULE_1__["default"])(hookName)) {
-      return;
-    }
-    if (!removeAll && !(0,_validateNamespace_js__WEBPACK_IMPORTED_MODULE_0__["default"])(namespace)) {
-      return;
-    }
-
-    // Bail if no hooks exist by this name.
-    if (!hooksStore[hookName]) {
-      return 0;
-    }
-    let handlersRemoved = 0;
-    if (removeAll) {
-      handlersRemoved = hooksStore[hookName].handlers.length;
-      hooksStore[hookName] = {
-        runs: hooksStore[hookName].runs,
-        handlers: []
-      };
-    } else {
-      // Try to find the specified callback to remove.
-      const handlers = hooksStore[hookName].handlers;
-      for (let i = handlers.length - 1; i >= 0; i--) {
-        if (handlers[i].namespace === namespace) {
-          handlers.splice(i, 1);
-          handlersRemoved++;
-          // This callback may also be part of a hook that is
-          // currently executing.  If the callback we're removing
-          // comes after the current callback, there's no problem;
-          // otherwise we need to decrease the execution index of any
-          // other runs by 1 to account for the removed element.
-          hooksStore.__current.forEach(hookInfo => {
-            if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
-              hookInfo.currentIndex--;
-            }
-          });
-        }
-      }
-    }
-    if (hookName !== 'hookRemoved') {
-      hooks.doAction('hookRemoved', hookName, namespace);
-    }
-    return handlersRemoved;
-  };
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createRemoveHook);
-//# sourceMappingURL=createRemoveHook.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/createRunHook.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/createRunHook.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/**
- * Returns a function which, when invoked, will execute all callbacks
- * registered to a hook of the specified type, optionally returning the final
- * value of the call chain.
- *
- * @param {import('.').Hooks}    hooks          Hooks instance.
- * @param {import('.').StoreKey} storeKey
- * @param {boolean}              returnFirstArg Whether each hook callback is expected to return its first argument.
- * @param {boolean}              async          Whether the hook callback should be run asynchronously
- *
- * @return {(hookName:string, ...args: unknown[]) => undefined|unknown} Function that runs hook callbacks.
- */
-function createRunHook(hooks, storeKey, returnFirstArg, async) {
-  return function runHook(hookName, ...args) {
-    const hooksStore = hooks[storeKey];
-    if (!hooksStore[hookName]) {
-      hooksStore[hookName] = {
-        handlers: [],
-        runs: 0
-      };
-    }
-    hooksStore[hookName].runs++;
-    const handlers = hooksStore[hookName].handlers;
-
-    // The following code is stripped from production builds.
-    if (true) {
-      // Handle any 'all' hooks registered.
-      if ('hookAdded' !== hookName && hooksStore.all) {
-        handlers.push(...hooksStore.all.handlers);
-      }
-    }
-    if (!handlers || !handlers.length) {
-      return returnFirstArg ? args[0] : undefined;
-    }
-    const hookInfo = {
-      name: hookName,
-      currentIndex: 0
-    };
-    async function asyncRunner() {
-      try {
-        hooksStore.__current.add(hookInfo);
-        let result = returnFirstArg ? args[0] : undefined;
-        while (hookInfo.currentIndex < handlers.length) {
-          const handler = handlers[hookInfo.currentIndex];
-          result = await handler.callback.apply(null, args);
-          if (returnFirstArg) {
-            args[0] = result;
-          }
-          hookInfo.currentIndex++;
-        }
-        return returnFirstArg ? result : undefined;
-      } finally {
-        hooksStore.__current.delete(hookInfo);
-      }
-    }
-    function syncRunner() {
-      try {
-        hooksStore.__current.add(hookInfo);
-        let result = returnFirstArg ? args[0] : undefined;
-        while (hookInfo.currentIndex < handlers.length) {
-          const handler = handlers[hookInfo.currentIndex];
-          result = handler.callback.apply(null, args);
-          if (returnFirstArg) {
-            args[0] = result;
-          }
-          hookInfo.currentIndex++;
-        }
-        return returnFirstArg ? result : undefined;
-      } finally {
-        hooksStore.__current.delete(hookInfo);
-      }
-    }
-    return (async ? asyncRunner : syncRunner)();
-  };
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createRunHook);
-//# sourceMappingURL=createRunHook.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/index.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/index.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   actions: () => (/* binding */ actions),
-/* harmony export */   addAction: () => (/* binding */ addAction),
-/* harmony export */   addFilter: () => (/* binding */ addFilter),
-/* harmony export */   applyFilters: () => (/* binding */ applyFilters),
-/* harmony export */   applyFiltersAsync: () => (/* binding */ applyFiltersAsync),
-/* harmony export */   createHooks: () => (/* reexport safe */ _createHooks__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   currentAction: () => (/* binding */ currentAction),
-/* harmony export */   currentFilter: () => (/* binding */ currentFilter),
-/* harmony export */   defaultHooks: () => (/* binding */ defaultHooks),
-/* harmony export */   didAction: () => (/* binding */ didAction),
-/* harmony export */   didFilter: () => (/* binding */ didFilter),
-/* harmony export */   doAction: () => (/* binding */ doAction),
-/* harmony export */   doActionAsync: () => (/* binding */ doActionAsync),
-/* harmony export */   doingAction: () => (/* binding */ doingAction),
-/* harmony export */   doingFilter: () => (/* binding */ doingFilter),
-/* harmony export */   filters: () => (/* binding */ filters),
-/* harmony export */   hasAction: () => (/* binding */ hasAction),
-/* harmony export */   hasFilter: () => (/* binding */ hasFilter),
-/* harmony export */   removeAction: () => (/* binding */ removeAction),
-/* harmony export */   removeAllActions: () => (/* binding */ removeAllActions),
-/* harmony export */   removeAllFilters: () => (/* binding */ removeAllFilters),
-/* harmony export */   removeFilter: () => (/* binding */ removeFilter)
-/* harmony export */ });
-/* harmony import */ var _createHooks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createHooks */ "./node_modules/@wordpress/hooks/build-module/createHooks.js");
-/**
- * Internal dependencies
- */
-
-
-/** @typedef {(...args: any[])=>any} Callback */
-
-/**
- * @typedef Handler
- * @property {Callback} callback  The callback
- * @property {string}   namespace The namespace
- * @property {number}   priority  The namespace
- */
-
-/**
- * @typedef Hook
- * @property {Handler[]} handlers Array of handlers
- * @property {number}    runs     Run counter
- */
-
-/**
- * @typedef Current
- * @property {string} name         Hook name
- * @property {number} currentIndex The index
- */
-
-/**
- * @typedef {Record<string, Hook> & {__current: Set<Current>}} Store
- */
-
-/**
- * @typedef {'actions' | 'filters'} StoreKey
- */
-
-/**
- * @typedef {import('./createHooks').Hooks} Hooks
- */
-
-const defaultHooks = (0,_createHooks__WEBPACK_IMPORTED_MODULE_0__["default"])();
-const {
-  addAction,
-  addFilter,
-  removeAction,
-  removeFilter,
-  hasAction,
-  hasFilter,
-  removeAllActions,
-  removeAllFilters,
-  doAction,
-  doActionAsync,
-  applyFilters,
-  applyFiltersAsync,
-  currentAction,
-  currentFilter,
-  doingAction,
-  doingFilter,
-  didAction,
-  didFilter,
-  actions,
-  filters
-} = defaultHooks;
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/validateHookName.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/validateHookName.js ***!
-  \************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/**
- * Validate a hookName string.
- *
- * @param {string} hookName The hook name to validate. Should be a non empty string containing
- *                          only numbers, letters, dashes, periods and underscores. Also,
- *                          the hook name cannot begin with `__`.
- *
- * @return {boolean} Whether the hook name is valid.
- */
-function validateHookName(hookName) {
-  if ('string' !== typeof hookName || '' === hookName) {
-    // eslint-disable-next-line no-console
-    console.error('The hook name must be a non-empty string.');
-    return false;
-  }
-  if (/^__/.test(hookName)) {
-    // eslint-disable-next-line no-console
-    console.error('The hook name cannot begin with `__`.');
-    return false;
-  }
-  if (!/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(hookName)) {
-    // eslint-disable-next-line no-console
-    console.error('The hook name can only contain numbers, letters, dashes, periods and underscores.');
-    return false;
-  }
-  return true;
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (validateHookName);
-//# sourceMappingURL=validateHookName.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/hooks/build-module/validateNamespace.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@wordpress/hooks/build-module/validateNamespace.js ***!
-  \*************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/**
- * Validate a namespace string.
- *
- * @param {string} namespace The namespace to validate - should take the form
- *                           `vendor/plugin/function`.
- *
- * @return {boolean} Whether the namespace is valid.
- */
-function validateNamespace(namespace) {
-  if ('string' !== typeof namespace || '' === namespace) {
-    // eslint-disable-next-line no-console
-    console.error('The namespace must be a non-empty string.');
-    return false;
-  }
-  if (!/^[a-zA-Z][a-zA-Z0-9_.\-\/]*$/.test(namespace)) {
-    // eslint-disable-next-line no-console
-    console.error('The namespace can only contain numbers, letters, dashes, periods, underscores and slashes.');
-    return false;
-  }
-  return true;
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (validateNamespace);
-//# sourceMappingURL=validateNamespace.js.map
-
-/***/ }),
-
 /***/ "./node_modules/async-validator/es/index.js":
 /*!**************************************************!*\
   !*** ./node_modules/async-validator/es/index.js ***!
@@ -1028,8 +291,8 @@ Schema.messages = _messages__WEBPACK_IMPORTED_MODULE_4__.messages;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   messages: () => (/* binding */ messages),
-/* harmony export */   newMessages: () => (/* binding */ newMessages)
+/* harmony export */   "newMessages": () => (/* binding */ newMessages),
+/* harmony export */   "messages": () => (/* binding */ messages)
 /* harmony export */ });
 function newMessages() {
   return {
@@ -1467,13 +730,13 @@ function whitespace(rule, value, source, errors, options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   asyncMap: () => (/* binding */ asyncMap),
-/* harmony export */   complementError: () => (/* binding */ complementError),
-/* harmony export */   deepMerge: () => (/* binding */ deepMerge),
-/* harmony export */   format: () => (/* binding */ format),
-/* harmony export */   isEmptyObject: () => (/* binding */ isEmptyObject),
-/* harmony export */   isEmptyValue: () => (/* binding */ isEmptyValue),
-/* harmony export */   warning: () => (/* binding */ warning)
+/* harmony export */   "warning": () => (/* binding */ warning),
+/* harmony export */   "format": () => (/* binding */ format),
+/* harmony export */   "isEmptyValue": () => (/* binding */ isEmptyValue),
+/* harmony export */   "isEmptyObject": () => (/* binding */ isEmptyObject),
+/* harmony export */   "asyncMap": () => (/* binding */ asyncMap),
+/* harmony export */   "complementError": () => (/* binding */ complementError),
+/* harmony export */   "deepMerge": () => (/* binding */ deepMerge)
 /* harmony export */ });
 /* harmony import */ var babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! babel-runtime/helpers/extends */ "./node_modules/babel-runtime/helpers/extends.js");
 /* harmony import */ var babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! babel-runtime/helpers/typeof */ "./node_modules/babel-runtime/helpers/typeof.js");
@@ -1526,8 +789,7 @@ function format() {
           } catch (_) {
             return '[Circular]';
           }
-          // removed by dead control flow
-{}
+          break;
         default:
           return x;
       }
@@ -2405,6 +1667,380 @@ function mergeFn (a, b) {
   }
 }
 
+
+/***/ }),
+
+/***/ "./resources/admin/Bits/QPEFWPlugin.js":
+/*!*********************************************!*\
+  !*** ./resources/admin/Bits/QPEFWPlugin.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ QPEFWPlugin)
+/* harmony export */ });
+/* harmony import */ var _Bits_elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Bits/elements */ "./resources/admin/Bits/elements.js");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/hooks */ "./node_modules/@wordpress/hooks/build-module/index.mjs");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, e) { if ("object" != _typeof(t) || !t) return t; var r; if ("undefined" != typeof Symbol && void 0 !== (r = t[Symbol.toPrimitive])) { var i = r.call(t, e || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === e ? String : Number)(t); }
+
+// import Vue from 'vue';
+
+
+_Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
+var QPEFWPlugin = /*#__PURE__*/function () {
+  function QPEFWPlugin() {
+    _classCallCheck(this, QPEFWPlugin);
+    // this.Router = new Router({
+    //     mode: 'history',
+    //     routes: [] // Define your routes here
+    // });
+    this.Router = vue_router__WEBPACK_IMPORTED_MODULE_2__["default"];
+    this.doAction = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.doAction;
+    this.addFilter = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.addFilter;
+    this.addAction = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.addAction;
+    this.applyFilters = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.applyFilters;
+    this.removeAllActions = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.removeAllActions;
+    this.appVars = window.QuickProductEnquiryAdminVars;
+
+    // Create a reactive data object for module status
+    // this.moduleStatus = Vue.observable({
+    //     ...window.QuickProductEnquiryAdminVars.get_active_modules
+    // });
+
+    this.Vue = this.extendVueConstructor();
+  }
+
+  // Method to update module status globally
+  // updateModuleStatus(type, status) {
+  //     Vue.set(this.moduleStatus, type, status);
+  //     // Also trigger a custom event for components that might need it
+  //     this.doAction('qpefw_module_status_changed', type, status);
+  // }
+  return _createClass(QPEFWPlugin, [{
+    key: "extendVueConstructor",
+    value: function extendVueConstructor() {
+      var self = this;
+      _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].mixin({
+        data: function data() {
+          return {
+            appVars: self.appVars
+          };
+        },
+        methods: {
+          addFilter: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.addFilter,
+          applyFilters: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.applyFilters,
+          doAction: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.doAction,
+          addAction: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.addAction,
+          removeAllActions: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.removeAllActions,
+          // dateFormats: self.dateFormat,
+          ucFirst: self.ucFirst,
+          ucWords: self.ucWords,
+          slugify: self.slugify,
+          $handleSuccess: self.handleSuccess,
+          $handleError: self.handleError,
+          // nsHumanDiffTime: self.humanDiffTime,
+          // getPrefixLinkUrl(link) {
+          //     var prefixLink = this.appVars.site_url;
+          //     if (link.subdomain_name) {
+          //         return prefixLink.replace('://', '://' + link.subdomain_name + '.')
+          //     }
+          //     return prefixLink;
+          // },
+          // getCopySlugUrl(link) {
+          //     return this.getPrefixLinkUrl(link) + '/' + link.slug;
+          // },
+          getCopyUrlLink: function getCopyUrlLink(link) {
+            return link;
+          },
+          getCopyText: function getCopyText(val) {
+            return val;
+          } // $t(string) {
+          //     return window.QuickProductEnquiryAdminVars.i18n[string] || string;
+          // },
+          // Updated method to use reactive module status
+          // $getTypeModule(type) {
+          //     return self.moduleStatus[type];
+          // },
+          // Method to update module status from any component
+          // $updateModuleStatus(type, status) {
+          //     self.updateModuleStatus(type, status);
+          // }
+        },
+        computed: {}
+      });
+
+      // Vue.filter('dateFormats', self.dateFormat);
+      _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].filter('ucFirst', self.ucFirst);
+      _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].filter('ucWords', self.ucWords);
+      // Vue.filter('nsHumanDiffTime', self.humanDiffTime);
+
+      _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].use(this.Router);
+      return _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"];
+    }
+  }, {
+    key: "registerBlock",
+    value: function registerBlock(blockLocation, blockName, block) {
+      this.addFilter(blockLocation, this.appVars.slug, function (components) {
+        components[blockName] = block;
+        return components;
+      });
+    }
+  }, {
+    key: "registerTopMenu",
+    value: function registerTopMenu(title, route) {
+      if (!title || !route.name || !route.path || !route.component) {
+        return;
+      }
+      this.addFilter('qpefw_top_menus', this.appVars.slug, function (menus) {
+        menus = menus.filter(function (m) {
+          return m.route !== route.name;
+        });
+        menus.push({
+          route: route.name,
+          title: title
+        });
+        return menus;
+      });
+      this.addFilter('qpefw_global_routes', this.appVars.slug, function (routes) {
+        routes = routes.filter(function (r) {
+          return r.name !== route.name;
+        });
+        routes.push(route);
+        return routes;
+      });
+    }
+  }, {
+    key: "request",
+    value: function request(method, route) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      var url = "".concat(window.QuickProductEnquiryAdminVars.rest.url, "/").concat(route);
+      var headers = {
+        'X-WP-Nonce': window.QuickProductEnquiryAdminVars.rest.nonce
+      };
+      if (['PUT', 'PATCH', 'DELETE'].indexOf(method.toUpperCase()) !== -1) {
+        headers['X-HTTP-Method-Override'] = method;
+        method = 'POST';
+      }
+      data.query_timestamp = Date.now();
+      return new Promise(function (resolve, reject) {
+        window.jQuery.ajax({
+          url: url,
+          type: method,
+          data: data,
+          headers: headers
+        }).then(function (response) {
+          return resolve(response);
+        }).fail(function (errors) {
+          return reject(errors.responseJSON);
+        });
+      });
+    }
+  }, {
+    key: "$get",
+    value: function $get(options) {
+      return window.jQuery.get(window.QuickProductEnquiryAdminVars.ajaxurl, options);
+    }
+  }, {
+    key: "$post",
+    value: function $post(options) {
+      return window.jQuery.post(window.QuickProductEnquiryAdminVars.ajaxurl, options);
+    }
+  }, {
+    key: "$put",
+    value: function $put(options) {
+      return window.jQuery.ajax({
+        url: window.QuickProductEnquiryAdminVars.ajaxurl,
+        type: 'PUT',
+        data: options
+      });
+    }
+  }, {
+    key: "$del",
+    value: function $del(options) {
+      return window.jQuery.post(window.QuickProductEnquiryAdminVars.ajaxurl, options);
+    }
+  }, {
+    key: "ucFirst",
+    value: function ucFirst(text) {
+      return text[0].toUpperCase() + text.slice(1).toLowerCase();
+    }
+  }, {
+    key: "ucWords",
+    value: function ucWords(text) {
+      return (text + '').replace(/^(.)|\s+(.)/g, function ($1) {
+        return $1.toUpperCase();
+      });
+    }
+  }, {
+    key: "slugify",
+    value: function slugify(text) {
+      return text.toString().toLowerCase().replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      .replace(/\-\-+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start of text
+      .replace(/-+$/, ''); // Trim - from end of text
+    }
+  }, {
+    key: "convertToText",
+    value: function convertToText(obj) {
+      var string = [];
+      if (_typeof(obj) === 'object' && obj.join === undefined) {
+        for (var prop in obj) {
+          string.push(this.convertToText(obj[prop]));
+        }
+      } else if (_typeof(obj) === 'object' && !(obj.join === undefined)) {
+        for (var _prop in obj) {
+          string.push(this.convertToText(obj[_prop]));
+        }
+      } else if (typeof obj === 'function') {} else if (typeof obj === 'string') {
+        string.push(obj);
+      }
+      return string.join('<br />');
+    }
+  }, {
+    key: "handleSuccess",
+    value: function handleSuccess(message) {
+      this.$notify({
+        type: 'success',
+        title: 'Success',
+        message: message,
+        offset: 32,
+        dangerouslyUseHTMLString: true
+      });
+    }
+  }, {
+    key: "handleError",
+    value: function handleError(response) {
+      var _response, _response2;
+      if ((_response = response) !== null && _response !== void 0 && (_response = _response.responseJSON) !== null && _response !== void 0 && _response.data) {
+        response = response.responseJSON.data;
+      }
+      var errorMessage = '';
+      if (typeof response === 'string') {
+        errorMessage = response;
+      } else if ((_response2 = response) !== null && _response2 !== void 0 && _response2.message) {
+        errorMessage = response.message;
+      }
+      if (!errorMessage) {
+        errorMessage = 'Something went wrong!';
+      }
+      this.$notify({
+        type: 'error',
+        title: 'Error',
+        message: errorMessage,
+        offset: 32,
+        dangerouslyUseHTMLString: true,
+        position: 'top-right'
+      });
+    }
+  }]);
+}();
+
+
+/***/ }),
+
+/***/ "./resources/admin/Bits/elements.js":
+/*!******************************************!*\
+  !*** ./resources/admin/Bits/elements.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var element_ui_lib_locale_lang_en__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! element-ui/lib/locale/lang/en */ "./node_modules/element-ui/lib/locale/lang/en.js");
+/* harmony import */ var element_ui_lib_locale__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! element-ui/lib/locale */ "./node_modules/element-ui/lib/locale/index.js");
+/* harmony import */ var element_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! element-ui */ "./node_modules/element-ui/lib/element-ui.common.js");
+/* harmony import */ var element_ui__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(element_ui__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Card);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Menu);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.MenuItem);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Form);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.FormItem);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Input);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Select);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Option);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Row);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Col);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Button);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Dialog);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Divider);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.DatePicker);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Icon);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Tabs);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.TabPane);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Tooltip);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Table);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.TableColumn);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Pagination);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.ButtonGroup);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.ColorPicker);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Collapse);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.CollapseItem);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Empty);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Skeleton);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.SkeletonItem);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.InputNumber);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Switch);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Submenu);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.MenuItemGroup);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.OptionGroup);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Radio);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.RadioGroup);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.RadioButton);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Checkbox);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Popover);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Tag);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.PageHeader);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.CheckboxGroup);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Collapse);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.CollapseItem);
+// Vue.use(Calendar);
+
+// Vue.use(RadioGroup);
+// Vue.use(Cascader);
+
+// Vue.use(Dropdown);
+// Vue.use(DropdownMenu);
+// Vue.use(DropdownItem);
+
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$notify = element_ui__WEBPACK_IMPORTED_MODULE_2__.Notification;
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$message = element_ui__WEBPACK_IMPORTED_MODULE_2__.Message;
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$msgbox = element_ui__WEBPACK_IMPORTED_MODULE_2__.MessageBox;
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$confirm = element_ui__WEBPACK_IMPORTED_MODULE_2__.MessageBox.confirm;
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Loading.directive);
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$loading = element_ui__WEBPACK_IMPORTED_MODULE_2__.Loading.service;
+element_ui_lib_locale__WEBPACK_IMPORTED_MODULE_1__["default"].use(element_ui_lib_locale_lang_en__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (vue__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+/***/ }),
+
+/***/ "./resources/admin/boot.js":
+/*!*********************************!*\
+  !*** ./resources/admin/boot.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Bits_QPEFWPlugin_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Bits/QPEFWPlugin.js */ "./resources/admin/Bits/QPEFWPlugin.js");
+
+window.QPEFWPlugin = new _Bits_QPEFWPlugin_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
 
 /***/ }),
 
@@ -4362,10 +3998,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -4464,10 +4100,10 @@ function normalizeComponent (
 /***/ }),
 
 /***/ 97:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6575__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6575__) {
 
 "use strict";
-__nested_webpack_require_6575__.r(__nested_webpack_exports__);
+__nested_webpack_require_6575__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/button/src/button-group.vue?vue&type=template&id=3d8661d0&
 var render = function() {
@@ -4517,8 +4153,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/button/src/button-group.vue"
 /* harmony default export */ var button_group = (component.exports);
 // CONCATENATED MODULE: ./packages/button-group/index.js
@@ -4529,7 +4164,7 @@ button_group.install = function (Vue) {
   Vue.component(button_group.name, button_group);
 };
 
-/* harmony default export */ var packages_button_group = __nested_webpack_exports__["default"] = (button_group);
+/* harmony default export */ var packages_button_group = __webpack_exports__["default"] = (button_group);
 
 /***/ })
 
@@ -4633,10 +4268,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -4735,10 +4370,10 @@ function normalizeComponent (
 /***/ }),
 
 /***/ 96:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6575__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6575__) {
 
 "use strict";
-__nested_webpack_require_6575__.r(__nested_webpack_exports__);
+__nested_webpack_require_6575__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/button/src/button.vue?vue&type=template&id=ca859fb4&
 var render = function() {
@@ -4883,8 +4518,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/button/src/button.vue"
 /* harmony default export */ var src_button = (component.exports);
 // CONCATENATED MODULE: ./packages/button/index.js
@@ -4895,7 +4529,7 @@ src_button.install = function (Vue) {
   Vue.component(src_button.name, src_button);
 };
 
-/* harmony default export */ var packages_button = __nested_webpack_exports__["default"] = (src_button);
+/* harmony default export */ var packages_button = __webpack_exports__["default"] = (src_button);
 
 /***/ })
 
@@ -4999,10 +4633,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -5164,10 +4798,10 @@ module.exports = __webpack_require__(/*! element-ui/lib/mixins/locale */ "./node
 /***/ }),
 
 /***/ 61:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_7612__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_7612__) {
 
 "use strict";
-__nested_webpack_require_7612__.r(__nested_webpack_exports__);
+__nested_webpack_require_7612__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/cascader-panel/src/cascader-panel.vue?vue&type=template&id=34932346&
 var cascader_panelvue_type_template_id_34932346_render = function() {
@@ -5511,8 +5145,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/cascader-panel/src/cascader-node.vue"
 /* harmony default export */ var cascader_node = (component.exports);
 // EXTERNAL MODULE: external "element-ui/lib/mixins/locale"
@@ -5689,8 +5322,7 @@ var cascader_menu_component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var cascader_menu_api; }
+if (false) { var cascader_menu_api; }
 cascader_menu_component.options.__file = "packages/cascader-panel/src/cascader-menu.vue"
 /* harmony default export */ var cascader_menu = (cascader_menu_component.exports);
 // EXTERNAL MODULE: external "element-ui/lib/utils/shared"
@@ -6451,8 +6083,7 @@ var cascader_panel_component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var cascader_panel_api; }
+if (false) { var cascader_panel_api; }
 cascader_panel_component.options.__file = "packages/cascader-panel/src/cascader-panel.vue"
 /* harmony default export */ var cascader_panel = (cascader_panel_component.exports);
 // CONCATENATED MODULE: ./packages/cascader-panel/index.js
@@ -6463,7 +6094,7 @@ cascader_panel.install = function (Vue) {
   Vue.component(cascader_panel.name, cascader_panel);
 };
 
-/* harmony default export */ var packages_cascader_panel = __nested_webpack_exports__["default"] = (cascader_panel);
+/* harmony default export */ var packages_cascader_panel = __webpack_exports__["default"] = (cascader_panel);
 
 /***/ }),
 
@@ -6574,10 +6205,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -6683,10 +6314,10 @@ module.exports = __webpack_require__(/*! element-ui/lib/mixins/emitter */ "./nod
 /***/ }),
 
 /***/ 93:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6691__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6691__) {
 
 "use strict";
-__nested_webpack_require_6691__.r(__nested_webpack_exports__);
+__nested_webpack_require_6691__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/checkbox/src/checkbox-group.vue?vue&type=template&id=7289a290&
 var render = function() {
@@ -6780,8 +6411,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/checkbox/src/checkbox-group.vue"
 /* harmony default export */ var checkbox_group = (component.exports);
 // CONCATENATED MODULE: ./packages/checkbox-group/index.js
@@ -6792,7 +6422,7 @@ checkbox_group.install = function (Vue) {
   Vue.component(checkbox_group.name, checkbox_group);
 };
 
-/* harmony default export */ var packages_checkbox_group = __nested_webpack_exports__["default"] = (checkbox_group);
+/* harmony default export */ var packages_checkbox_group = __webpack_exports__["default"] = (checkbox_group);
 
 /***/ })
 
@@ -6896,10 +6526,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -7005,10 +6635,10 @@ module.exports = __webpack_require__(/*! element-ui/lib/mixins/emitter */ "./nod
 /***/ }),
 
 /***/ 91:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6691__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6691__) {
 
 "use strict";
-__nested_webpack_require_6691__.r(__nested_webpack_exports__);
+__nested_webpack_require_6691__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/checkbox/src/checkbox.vue?vue&type=template&id=d0387074&
 var render = function() {
@@ -7416,8 +7046,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/checkbox/src/checkbox.vue"
 /* harmony default export */ var src_checkbox = (component.exports);
 // CONCATENATED MODULE: ./packages/checkbox/index.js
@@ -7428,7 +7057,7 @@ src_checkbox.install = function (Vue) {
   Vue.component(src_checkbox.name, src_checkbox);
 };
 
-/* harmony default export */ var packages_checkbox = __nested_webpack_exports__["default"] = (src_checkbox);
+/* harmony default export */ var packages_checkbox = __webpack_exports__["default"] = (src_checkbox);
 
 /***/ })
 
@@ -7814,10 +7443,10 @@ module.exports = __nested_webpack_require_8794__(47);
 
 /***/ }),
 /* 47 */
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_8926__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_8926__) {
 
 "use strict";
-__nested_webpack_require_8926__.r(__nested_webpack_exports__);
+__nested_webpack_require_8926__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/pagination/src/pager.vue?vue&type=template&id=7274f267&
 var pagervue_type_template_id_7274f267_render = function() {
@@ -8178,8 +7807,7 @@ var component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/pagination/src/pager.vue"
 /* harmony default export */ var pager = (component.exports);
 // EXTERNAL MODULE: external "element-ui/lib/select"
@@ -8982,8 +8610,7 @@ var component_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var component_api; }
+if (false) { var component_api; }
 component_component.options.__file = "packages/dialog/src/component.vue"
 /* harmony default export */ var src_component = (component_component.exports);
 // CONCATENATED MODULE: ./packages/dialog/index.js
@@ -9328,8 +8955,7 @@ var autocomplete_suggestions_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var autocomplete_suggestions_api; }
+if (false) { var autocomplete_suggestions_api; }
 autocomplete_suggestions_component.options.__file = "packages/autocomplete/src/autocomplete-suggestions.vue"
 /* harmony default export */ var autocomplete_suggestions = (autocomplete_suggestions_component.exports);
 // EXTERNAL MODULE: external "element-ui/lib/mixins/focus"
@@ -9654,8 +9280,7 @@ var autocomplete_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var autocomplete_api; }
+if (false) { var autocomplete_api; }
 autocomplete_component.options.__file = "packages/autocomplete/src/autocomplete.vue"
 /* harmony default export */ var autocomplete = (autocomplete_component.exports);
 // CONCATENATED MODULE: ./packages/autocomplete/index.js
@@ -10036,8 +9661,7 @@ var dropdown_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var dropdown_api; }
+if (false) { var dropdown_api; }
 dropdown_component.options.__file = "packages/dropdown/src/dropdown.vue"
 /* harmony default export */ var dropdown = (dropdown_component.exports);
 // CONCATENATED MODULE: ./packages/dropdown/index.js
@@ -10172,8 +9796,7 @@ var dropdown_menu_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var dropdown_menu_api; }
+if (false) { var dropdown_menu_api; }
 dropdown_menu_component.options.__file = "packages/dropdown/src/dropdown-menu.vue"
 /* harmony default export */ var dropdown_menu = (dropdown_menu_component.exports);
 // CONCATENATED MODULE: ./packages/dropdown-menu/index.js
@@ -10273,8 +9896,7 @@ var dropdown_item_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var dropdown_item_api; }
+if (false) { var dropdown_item_api; }
 dropdown_item_component.options.__file = "packages/dropdown/src/dropdown-item.vue"
 /* harmony default export */ var dropdown_item = (dropdown_item_component.exports);
 // CONCATENATED MODULE: ./packages/dropdown-item/index.js
@@ -10905,8 +10527,7 @@ var menu_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var menu_api; }
+if (false) { var menu_api; }
 menu_component.options.__file = "packages/menu/src/menu.vue"
 /* harmony default export */ var src_menu = (menu_component.exports);
 // CONCATENATED MODULE: ./packages/menu/index.js
@@ -11364,8 +10985,7 @@ var submenu_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var submenu_api; }
+if (false) { var submenu_api; }
 submenu_component.options.__file = "packages/menu/src/submenu.vue"
 /* harmony default export */ var submenu = (submenu_component.exports);
 // CONCATENATED MODULE: ./packages/submenu/index.js
@@ -11582,8 +11202,7 @@ var menu_item_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var menu_item_api; }
+if (false) { var menu_item_api; }
 menu_item_component.options.__file = "packages/menu/src/menu-item.vue"
 /* harmony default export */ var menu_item = (menu_item_component.exports);
 // CONCATENATED MODULE: ./packages/menu-item/index.js
@@ -11686,8 +11305,7 @@ var menu_item_group_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var menu_item_group_api; }
+if (false) { var menu_item_group_api; }
 menu_item_group_component.options.__file = "packages/menu/src/menu-item-group.vue"
 /* harmony default export */ var menu_item_group = (menu_item_group_component.exports);
 // CONCATENATED MODULE: ./packages/menu-item-group/index.js
@@ -12444,8 +12062,7 @@ var input_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var input_api; }
+if (false) { var input_api; }
 input_component.options.__file = "packages/input/src/input.vue"
 /* harmony default export */ var src_input = (input_component.exports);
 // CONCATENATED MODULE: ./packages/input/index.js
@@ -12943,8 +12560,7 @@ var input_number_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var input_number_api; }
+if (false) { var input_number_api; }
 input_number_component.options.__file = "packages/input-number/src/input-number.vue"
 /* harmony default export */ var input_number = (input_number_component.exports);
 // CONCATENATED MODULE: ./packages/input-number/index.js
@@ -13225,8 +12841,7 @@ var radio_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var radio_api; }
+if (false) { var radio_api; }
 radio_component.options.__file = "packages/radio/src/radio.vue"
 /* harmony default export */ var src_radio = (radio_component.exports);
 // CONCATENATED MODULE: ./packages/radio/index.js
@@ -13401,8 +13016,7 @@ var radio_group_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var radio_group_api; }
+if (false) { var radio_group_api; }
 radio_group_component.options.__file = "packages/radio/src/radio-group.vue"
 /* harmony default export */ var radio_group = (radio_group_component.exports);
 // CONCATENATED MODULE: ./packages/radio-group/index.js
@@ -13649,8 +13263,7 @@ var radio_button_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var radio_button_api; }
+if (false) { var radio_button_api; }
 radio_button_component.options.__file = "packages/radio/src/radio-button.vue"
 /* harmony default export */ var radio_button = (radio_button_component.exports);
 // CONCATENATED MODULE: ./packages/radio-button/index.js
@@ -14061,8 +13674,7 @@ var checkbox_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var checkbox_api; }
+if (false) { var checkbox_api; }
 checkbox_component.options.__file = "packages/checkbox/src/checkbox.vue"
 /* harmony default export */ var src_checkbox = (checkbox_component.exports);
 // CONCATENATED MODULE: ./packages/checkbox/index.js
@@ -14429,8 +14041,7 @@ var checkbox_button_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var checkbox_button_api; }
+if (false) { var checkbox_button_api; }
 checkbox_button_component.options.__file = "packages/checkbox/src/checkbox-button.vue"
 /* harmony default export */ var checkbox_button = (checkbox_button_component.exports);
 // CONCATENATED MODULE: ./packages/checkbox-button/index.js
@@ -14527,8 +14138,7 @@ var checkbox_group_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var checkbox_group_api; }
+if (false) { var checkbox_group_api; }
 checkbox_group_component.options.__file = "packages/checkbox/src/checkbox-group.vue"
 /* harmony default export */ var checkbox_group = (checkbox_group_component.exports);
 // CONCATENATED MODULE: ./packages/checkbox-group/index.js
@@ -14844,8 +14454,7 @@ var src_component_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var src_component_api; }
+if (false) { var src_component_api; }
 src_component_component.options.__file = "packages/switch/src/component.vue"
 /* harmony default export */ var switch_src_component = (src_component_component.exports);
 // CONCATENATED MODULE: ./packages/switch/index.js
@@ -15453,8 +15062,7 @@ var select_dropdown_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var select_dropdown_api; }
+if (false) { var select_dropdown_api; }
 select_dropdown_component.options.__file = "packages/select/src/select-dropdown.vue"
 /* harmony default export */ var select_dropdown = (select_dropdown_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/select/src/option.vue?vue&type=template&id=7a44c642&
@@ -15687,8 +15295,7 @@ var option_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var option_api; }
+if (false) { var option_api; }
 option_component.options.__file = "packages/select/src/option.vue"
 /* harmony default export */ var src_option = (option_component.exports);
 // EXTERNAL MODULE: external "element-ui/lib/tag"
@@ -16665,8 +16272,7 @@ var select_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var select_api; }
+if (false) { var select_api; }
 select_component.options.__file = "packages/select/src/select.vue"
 /* harmony default export */ var src_select = (select_component.exports);
 // CONCATENATED MODULE: ./packages/select/index.js
@@ -16803,8 +16409,7 @@ var option_group_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var option_group_api; }
+if (false) { var option_group_api; }
 option_group_component.options.__file = "packages/select/src/option-group.vue"
 /* harmony default export */ var option_group = (option_group_component.exports);
 // CONCATENATED MODULE: ./packages/option-group/index.js
@@ -16956,8 +16561,7 @@ var button_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var button_api; }
+if (false) { var button_api; }
 button_component.options.__file = "packages/button/src/button.vue"
 /* harmony default export */ var src_button = (button_component.exports);
 // CONCATENATED MODULE: ./packages/button/index.js
@@ -17014,8 +16618,7 @@ var button_group_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var button_group_api; }
+if (false) { var button_group_api; }
 button_group_component.options.__file = "packages/button/src/button-group.vue"
 /* harmony default export */ var button_group = (button_group_component.exports);
 // CONCATENATED MODULE: ./packages/button-group/index.js
@@ -20156,8 +19759,7 @@ var filter_panel_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var filter_panel_api; }
+if (false) { var filter_panel_api; }
 filter_panel_component.options.__file = "packages/table/src/filter-panel.vue"
 /* harmony default export */ var filter_panel = (filter_panel_component.exports);
 // CONCATENATED MODULE: ./packages/table/src/table-header.js
@@ -21608,8 +21210,7 @@ var table_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var table_api; }
+if (false) { var table_api; }
 table_component.options.__file = "packages/table/src/table.vue"
 /* harmony default export */ var src_table = (table_component.exports);
 // CONCATENATED MODULE: ./packages/table/index.js
@@ -23262,8 +22863,7 @@ var picker_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var picker_api; }
+if (false) { var picker_api; }
 picker_component.options.__file = "packages/date-picker/src/picker.vue"
 /* harmony default export */ var picker = (picker_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/panel/date.vue?vue&type=template&id=2440d4ea&
@@ -24416,8 +24016,7 @@ var time_spinner_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var time_spinner_api; }
+if (false) { var time_spinner_api; }
 time_spinner_component.options.__file = "packages/date-picker/src/basic/time-spinner.vue"
 /* harmony default export */ var time_spinner = (time_spinner_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/panel/time.vue?vue&type=script&lang=js&
@@ -24634,8 +24233,7 @@ var time_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var time_api; }
+if (false) { var time_api; }
 time_component.options.__file = "packages/date-picker/src/panel/time.vue"
 /* harmony default export */ var panel_time = (time_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/basic/year-table.vue?vue&type=template&id=c86ab5e0&
@@ -24916,8 +24514,7 @@ var year_table_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var year_table_api; }
+if (false) { var year_table_api; }
 year_table_component.options.__file = "packages/date-picker/src/basic/year-table.vue"
 /* harmony default export */ var year_table = (year_table_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/basic/month-table.vue?vue&type=template&id=654d4f42&
@@ -25275,8 +24872,7 @@ var month_table_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var month_table_api; }
+if (false) { var month_table_api; }
 month_table_component.options.__file = "packages/date-picker/src/basic/month-table.vue"
 /* harmony default export */ var month_table = (month_table_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/basic/date-table.vue?vue&type=template&id=5d1f3341&
@@ -25808,8 +25404,7 @@ var date_table_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var date_table_api; }
+if (false) { var date_table_api; }
 date_table_component.options.__file = "packages/date-picker/src/basic/date-table.vue"
 /* harmony default export */ var date_table = (date_table_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/panel/date.vue?vue&type=script&lang=js&
@@ -26412,8 +26007,7 @@ var date_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var date_api; }
+if (false) { var date_api; }
 date_component.options.__file = "packages/date-picker/src/panel/date.vue"
 /* harmony default export */ var panel_date = (date_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/panel/date-range.vue?vue&type=template&id=2652849a&
@@ -27520,8 +27114,7 @@ var date_range_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var date_range_api; }
+if (false) { var date_range_api; }
 date_range_component.options.__file = "packages/date-picker/src/panel/date-range.vue"
 /* harmony default export */ var date_range = (date_range_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/panel/month-range.vue?vue&type=template&id=f2645fb8&
@@ -27988,8 +27581,7 @@ var month_range_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var month_range_api; }
+if (false) { var month_range_api; }
 month_range_component.options.__file = "packages/date-picker/src/panel/month-range.vue"
 /* harmony default export */ var month_range = (month_range_component.exports);
 // CONCATENATED MODULE: ./packages/date-picker/src/picker/date-picker.js
@@ -28333,8 +27925,7 @@ var time_select_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var time_select_api; }
+if (false) { var time_select_api; }
 time_select_component.options.__file = "packages/date-picker/src/panel/time-select.vue"
 /* harmony default export */ var time_select = (time_select_component.exports);
 // CONCATENATED MODULE: ./packages/date-picker/src/picker/time-select.js
@@ -28758,8 +28349,7 @@ var time_range_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var time_range_api; }
+if (false) { var time_range_api; }
 time_range_component.options.__file = "packages/date-picker/src/panel/time-range.vue"
 /* harmony default export */ var time_range = (time_range_component.exports);
 // CONCATENATED MODULE: ./packages/date-picker/src/picker/time-picker.js
@@ -29143,8 +28733,7 @@ var main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var main_api; }
+if (false) { var main_api; }
 main_component.options.__file = "packages/popover/src/main.vue"
 /* harmony default export */ var main = (main_component.exports);
 // CONCATENATED MODULE: ./packages/popover/src/directive.js
@@ -30116,8 +29705,7 @@ var src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var src_main_api; }
+if (false) { var src_main_api; }
 src_main_component.options.__file = "packages/message-box/src/main.vue"
 /* harmony default export */ var message_box_src_main = (src_main_component.exports);
 // EXTERNAL MODULE: external "element-ui/lib/utils/vdom"
@@ -30423,8 +30011,7 @@ var breadcrumb_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var breadcrumb_api; }
+if (false) { var breadcrumb_api; }
 breadcrumb_component.options.__file = "packages/breadcrumb/src/breadcrumb.vue"
 /* harmony default export */ var breadcrumb = (breadcrumb_component.exports);
 // CONCATENATED MODULE: ./packages/breadcrumb/index.js
@@ -30541,8 +30128,7 @@ var breadcrumb_item_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var breadcrumb_item_api; }
+if (false) { var breadcrumb_item_api; }
 breadcrumb_item_component.options.__file = "packages/breadcrumb/src/breadcrumb-item.vue"
 /* harmony default export */ var breadcrumb_item = (breadcrumb_item_component.exports);
 // CONCATENATED MODULE: ./packages/breadcrumb-item/index.js
@@ -30792,8 +30378,7 @@ var form_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var form_api; }
+if (false) { var form_api; }
 form_component.options.__file = "packages/form/src/form.vue"
 /* harmony default export */ var src_form = (form_component.exports);
 // CONCATENATED MODULE: ./packages/form/index.js
@@ -31017,8 +30602,7 @@ var label_wrap_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var label_wrap_api; }
+if (false) { var label_wrap_api; }
 label_wrap_component.options.__file = "packages/form/src/label-wrap.vue"
 /* harmony default export */ var label_wrap = (label_wrap_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/form/src/form-item.vue?vue&type=script&lang=js&
@@ -31379,8 +30963,7 @@ var form_item_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var form_item_api; }
+if (false) { var form_item_api; }
 form_item_component.options.__file = "packages/form/src/form-item.vue"
 /* harmony default export */ var form_item = (form_item_component.exports);
 // CONCATENATED MODULE: ./packages/form-item/index.js
@@ -31496,8 +31079,7 @@ var tab_bar_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var tab_bar_api; }
+if (false) { var tab_bar_api; }
 tab_bar_component.options.__file = "packages/tabs/src/tab-bar.vue"
 /* harmony default export */ var tab_bar = (tab_bar_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/tabs/src/tab-nav.vue?vue&type=script&lang=js&
@@ -31852,8 +31434,7 @@ var tab_nav_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var tab_nav_api; }
+if (false) { var tab_nav_api; }
 tab_nav_component.options.__file = "packages/tabs/src/tab-nav.vue"
 /* harmony default export */ var tab_nav = (tab_nav_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/tabs/src/tabs.vue?vue&type=script&lang=js&
@@ -32083,8 +31664,7 @@ var tabs_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var tabs_api; }
+if (false) { var tabs_api; }
 tabs_component.options.__file = "packages/tabs/src/tabs.vue"
 /* harmony default export */ var tabs = (tabs_component.exports);
 // CONCATENATED MODULE: ./packages/tabs/index.js
@@ -32211,8 +31791,7 @@ var tab_pane_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var tab_pane_api; }
+if (false) { var tab_pane_api; }
 tab_pane_component.options.__file = "packages/tabs/src/tab-pane.vue"
 /* harmony default export */ var tab_pane = (tab_pane_component.exports);
 // CONCATENATED MODULE: ./packages/tab-pane/index.js
@@ -32311,8 +31890,7 @@ var tag_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var tag_api; }
+if (false) { var tag_api; }
 tag_component.options.__file = "packages/tag/src/tag.vue"
 /* harmony default export */ var src_tag = (tag_component.exports);
 // CONCATENATED MODULE: ./packages/tag/index.js
@@ -33793,8 +33371,7 @@ var tree_node_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var tree_node_api; }
+if (false) { var tree_node_api; }
 tree_node_component.options.__file = "packages/tree/src/tree-node.vue"
 /* harmony default export */ var tree_node = (tree_node_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/tree/src/tree.vue?vue&type=script&lang=js&
@@ -34300,8 +33877,7 @@ var tree_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var tree_api; }
+if (false) { var tree_api; }
 tree_component.options.__file = "packages/tree/src/tree.vue"
 /* harmony default export */ var src_tree = (tree_component.exports);
 // CONCATENATED MODULE: ./packages/tree/index.js
@@ -34516,8 +34092,7 @@ var alert_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var alert_src_main_api; }
+if (false) { var alert_src_main_api; }
 alert_src_main_component.options.__file = "packages/alert/src/main.vue"
 /* harmony default export */ var alert_src_main = (alert_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/alert/index.js
@@ -34795,8 +34370,7 @@ var notification_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var notification_src_main_api; }
+if (false) { var notification_src_main_api; }
 notification_src_main_component.options.__file = "packages/notification/src/main.vue"
 /* harmony default export */ var notification_src_main = (notification_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/notification/src/main.js
@@ -35394,8 +34968,7 @@ var src_button_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var src_button_api; }
+if (false) { var src_button_api; }
 src_button_component.options.__file = "packages/slider/src/button.vue"
 /* harmony default export */ var slider_src_button = (src_button_component.exports);
 // CONCATENATED MODULE: ./packages/slider/src/marker.js
@@ -35855,8 +35428,7 @@ var slider_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var slider_src_main_api; }
+if (false) { var slider_src_main_api; }
 slider_src_main_component.options.__file = "packages/slider/src/main.vue"
 /* harmony default export */ var slider_src_main = (slider_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/slider/index.js
@@ -35993,8 +35565,7 @@ var loading_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var loading_api; }
+if (false) { var loading_api; }
 loading_component.options.__file = "packages/loading/src/loading.vue"
 /* harmony default export */ var loading = (loading_component.exports);
 // EXTERNAL MODULE: external "element-ui/lib/utils/after-leave"
@@ -36294,8 +35865,7 @@ var icon_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var icon_api; }
+if (false) { var icon_api; }
 icon_component.options.__file = "packages/icon/src/icon.vue"
 /* harmony default export */ var icon = (icon_component.exports);
 // CONCATENATED MODULE: ./packages/icon/index.js
@@ -36728,8 +36298,7 @@ var upload_list_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var upload_list_api; }
+if (false) { var upload_list_api; }
 upload_list_component.options.__file = "packages/upload/src/upload-list.vue"
 /* harmony default export */ var upload_list = (upload_list_component.exports);
 // EXTERNAL MODULE: external "babel-helper-vue-jsx-merge-props"
@@ -36952,8 +36521,7 @@ var upload_dragger_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var upload_dragger_api; }
+if (false) { var upload_dragger_api; }
 upload_dragger_component.options.__file = "packages/upload/src/upload-dragger.vue"
 /* harmony default export */ var upload_dragger = (upload_dragger_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/upload/src/upload.vue?vue&type=script&lang=js&
@@ -37212,8 +36780,7 @@ var upload_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var upload_api; }
+if (false) { var upload_api; }
 upload_component.options.__file = "packages/upload/src/upload.vue"
 /* harmony default export */ var src_upload = (upload_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/upload/src/index.vue?vue&type=script&lang=js&
@@ -37582,8 +37149,7 @@ var upload_src_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var src_api; }
+if (false) { var src_api; }
 upload_src_component.options.__file = "packages/upload/src/index.vue"
 /* harmony default export */ var upload_src = (upload_src_component.exports);
 // CONCATENATED MODULE: ./packages/upload/index.js
@@ -37971,8 +37537,7 @@ var progress_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var progress_api; }
+if (false) { var progress_api; }
 progress_component.options.__file = "packages/progress/src/progress.vue"
 /* harmony default export */ var progress = (progress_component.exports);
 // CONCATENATED MODULE: ./packages/progress/index.js
@@ -38068,8 +37633,7 @@ var spinner_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var spinner_api; }
+if (false) { var spinner_api; }
 spinner_component.options.__file = "packages/spinner/src/spinner.vue"
 /* harmony default export */ var spinner = (spinner_component.exports);
 // CONCATENATED MODULE: ./packages/spinner/index.js
@@ -38285,8 +37849,7 @@ var message_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var message_src_main_api; }
+if (false) { var message_src_main_api; }
 message_src_main_component.options.__file = "packages/message/src/main.vue"
 /* harmony default export */ var message_src_main = (message_src_main_component.exports);
 // EXTERNAL MODULE: external "element-ui/lib/utils/types"
@@ -38504,8 +38067,7 @@ var badge_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var badge_src_main_api; }
+if (false) { var badge_src_main_api; }
 badge_src_main_component.options.__file = "packages/badge/src/main.vue"
 /* harmony default export */ var badge_src_main = (badge_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/badge/index.js
@@ -38597,8 +38159,7 @@ var card_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var card_src_main_api; }
+if (false) { var card_src_main_api; }
 card_src_main_component.options.__file = "packages/card/src/main.vue"
 /* harmony default export */ var card_src_main = (card_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/card/index.js
@@ -39032,8 +38593,7 @@ var rate_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var rate_src_main_api; }
+if (false) { var rate_src_main_api; }
 rate_src_main_component.options.__file = "packages/rate/src/main.vue"
 /* harmony default export */ var rate_src_main = (rate_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/rate/index.js
@@ -39159,8 +38719,7 @@ var steps_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var steps_api; }
+if (false) { var steps_api; }
 steps_component.options.__file = "packages/steps/src/steps.vue"
 /* harmony default export */ var steps = (steps_component.exports);
 // CONCATENATED MODULE: ./packages/steps/index.js
@@ -39477,8 +39036,7 @@ var step_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var step_api; }
+if (false) { var step_api; }
 step_component.options.__file = "packages/steps/src/step.vue"
 /* harmony default export */ var step = (step_component.exports);
 // CONCATENATED MODULE: ./packages/step/index.js
@@ -39963,8 +39521,7 @@ var carousel_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var carousel_src_main_api; }
+if (false) { var carousel_src_main_api; }
 carousel_src_main_component.options.__file = "packages/carousel/src/main.vue"
 /* harmony default export */ var carousel_src_main = (carousel_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/carousel/index.js
@@ -40465,8 +40022,7 @@ var item_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var item_api; }
+if (false) { var item_api; }
 item_component.options.__file = "packages/carousel/src/item.vue"
 /* harmony default export */ var src_item = (item_component.exports);
 // CONCATENATED MODULE: ./packages/carousel-item/index.js
@@ -40590,8 +40146,7 @@ var collapse_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var collapse_api; }
+if (false) { var collapse_api; }
 collapse_component.options.__file = "packages/collapse/src/collapse.vue"
 /* harmony default export */ var collapse = (collapse_component.exports);
 // CONCATENATED MODULE: ./packages/collapse/index.js
@@ -40851,8 +40406,7 @@ var collapse_item_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var collapse_item_api; }
+if (false) { var collapse_item_api; }
 collapse_item_component.options.__file = "packages/collapse/src/collapse-item.vue"
 /* harmony default export */ var collapse_item = (collapse_item_component.exports);
 // CONCATENATED MODULE: ./packages/collapse-item/index.js
@@ -41921,8 +41475,7 @@ var cascader_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var cascader_api; }
+if (false) { var cascader_api; }
 cascader_component.options.__file = "packages/cascader/src/cascader.vue"
 /* harmony default export */ var cascader = (cascader_component.exports);
 // CONCATENATED MODULE: ./packages/cascader/index.js
@@ -42725,8 +42278,7 @@ var sv_panel_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var sv_panel_api; }
+if (false) { var sv_panel_api; }
 sv_panel_component.options.__file = "packages/color-picker/src/components/sv-panel.vue"
 /* harmony default export */ var sv_panel = (sv_panel_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/color-picker/src/components/hue-slider.vue?vue&type=template&id=5cdc43b1&
@@ -42911,8 +42463,7 @@ var hue_slider_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var hue_slider_api; }
+if (false) { var hue_slider_api; }
 hue_slider_component.options.__file = "packages/color-picker/src/components/hue-slider.vue"
 /* harmony default export */ var hue_slider = (hue_slider_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/color-picker/src/components/alpha-slider.vue?vue&type=template&id=068c66cb&
@@ -43109,8 +42660,7 @@ var alpha_slider_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var alpha_slider_api; }
+if (false) { var alpha_slider_api; }
 alpha_slider_component.options.__file = "packages/color-picker/src/components/alpha-slider.vue"
 /* harmony default export */ var alpha_slider = (alpha_slider_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/color-picker/src/components/predefine.vue?vue&type=template&id=06e03093&
@@ -43232,8 +42782,7 @@ var predefine_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var predefine_api; }
+if (false) { var predefine_api; }
 predefine_component.options.__file = "packages/color-picker/src/components/predefine.vue"
 /* harmony default export */ var predefine = (predefine_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/color-picker/src/components/picker-dropdown.vue?vue&type=script&lang=js&
@@ -43387,8 +42936,7 @@ var picker_dropdown_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var picker_dropdown_api; }
+if (false) { var picker_dropdown_api; }
 picker_dropdown_component.options.__file = "packages/color-picker/src/components/picker-dropdown.vue"
 /* harmony default export */ var picker_dropdown = (picker_dropdown_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/color-picker/src/main.vue?vue&type=script&lang=js&
@@ -43603,8 +43151,7 @@ var color_picker_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var color_picker_src_main_api; }
+if (false) { var color_picker_src_main_api; }
 color_picker_src_main_component.options.__file = "packages/color-picker/src/main.vue"
 /* harmony default export */ var color_picker_src_main = (color_picker_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/color-picker/index.js
@@ -44171,8 +43718,7 @@ var transfer_panel_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var transfer_panel_api; }
+if (false) { var transfer_panel_api; }
 transfer_panel_component.options.__file = "packages/transfer/src/transfer-panel.vue"
 /* harmony default export */ var transfer_panel = (transfer_panel_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/transfer/src/main.vue?vue&type=script&lang=js&
@@ -44428,8 +43974,7 @@ var transfer_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var transfer_src_main_api; }
+if (false) { var transfer_src_main_api; }
 transfer_src_main_component.options.__file = "packages/transfer/src/main.vue"
 /* harmony default export */ var transfer_src_main = (transfer_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/transfer/index.js
@@ -44512,8 +44057,7 @@ var container_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var container_src_main_api; }
+if (false) { var container_src_main_api; }
 container_src_main_component.options.__file = "packages/container/src/main.vue"
 /* harmony default export */ var container_src_main = (container_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/container/index.js
@@ -44585,8 +44129,7 @@ var header_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var header_src_main_api; }
+if (false) { var header_src_main_api; }
 header_src_main_component.options.__file = "packages/header/src/main.vue"
 /* harmony default export */ var header_src_main = (header_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/header/index.js
@@ -44658,8 +44201,7 @@ var aside_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var aside_src_main_api; }
+if (false) { var aside_src_main_api; }
 aside_src_main_component.options.__file = "packages/aside/src/main.vue"
 /* harmony default export */ var aside_src_main = (aside_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/aside/index.js
@@ -44718,8 +44260,7 @@ var main_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var main_src_main_api; }
+if (false) { var main_src_main_api; }
 main_src_main_component.options.__file = "packages/main/src/main.vue"
 /* harmony default export */ var main_src_main = (main_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/main/index.js
@@ -44791,8 +44332,7 @@ var footer_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var footer_src_main_api; }
+if (false) { var footer_src_main_api; }
 footer_src_main_component.options.__file = "packages/footer/src/main.vue"
 /* harmony default export */ var footer_src_main = (footer_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/footer/index.js
@@ -44862,8 +44402,7 @@ var timeline_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var timeline_src_main_api; }
+if (false) { var timeline_src_main_api; }
 timeline_src_main_component.options.__file = "packages/timeline/src/main.vue"
 /* harmony default export */ var timeline_src_main = (timeline_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/timeline/index.js
@@ -45029,8 +44568,7 @@ var src_item_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var src_item_api; }
+if (false) { var src_item_api; }
 src_item_component.options.__file = "packages/timeline/src/item.vue"
 /* harmony default export */ var timeline_src_item = (src_item_component.exports);
 // CONCATENATED MODULE: ./packages/timeline-item/index.js
@@ -45155,8 +44693,7 @@ var link_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var link_src_main_api; }
+if (false) { var link_src_main_api; }
 link_src_main_component.options.__file = "packages/link/src/main.vue"
 /* harmony default export */ var link_src_main = (link_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/link/index.js
@@ -45264,8 +44801,7 @@ var divider_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var divider_src_main_api; }
+if (false) { var divider_src_main_api; }
 divider_src_main_component.options.__file = "packages/divider/src/main.vue"
 /* harmony default export */ var divider_src_main = (divider_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/divider/index.js
@@ -45852,8 +45388,7 @@ var image_viewer_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var image_viewer_api; }
+if (false) { var image_viewer_api; }
 image_viewer_component.options.__file = "packages/image/src/image-viewer.vue"
 /* harmony default export */ var image_viewer = (image_viewer_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/image/src/main.vue?vue&type=script&lang=js&
@@ -46140,8 +45675,7 @@ var image_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var image_src_main_api; }
+if (false) { var image_src_main_api; }
 image_src_main_component.options.__file = "packages/image/src/main.vue"
 /* harmony default export */ var image_src_main = (image_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/image/index.js
@@ -46527,8 +46061,7 @@ var src_date_table_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var src_date_table_api; }
+if (false) { var src_date_table_api; }
 src_date_table_component.options.__file = "packages/calendar/src/date-table.vue"
 /* harmony default export */ var src_date_table = (src_date_table_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/calendar/src/main.vue?vue&type=script&lang=js&
@@ -46823,8 +46356,7 @@ var calendar_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var calendar_src_main_api; }
+if (false) { var calendar_src_main_api; }
 calendar_src_main_component.options.__file = "packages/calendar/src/main.vue"
 /* harmony default export */ var calendar_src_main = (calendar_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/calendar/index.js
@@ -47010,8 +46542,7 @@ var backtop_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var backtop_src_main_api; }
+if (false) { var backtop_src_main_api; }
 backtop_src_main_component.options.__file = "packages/backtop/src/main.vue"
 /* harmony default export */ var backtop_src_main = (backtop_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/backtop/index.js
@@ -47285,8 +46816,7 @@ var page_header_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var page_header_src_main_api; }
+if (false) { var page_header_src_main_api; }
 page_header_src_main_component.options.__file = "packages/page-header/src/main.vue"
 /* harmony default export */ var page_header_src_main = (page_header_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/page-header/index.js
@@ -47622,8 +47152,7 @@ var cascader_node_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var cascader_node_api; }
+if (false) { var cascader_node_api; }
 cascader_node_component.options.__file = "packages/cascader-panel/src/cascader-node.vue"
 /* harmony default export */ var cascader_node = (cascader_node_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/cascader-panel/src/cascader-menu.vue?vue&type=script&lang=js&
@@ -47796,8 +47325,7 @@ var cascader_menu_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var cascader_menu_api; }
+if (false) { var cascader_menu_api; }
 cascader_menu_component.options.__file = "packages/cascader-panel/src/cascader-menu.vue"
 /* harmony default export */ var cascader_menu = (cascader_menu_component.exports);
 // CONCATENATED MODULE: ./packages/cascader-panel/src/node.js
@@ -48543,8 +48071,7 @@ var cascader_panel_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var cascader_panel_api; }
+if (false) { var cascader_panel_api; }
 cascader_panel_component.options.__file = "packages/cascader-panel/src/cascader-panel.vue"
 /* harmony default export */ var cascader_panel = (cascader_panel_component.exports);
 // CONCATENATED MODULE: ./packages/cascader-panel/index.js
@@ -48702,8 +48229,7 @@ var avatar_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var avatar_src_main_api; }
+if (false) { var avatar_src_main_api; }
 avatar_src_main_component.options.__file = "packages/avatar/src/main.vue"
 /* harmony default export */ var avatar_src_main = (avatar_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/avatar/index.js
@@ -49068,8 +48594,7 @@ var drawer_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var drawer_src_main_api; }
+if (false) { var drawer_src_main_api; }
 drawer_src_main_component.options.__file = "packages/drawer/src/main.vue"
 /* harmony default export */ var drawer_src_main = (drawer_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/drawer/index.js
@@ -49390,8 +48915,7 @@ var statistic_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var statistic_src_main_api; }
+if (false) { var statistic_src_main_api; }
 statistic_src_main_component.options.__file = "packages/statistic/src/main.vue"
 /* harmony default export */ var statistic_src_main = (statistic_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/statistic/index.js
@@ -49615,8 +49139,7 @@ var popconfirm_src_main_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var popconfirm_src_main_api; }
+if (false) { var popconfirm_src_main_api; }
 popconfirm_src_main_component.options.__file = "packages/popconfirm/src/main.vue"
 /* harmony default export */ var popconfirm_src_main = (popconfirm_src_main_component.exports);
 // CONCATENATED MODULE: ./packages/popconfirm/index.js
@@ -49783,8 +49306,7 @@ var skeleton_src_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var skeleton_src_api; }
+if (false) { var skeleton_src_api; }
 skeleton_src_component.options.__file = "packages/skeleton/src/index.vue"
 /* harmony default export */ var skeleton_src = (skeleton_src_component.exports);
 // CONCATENATED MODULE: ./packages/skeleton/index.js
@@ -49878,8 +49400,7 @@ var img_placeholder_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var img_placeholder_api; }
+if (false) { var img_placeholder_api; }
 img_placeholder_component.options.__file = "packages/skeleton/src/img-placeholder.vue"
 /* harmony default export */ var img_placeholder = (img_placeholder_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/skeleton/src/item.vue?vue&type=script&lang=js&
@@ -49926,8 +49447,7 @@ var skeleton_src_item_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var skeleton_src_item_api; }
+if (false) { var skeleton_src_item_api; }
 skeleton_src_item_component.options.__file = "packages/skeleton/src/item.vue"
 /* harmony default export */ var skeleton_src_item = (skeleton_src_item_component.exports);
 // CONCATENATED MODULE: ./packages/skeleton-item/index.js
@@ -50368,8 +49888,7 @@ var img_empty_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var img_empty_api; }
+if (false) { var img_empty_api; }
 img_empty_component.options.__file = "packages/empty/src/img-empty.vue"
 /* harmony default export */ var img_empty = (img_empty_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/empty/src/index.vue?vue&type=script&lang=js&
@@ -50444,8 +49963,7 @@ var empty_src_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var empty_src_api; }
+if (false) { var empty_src_api; }
 empty_src_component.options.__file = "packages/empty/src/index.vue"
 /* harmony default export */ var empty_src = (empty_src_component.exports);
 // CONCATENATED MODULE: ./packages/empty/index.js
@@ -50945,8 +50463,7 @@ var icon_success_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var icon_success_api; }
+if (false) { var icon_success_api; }
 icon_success_component.options.__file = "packages/result/src/icon-success.vue"
 /* harmony default export */ var icon_success = (icon_success_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/result/src/icon-error.vue?vue&type=template&id=21199246&
@@ -51008,8 +50525,7 @@ var icon_error_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var icon_error_api; }
+if (false) { var icon_error_api; }
 icon_error_component.options.__file = "packages/result/src/icon-error.vue"
 /* harmony default export */ var icon_error = (icon_error_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/result/src/icon-warning.vue?vue&type=template&id=46fe8f31&
@@ -51072,8 +50588,7 @@ var icon_warning_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var icon_warning_api; }
+if (false) { var icon_warning_api; }
 icon_warning_component.options.__file = "packages/result/src/icon-warning.vue"
 /* harmony default export */ var icon_warning = (icon_warning_component.exports);
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/result/src/icon-info.vue?vue&type=template&id=19e3de69&
@@ -51136,8 +50651,7 @@ var icon_info_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var icon_info_api; }
+if (false) { var icon_info_api; }
 icon_info_component.options.__file = "packages/result/src/icon-info.vue"
 /* harmony default export */ var icon_info = (icon_info_component.exports);
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/result/src/index.vue?vue&type=script&lang=js&
@@ -51224,8 +50738,7 @@ var result_src_component = normalizeComponent(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var result_src_api; }
+if (false) { var result_src_api; }
 result_src_component.options.__file = "packages/result/src/index.vue"
 /* harmony default export */ var result_src = (result_src_component.exports);
 // CONCATENATED MODULE: ./packages/result/index.js
@@ -51366,7 +50879,7 @@ if (typeof window !== 'undefined' && window.Vue) {
   src_install(window.Vue);
 }
 
-/* harmony default export */ var src_0 = __nested_webpack_exports__["default"] = ({
+/* harmony default export */ var src_0 = __webpack_exports__["default"] = ({
   version: '2.15.14',
   locale: lib_locale_default.a.use,
   i18n: lib_locale_default.a.i18n,
@@ -51564,10 +51077,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -51694,7 +51207,7 @@ module.exports = __webpack_require__(/*! element-ui/lib/utils/util */ "./node_mo
 /***/ }),
 
 /***/ 30:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_7021__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_7021__) {
 
 "use strict";
 /* harmony import */ var element_ui_src_utils_dom__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_7021__(2);
@@ -51704,7 +51217,7 @@ module.exports = __webpack_require__(/*! element-ui/lib/utils/util */ "./node_mo
 
 
 
-/* harmony default export */ __nested_webpack_exports__["a"] = ({
+/* harmony default export */ __webpack_exports__["a"] = ({
   bind: function bind(el, binding, vnode) {
     var interval = null;
     var startTime = void 0;
@@ -51733,10 +51246,10 @@ module.exports = __webpack_require__(/*! element-ui/lib/utils/util */ "./node_mo
 /***/ }),
 
 /***/ 87:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_8618__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_8618__) {
 
 "use strict";
-__nested_webpack_require_8618__.r(__nested_webpack_exports__);
+__nested_webpack_require_8618__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/input-number/src/input-number.vue?vue&type=template&id=42f8cf66&
 var render = function() {
@@ -52209,8 +51722,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/input-number/src/input-number.vue"
 /* harmony default export */ var input_number = (component.exports);
 // CONCATENATED MODULE: ./packages/input-number/index.js
@@ -52221,7 +51733,7 @@ input_number.install = function (Vue) {
   Vue.component(input_number.name, input_number);
 };
 
-/* harmony default export */ var packages_input_number = __nested_webpack_exports__["default"] = (input_number);
+/* harmony default export */ var packages_input_number = __webpack_exports__["default"] = (input_number);
 
 /***/ })
 
@@ -52325,10 +51837,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -52448,10 +51960,10 @@ module.exports = __webpack_require__(/*! element-ui/lib/mixins/emitter */ "./nod
 /***/ }),
 
 /***/ 75:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6925__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6925__) {
 
 "use strict";
-__nested_webpack_require_6925__.r(__nested_webpack_exports__);
+__nested_webpack_require_6925__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/input/src/input.vue?vue&type=template&id=343dd774&
 var render = function() {
@@ -53209,8 +52721,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/input/src/input.vue"
 /* harmony default export */ var input = (component.exports);
 // CONCATENATED MODULE: ./packages/input/index.js
@@ -53221,7 +52732,7 @@ input.install = function (Vue) {
   Vue.component(input.name, input);
 };
 
-/* harmony default export */ var packages_input = __nested_webpack_exports__["default"] = (input);
+/* harmony default export */ var packages_input = __webpack_exports__["default"] = (input);
 
 /***/ }),
 
@@ -53781,8 +53292,7 @@ var _util = __webpack_require__(/*! element-ui/lib/utils/util */ "./node_modules
  */
 exports["default"] = {
   mounted: function mounted() {
-    if (false) // removed by dead control flow
-{}
+    if (false) {}
     if (!this.$vnode) return;
 
     var _getMigratingConfig = this.getMigratingConfig(),
@@ -53921,10 +53431,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -54030,7 +53540,7 @@ module.exports = __webpack_require__(/*! element-ui/lib/utils/util */ "./node_mo
 /***/ }),
 
 /***/ 33:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6687__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6687__) {
 
 "use strict";
 
@@ -54274,10 +53784,9 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/select/src/option.vue"
-/* harmony default export */ var src_option = __nested_webpack_exports__["a"] = (component.exports);
+/* harmony default export */ var src_option = __webpack_exports__["a"] = (component.exports);
 
 /***/ }),
 
@@ -54289,10 +53798,10 @@ module.exports = __webpack_require__(/*! element-ui/lib/mixins/emitter */ "./nod
 /***/ }),
 
 /***/ 54:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_13963__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_13963__) {
 
 "use strict";
-__nested_webpack_require_13963__.r(__nested_webpack_exports__);
+__nested_webpack_require_13963__.r(__webpack_exports__);
 /* harmony import */ var _select_src_option__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_13963__(33);
 
 
@@ -54301,7 +53810,7 @@ _select_src_option__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].install = fun
   Vue.component(_select_src_option__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].name, _select_src_option__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
 };
 
-/* harmony default export */ __nested_webpack_exports__["default"] = (_select_src_option__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
+/* harmony default export */ __webpack_exports__["default"] = (_select_src_option__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
 
 /***/ })
 
@@ -54405,10 +53914,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -54535,10 +54044,10 @@ module.exports = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm
 /***/ }),
 
 /***/ 78:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_7006__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_7006__) {
 
 "use strict";
-__nested_webpack_require_7006__.r(__nested_webpack_exports__);
+__nested_webpack_require_7006__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/popover/src/main.vue?vue&type=template&id=52060272&
 var render = function() {
@@ -54884,8 +54393,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/popover/src/main.vue"
 /* harmony default export */ var main = (component.exports);
 // CONCATENATED MODULE: ./packages/popover/src/directive.js
@@ -54927,7 +54435,7 @@ main.install = function (Vue) {
 };
 main.directive = directive;
 
-/* harmony default export */ var popover = __nested_webpack_exports__["default"] = (main);
+/* harmony default export */ var popover = __webpack_exports__["default"] = (main);
 
 /***/ })
 
@@ -55031,10 +54539,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3673__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3673__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3673__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3673__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -55133,10 +54641,10 @@ function normalizeComponent (
 /***/ }),
 
 /***/ 104:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6577__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6577__) {
 
 "use strict";
-__nested_webpack_require_6577__.r(__nested_webpack_exports__);
+__nested_webpack_require_6577__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/progress/src/progress.vue?vue&type=template&id=229ee406&
 var render = function() {
@@ -55517,8 +55025,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/progress/src/progress.vue"
 /* harmony default export */ var progress = (component.exports);
 // CONCATENATED MODULE: ./packages/progress/index.js
@@ -55529,7 +55036,7 @@ progress.install = function (Vue) {
   Vue.component(progress.name, progress);
 };
 
-/* harmony default export */ var packages_progress = __nested_webpack_exports__["default"] = (progress);
+/* harmony default export */ var packages_progress = __webpack_exports__["default"] = (progress);
 
 /***/ })
 
@@ -55633,10 +55140,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -55742,10 +55249,10 @@ module.exports = __webpack_require__(/*! element-ui/lib/mixins/emitter */ "./nod
 /***/ }),
 
 /***/ 88:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6691__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6691__) {
 
 "use strict";
-__nested_webpack_require_6691__.r(__nested_webpack_exports__);
+__nested_webpack_require_6691__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/radio/src/radio.vue?vue&type=template&id=69cd6268&
 var render = function() {
@@ -56023,8 +55530,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/radio/src/radio.vue"
 /* harmony default export */ var src_radio = (component.exports);
 // CONCATENATED MODULE: ./packages/radio/index.js
@@ -56035,7 +55541,7 @@ src_radio.install = function (Vue) {
   Vue.component(src_radio.name, src_radio);
 };
 
-/* harmony default export */ var packages_radio = __nested_webpack_exports__["default"] = (src_radio);
+/* harmony default export */ var packages_radio = __webpack_exports__["default"] = (src_radio);
 
 /***/ })
 
@@ -56139,10 +55645,10 @@ module.exports =
 /******/ ({
 
 /***/ 133:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3675__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3675__) {
 
 "use strict";
-__nested_webpack_require_3675__.r(__nested_webpack_exports__);
+__nested_webpack_require_3675__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: external "element-ui/lib/utils/resize-event"
 var resize_event_ = __nested_webpack_require_3675__(16);
@@ -56438,7 +55944,7 @@ main.install = function (Vue) {
   Vue.component(main.name, main);
 };
 
-/* harmony default export */ var scrollbar = __nested_webpack_exports__["default"] = (main);
+/* harmony default export */ var scrollbar = __webpack_exports__["default"] = (main);
 
 /***/ }),
 
@@ -56570,10 +56076,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3672__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3672__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3672__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3672__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -56735,7 +56241,7 @@ module.exports = __webpack_require__(/*! element-ui/lib/utils/scroll-into-view *
 /***/ }),
 
 /***/ 33:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_7618__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_7618__) {
 
 "use strict";
 
@@ -56979,10 +56485,9 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/select/src/option.vue"
-/* harmony default export */ var src_option = __nested_webpack_exports__["a"] = (component.exports);
+/* harmony default export */ var src_option = __webpack_exports__["a"] = (component.exports);
 
 /***/ }),
 
@@ -57015,10 +56520,10 @@ module.exports = __webpack_require__(/*! element-ui/lib/mixins/locale */ "./node
 /***/ }),
 
 /***/ 62:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_15233__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_15233__) {
 
 "use strict";
-__nested_webpack_require_15233__.r(__nested_webpack_exports__);
+__nested_webpack_require_15233__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/select/src/select.vue?vue&type=template&id=0e4aade6&
 var render = function() {
@@ -57639,8 +57144,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/select/src/select-dropdown.vue"
 /* harmony default export */ var select_dropdown = (component.exports);
 // EXTERNAL MODULE: ./packages/select/src/option.vue + 4 modules
@@ -58638,8 +58142,7 @@ var select_component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var select_api; }
+if (false) { var select_api; }
 select_component.options.__file = "packages/select/src/select.vue"
 /* harmony default export */ var src_select = (select_component.exports);
 // CONCATENATED MODULE: ./packages/select/index.js
@@ -58650,7 +58153,7 @@ src_select.install = function (Vue) {
   Vue.component(src_select.name, src_select);
 };
 
-/* harmony default export */ var packages_select = __nested_webpack_exports__["default"] = (src_select);
+/* harmony default export */ var packages_select = __webpack_exports__["default"] = (src_select);
 
 /***/ })
 
@@ -58754,10 +58257,10 @@ module.exports =
 /******/ ({
 
 /***/ 0:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3673__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3673__) {
 
 "use strict";
-/* harmony export (binding) */ __nested_webpack_require_3673__.d(__nested_webpack_exports__, "a", function() { return normalizeComponent; });
+/* harmony export (binding) */ __nested_webpack_require_3673__.d(__webpack_exports__, "a", function() { return normalizeComponent; });
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
@@ -58856,10 +58359,10 @@ function normalizeComponent (
 /***/ }),
 
 /***/ 132:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_6577__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_6577__) {
 
 "use strict";
-__nested_webpack_require_6577__.r(__nested_webpack_exports__);
+__nested_webpack_require_6577__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/tag/src/tag.vue?vue&type=script&lang=js&
 
@@ -58951,8 +58454,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* hot reload */
-if (false) // removed by dead control flow
-{ var api; }
+if (false) { var api; }
 component.options.__file = "packages/tag/src/tag.vue"
 /* harmony default export */ var tag = (component.exports);
 // CONCATENATED MODULE: ./packages/tag/index.js
@@ -58963,7 +58465,7 @@ tag.install = function (Vue) {
   Vue.component(tag.name, tag);
 };
 
-/* harmony default export */ var packages_tag = __nested_webpack_exports__["default"] = (tag);
+/* harmony default export */ var packages_tag = __webpack_exports__["default"] = (tag);
 
 /***/ })
 
@@ -59067,10 +58569,10 @@ module.exports =
 /******/ ({
 
 /***/ 138:
-/***/ (function(module, __nested_webpack_exports__, __nested_webpack_require_3675__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3675__) {
 
 "use strict";
-__nested_webpack_require_3675__.r(__nested_webpack_exports__);
+__nested_webpack_require_3675__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: external "element-ui/lib/utils/vue-popper"
 var vue_popper_ = __nested_webpack_require_3675__(5);
@@ -59361,7 +58863,7 @@ main.install = function (Vue) {
   Vue.component(main.name, main);
 };
 
-/* harmony default export */ var tooltip = __nested_webpack_exports__["default"] = (main);
+/* harmony default export */ var tooltip = __webpack_exports__["default"] = (main);
 
 /***/ }),
 
@@ -60582,8 +60084,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;
       return fecha;
     }).call(exports, __webpack_require__, exports, module),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else // removed by dead control flow
-{}
+  } else {}
 })(undefined);
 
 /***/ }),
@@ -70344,8 +69845,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
 		__WEBPACK_AMD_DEFINE_FACTORY__),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else // removed by dead control flow
-{}
+    } else {}
 })(undefined, function () {
 
     'use strict';
@@ -72789,6 +72289,32 @@ exports["default"] = {
 
 /***/ }),
 
+/***/ "./resources/scss/admin.scss":
+/*!***********************************!*\
+  !*** ./resources/scss/admin.scss ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/scss/public-qpefw.scss":
+/*!******************************************!*\
+  !*** ./resources/scss/public-qpefw.scss ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./node_modules/normalize-wheel/index.js":
 /*!***********************************************!*\
   !*** ./node_modules/normalize-wheel/index.js ***!
@@ -74513,13 +74039,13 @@ module.exports = function ( delay, noTrailing, callback, debounceMode ) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   NavigationFailureType: () => (/* binding */ NavigationFailureType),
-/* harmony export */   RouterLink: () => (/* binding */ Link),
-/* harmony export */   RouterView: () => (/* binding */ View),
-/* harmony export */   START_LOCATION: () => (/* binding */ START),
+/* harmony export */   "NavigationFailureType": () => (/* binding */ NavigationFailureType),
+/* harmony export */   "RouterLink": () => (/* binding */ Link),
+/* harmony export */   "RouterView": () => (/* binding */ View),
+/* harmony export */   "START_LOCATION": () => (/* binding */ START),
 /* harmony export */   "default": () => (/* binding */ VueRouter$1),
-/* harmony export */   isNavigationFailure: () => (/* binding */ isNavigationFailure),
-/* harmony export */   version: () => (/* binding */ version)
+/* harmony export */   "isNavigationFailure": () => (/* binding */ isNavigationFailure),
+/* harmony export */   "version": () => (/* binding */ version)
 /* harmony export */ });
 /*!
   * vue-router v3.6.5
@@ -77693,67 +77219,67 @@ var version = '3.6.5';
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   EffectScope: () => (/* binding */ EffectScope),
-/* harmony export */   computed: () => (/* binding */ computed),
-/* harmony export */   customRef: () => (/* binding */ customRef),
+/* harmony export */   "EffectScope": () => (/* binding */ EffectScope),
+/* harmony export */   "computed": () => (/* binding */ computed),
+/* harmony export */   "customRef": () => (/* binding */ customRef),
 /* harmony export */   "default": () => (/* binding */ Vue),
-/* harmony export */   defineAsyncComponent: () => (/* binding */ defineAsyncComponent),
-/* harmony export */   defineComponent: () => (/* binding */ defineComponent),
-/* harmony export */   del: () => (/* binding */ del),
-/* harmony export */   effectScope: () => (/* binding */ effectScope),
-/* harmony export */   getCurrentInstance: () => (/* binding */ getCurrentInstance),
-/* harmony export */   getCurrentScope: () => (/* binding */ getCurrentScope),
-/* harmony export */   h: () => (/* binding */ h),
-/* harmony export */   inject: () => (/* binding */ inject),
-/* harmony export */   isProxy: () => (/* binding */ isProxy),
-/* harmony export */   isReactive: () => (/* binding */ isReactive),
-/* harmony export */   isReadonly: () => (/* binding */ isReadonly),
-/* harmony export */   isRef: () => (/* binding */ isRef),
-/* harmony export */   isShallow: () => (/* binding */ isShallow),
-/* harmony export */   markRaw: () => (/* binding */ markRaw),
-/* harmony export */   mergeDefaults: () => (/* binding */ mergeDefaults),
-/* harmony export */   nextTick: () => (/* binding */ nextTick),
-/* harmony export */   onActivated: () => (/* binding */ onActivated),
-/* harmony export */   onBeforeMount: () => (/* binding */ onBeforeMount),
-/* harmony export */   onBeforeUnmount: () => (/* binding */ onBeforeUnmount),
-/* harmony export */   onBeforeUpdate: () => (/* binding */ onBeforeUpdate),
-/* harmony export */   onDeactivated: () => (/* binding */ onDeactivated),
-/* harmony export */   onErrorCaptured: () => (/* binding */ onErrorCaptured),
-/* harmony export */   onMounted: () => (/* binding */ onMounted),
-/* harmony export */   onRenderTracked: () => (/* binding */ onRenderTracked),
-/* harmony export */   onRenderTriggered: () => (/* binding */ onRenderTriggered),
-/* harmony export */   onScopeDispose: () => (/* binding */ onScopeDispose),
-/* harmony export */   onServerPrefetch: () => (/* binding */ onServerPrefetch),
-/* harmony export */   onUnmounted: () => (/* binding */ onUnmounted),
-/* harmony export */   onUpdated: () => (/* binding */ onUpdated),
-/* harmony export */   provide: () => (/* binding */ provide),
-/* harmony export */   proxyRefs: () => (/* binding */ proxyRefs),
-/* harmony export */   reactive: () => (/* binding */ reactive),
-/* harmony export */   readonly: () => (/* binding */ readonly),
-/* harmony export */   ref: () => (/* binding */ ref$1),
-/* harmony export */   set: () => (/* binding */ set),
-/* harmony export */   shallowReactive: () => (/* binding */ shallowReactive),
-/* harmony export */   shallowReadonly: () => (/* binding */ shallowReadonly),
-/* harmony export */   shallowRef: () => (/* binding */ shallowRef),
-/* harmony export */   toRaw: () => (/* binding */ toRaw),
-/* harmony export */   toRef: () => (/* binding */ toRef),
-/* harmony export */   toRefs: () => (/* binding */ toRefs),
-/* harmony export */   triggerRef: () => (/* binding */ triggerRef),
-/* harmony export */   unref: () => (/* binding */ unref),
-/* harmony export */   useAttrs: () => (/* binding */ useAttrs),
-/* harmony export */   useCssModule: () => (/* binding */ useCssModule),
-/* harmony export */   useCssVars: () => (/* binding */ useCssVars),
-/* harmony export */   useListeners: () => (/* binding */ useListeners),
-/* harmony export */   useSlots: () => (/* binding */ useSlots),
-/* harmony export */   version: () => (/* binding */ version),
-/* harmony export */   watch: () => (/* binding */ watch),
-/* harmony export */   watchEffect: () => (/* binding */ watchEffect),
-/* harmony export */   watchPostEffect: () => (/* binding */ watchPostEffect),
-/* harmony export */   watchSyncEffect: () => (/* binding */ watchSyncEffect)
+/* harmony export */   "defineAsyncComponent": () => (/* binding */ defineAsyncComponent),
+/* harmony export */   "defineComponent": () => (/* binding */ defineComponent),
+/* harmony export */   "del": () => (/* binding */ del),
+/* harmony export */   "effectScope": () => (/* binding */ effectScope),
+/* harmony export */   "getCurrentInstance": () => (/* binding */ getCurrentInstance),
+/* harmony export */   "getCurrentScope": () => (/* binding */ getCurrentScope),
+/* harmony export */   "h": () => (/* binding */ h),
+/* harmony export */   "inject": () => (/* binding */ inject),
+/* harmony export */   "isProxy": () => (/* binding */ isProxy),
+/* harmony export */   "isReactive": () => (/* binding */ isReactive),
+/* harmony export */   "isReadonly": () => (/* binding */ isReadonly),
+/* harmony export */   "isRef": () => (/* binding */ isRef),
+/* harmony export */   "isShallow": () => (/* binding */ isShallow),
+/* harmony export */   "markRaw": () => (/* binding */ markRaw),
+/* harmony export */   "mergeDefaults": () => (/* binding */ mergeDefaults),
+/* harmony export */   "nextTick": () => (/* binding */ nextTick),
+/* harmony export */   "onActivated": () => (/* binding */ onActivated),
+/* harmony export */   "onBeforeMount": () => (/* binding */ onBeforeMount),
+/* harmony export */   "onBeforeUnmount": () => (/* binding */ onBeforeUnmount),
+/* harmony export */   "onBeforeUpdate": () => (/* binding */ onBeforeUpdate),
+/* harmony export */   "onDeactivated": () => (/* binding */ onDeactivated),
+/* harmony export */   "onErrorCaptured": () => (/* binding */ onErrorCaptured),
+/* harmony export */   "onMounted": () => (/* binding */ onMounted),
+/* harmony export */   "onRenderTracked": () => (/* binding */ onRenderTracked),
+/* harmony export */   "onRenderTriggered": () => (/* binding */ onRenderTriggered),
+/* harmony export */   "onScopeDispose": () => (/* binding */ onScopeDispose),
+/* harmony export */   "onServerPrefetch": () => (/* binding */ onServerPrefetch),
+/* harmony export */   "onUnmounted": () => (/* binding */ onUnmounted),
+/* harmony export */   "onUpdated": () => (/* binding */ onUpdated),
+/* harmony export */   "provide": () => (/* binding */ provide),
+/* harmony export */   "proxyRefs": () => (/* binding */ proxyRefs),
+/* harmony export */   "reactive": () => (/* binding */ reactive),
+/* harmony export */   "readonly": () => (/* binding */ readonly),
+/* harmony export */   "ref": () => (/* binding */ ref$1),
+/* harmony export */   "set": () => (/* binding */ set),
+/* harmony export */   "shallowReactive": () => (/* binding */ shallowReactive),
+/* harmony export */   "shallowReadonly": () => (/* binding */ shallowReadonly),
+/* harmony export */   "shallowRef": () => (/* binding */ shallowRef),
+/* harmony export */   "toRaw": () => (/* binding */ toRaw),
+/* harmony export */   "toRef": () => (/* binding */ toRef),
+/* harmony export */   "toRefs": () => (/* binding */ toRefs),
+/* harmony export */   "triggerRef": () => (/* binding */ triggerRef),
+/* harmony export */   "unref": () => (/* binding */ unref),
+/* harmony export */   "useAttrs": () => (/* binding */ useAttrs),
+/* harmony export */   "useCssModule": () => (/* binding */ useCssModule),
+/* harmony export */   "useCssVars": () => (/* binding */ useCssVars),
+/* harmony export */   "useListeners": () => (/* binding */ useListeners),
+/* harmony export */   "useSlots": () => (/* binding */ useSlots),
+/* harmony export */   "version": () => (/* binding */ version),
+/* harmony export */   "watch": () => (/* binding */ watch),
+/* harmony export */   "watchEffect": () => (/* binding */ watchEffect),
+/* harmony export */   "watchPostEffect": () => (/* binding */ watchPostEffect),
+/* harmony export */   "watchSyncEffect": () => (/* binding */ watchSyncEffect)
 /* harmony export */ });
 /*!
- * Vue.js v2.7.16
- * (c) 2014-2023 Evan You
+ * Vue.js v2.7.14
+ * (c) 2014-2022 Evan You
  * Released under the MIT License.
  */
 var emptyObject = Object.freeze({});
@@ -77829,15 +77355,8 @@ function toString(val) {
     return val == null
         ? ''
         : Array.isArray(val) || (isPlainObject(val) && val.toString === _toString)
-            ? JSON.stringify(val, replacer, 2)
+            ? JSON.stringify(val, null, 2)
             : String(val);
-}
-function replacer(_key, val) {
-    // avoid circular deps from v3
-    if (val && val.__v_isRef) {
-        return val.value;
-    }
-    return val;
 }
 /**
  * Convert an input value to a number for persistence.
@@ -78000,7 +77519,9 @@ var identity = function (_) { return _; };
  */
 function genStaticKeys$1(modules) {
     return modules
-        .reduce(function (keys, m) { return keys.concat(m.staticKeys || []); }, [])
+        .reduce(function (keys, m) {
+        return keys.concat(m.staticKeys || []);
+    }, [])
         .join(',');
 }
 /**
@@ -78503,11 +78024,6 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
-typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
-    var e = new Error(message);
-    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-};
-
 var uid$2 = 0;
 var pendingCleanupDeps = [];
 var cleanupDeps = function () {
@@ -78634,14 +78150,13 @@ methodsToPatch.forEach(function (method) {
                 key: method
             });
         }
-        else // removed by dead control flow
-{}
+        else {}
         return result;
     });
 });
 
 var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
-var NO_INITIAL_VALUE = {};
+var NO_INIITIAL_VALUE = {};
 /**
  * In some cases we may want to disable observation inside a component's
  * update computation.
@@ -78700,7 +78215,7 @@ var Observer = /** @class */ (function () {
             var keys = Object.keys(value);
             for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
-                defineReactive(value, key, NO_INITIAL_VALUE, undefined, shallow, mock);
+                defineReactive(value, key, NO_INIITIAL_VALUE, undefined, shallow, mock);
             }
         }
     }
@@ -78737,8 +78252,7 @@ function observe(value, shallow, ssrMockReactivity) {
 /**
  * Define a reactive property on an Object.
  */
-function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenIfShallow) {
-    if (observeEvenIfShallow === void 0) { observeEvenIfShallow = false; }
+function defineReactive(obj, key, val, customSetter, shallow, mock) {
     var dep = new Dep();
     var property = Object.getOwnPropertyDescriptor(obj, key);
     if (property && property.configurable === false) {
@@ -78748,10 +78262,10 @@ function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenI
     var getter = property && property.get;
     var setter = property && property.set;
     if ((!getter || setter) &&
-        (val === NO_INITIAL_VALUE || arguments.length === 2)) {
+        (val === NO_INIITIAL_VALUE || arguments.length === 2)) {
         val = obj[key];
     }
-    var childOb = shallow ? val && val.__ob__ : observe(val, false, mock);
+    var childOb = !shallow && observe(val, false, mock);
     Object.defineProperty(obj, key, {
         enumerable: true,
         configurable: true,
@@ -78765,8 +78279,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenI
                         key: key
                     });
                 }
-                else // removed by dead control flow
-{}
+                else {}
                 if (childOb) {
                     childOb.dep.depend();
                     if (isArray(value)) {
@@ -78798,7 +78311,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenI
             else {
                 val = newVal;
             }
-            childOb = shallow ? newVal && newVal.__ob__ : observe(newVal, false, mock);
+            childOb = !shallow && observe(newVal, false, mock);
             if (true) {
                 dep.notify({
                     type: "set" /* TriggerOpTypes.SET */,
@@ -78808,8 +78321,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenI
                     oldValue: value
                 });
             }
-            else // removed by dead control flow
-{}
+            else {}
         }
     });
     return dep;
@@ -78856,8 +78368,7 @@ function set(target, key, val) {
             oldValue: undefined
         });
     }
-    else // removed by dead control flow
-{}
+    else {}
     return val;
 }
 function del(target, key) {
@@ -78894,8 +78405,7 @@ function del(target, key) {
             key: key
         });
     }
-    else // removed by dead control flow
-{}
+    else {}
 }
 /**
  * Collect dependencies on array elements when the array is touched, since
@@ -79019,8 +78529,7 @@ function triggerRef(ref) {
                 key: 'value'
             });
     }
-    else // removed by dead control flow
-{}
+    else {}
 }
 function unref(ref) {
     return isRef(ref) ? ref.value : ref;
@@ -79073,8 +78582,7 @@ function customRef(factory) {
                 key: 'value'
             });
         }
-        else // removed by dead control flow
-{}
+        else {}
     }, function () {
         if (true) {
             dep.notify({
@@ -79083,8 +78591,7 @@ function customRef(factory) {
                 key: 'value'
             });
         }
-        else // removed by dead control flow
-{}
+        else {}
     }), get = _a.get, set = _a.set;
     var ref = {
         get value() {
@@ -80261,8 +79768,7 @@ function initRender(vm) {
             !isUpdatingChildComponent && warn$2("$listeners is readonly.", vm);
         }, true);
     }
-    else // removed by dead control flow
-{}
+    else {}
 }
 var currentRenderingInstance = null;
 function renderMixin(Vue) {
@@ -80284,10 +79790,11 @@ function renderMixin(Vue) {
         // to the data on the placeholder node.
         vm.$vnode = _parentVnode;
         // render self
-        var prevInst = currentInstance;
-        var prevRenderInst = currentRenderingInstance;
         var vnode;
         try {
+            // There's no need to maintain a stack because all render fns are called
+            // separately from one another. Nested component's render fns are called
+            // when parent component is patched.
             setCurrentInstance(vm);
             currentRenderingInstance = vm;
             vnode = render.call(vm._renderProxy, vm.$createElement);
@@ -80311,8 +79818,8 @@ function renderMixin(Vue) {
             }
         }
         finally {
-            currentRenderingInstance = prevRenderInst;
-            setCurrentInstance(prevInst);
+            currentRenderingInstance = null;
+            setCurrentInstance();
         }
         // if the returned array contains only a single node, allow it
         if (isArray(vnode) && vnode.length === 1) {
@@ -80576,112 +80083,6 @@ function eventsMixin(Vue) {
         }
         return vm;
     };
-}
-
-var activeEffectScope;
-var EffectScope = /** @class */ (function () {
-    function EffectScope(detached) {
-        if (detached === void 0) { detached = false; }
-        this.detached = detached;
-        /**
-         * @internal
-         */
-        this.active = true;
-        /**
-         * @internal
-         */
-        this.effects = [];
-        /**
-         * @internal
-         */
-        this.cleanups = [];
-        this.parent = activeEffectScope;
-        if (!detached && activeEffectScope) {
-            this.index =
-                (activeEffectScope.scopes || (activeEffectScope.scopes = [])).push(this) - 1;
-        }
-    }
-    EffectScope.prototype.run = function (fn) {
-        if (this.active) {
-            var currentEffectScope = activeEffectScope;
-            try {
-                activeEffectScope = this;
-                return fn();
-            }
-            finally {
-                activeEffectScope = currentEffectScope;
-            }
-        }
-        else if (true) {
-            warn$2("cannot run an inactive effect scope.");
-        }
-    };
-    /**
-     * This should only be called on non-detached scopes
-     * @internal
-     */
-    EffectScope.prototype.on = function () {
-        activeEffectScope = this;
-    };
-    /**
-     * This should only be called on non-detached scopes
-     * @internal
-     */
-    EffectScope.prototype.off = function () {
-        activeEffectScope = this.parent;
-    };
-    EffectScope.prototype.stop = function (fromParent) {
-        if (this.active) {
-            var i = void 0, l = void 0;
-            for (i = 0, l = this.effects.length; i < l; i++) {
-                this.effects[i].teardown();
-            }
-            for (i = 0, l = this.cleanups.length; i < l; i++) {
-                this.cleanups[i]();
-            }
-            if (this.scopes) {
-                for (i = 0, l = this.scopes.length; i < l; i++) {
-                    this.scopes[i].stop(true);
-                }
-            }
-            // nested scope, dereference from parent to avoid memory leaks
-            if (!this.detached && this.parent && !fromParent) {
-                // optimized O(1) removal
-                var last = this.parent.scopes.pop();
-                if (last && last !== this) {
-                    this.parent.scopes[this.index] = last;
-                    last.index = this.index;
-                }
-            }
-            this.parent = undefined;
-            this.active = false;
-        }
-    };
-    return EffectScope;
-}());
-function effectScope(detached) {
-    return new EffectScope(detached);
-}
-/**
- * @internal
- */
-function recordEffectScope(effect, scope) {
-    if (scope === void 0) { scope = activeEffectScope; }
-    if (scope && scope.active) {
-        scope.effects.push(effect);
-    }
-}
-function getCurrentScope() {
-    return activeEffectScope;
-}
-function onScopeDispose(fn) {
-    if (activeEffectScope) {
-        activeEffectScope.cleanups.push(fn);
-    }
-    else if (true) {
-        warn$2("onScopeDispose() is called when there is no active effect scope" +
-            " to be associated with.");
-    }
 }
 
 var activeInstance = null;
@@ -80986,8 +80387,7 @@ function callHook$1(vm, hook, args, setContext) {
     if (setContext === void 0) { setContext = true; }
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
-    var prevInst = currentInstance;
-    var prevScope = getCurrentScope();
+    var prev = currentInstance;
     setContext && setCurrentInstance(vm);
     var handlers = vm.$options[hook];
     var info = "".concat(hook, " hook");
@@ -80999,10 +80399,7 @@ function callHook$1(vm, hook, args, setContext) {
     if (vm._hasHookEvent) {
         vm.$emit('hook:' + hook);
     }
-    if (setContext) {
-        setCurrentInstance(prevInst);
-        prevScope && prevScope.on();
-    }
+    setContext && setCurrentInstance(prev);
     popTarget();
 }
 
@@ -81222,10 +80619,7 @@ function doWatch(source, cb, _a) {
     var instance = currentInstance;
     var call = function (fn, type, args) {
         if (args === void 0) { args = null; }
-        var res = invokeWithErrorHandling(fn, null, args, instance, type);
-        if (deep && res && res.__ob__)
-            res.__ob__.dep.depend();
-        return res;
+        return invokeWithErrorHandling(fn, null, args, instance, type);
     };
     var getter;
     var forceTrigger = false;
@@ -81250,7 +80644,6 @@ function doWatch(source, cb, _a) {
                     return s.value;
                 }
                 else if (isReactive(s)) {
-                    s.__ob__.dep.depend();
                     return traverse(s);
                 }
                 else if (isFunction(s)) {
@@ -81392,6 +80785,112 @@ function doWatch(source, cb, _a) {
     return function () {
         watcher.teardown();
     };
+}
+
+var activeEffectScope;
+var EffectScope = /** @class */ (function () {
+    function EffectScope(detached) {
+        if (detached === void 0) { detached = false; }
+        this.detached = detached;
+        /**
+         * @internal
+         */
+        this.active = true;
+        /**
+         * @internal
+         */
+        this.effects = [];
+        /**
+         * @internal
+         */
+        this.cleanups = [];
+        this.parent = activeEffectScope;
+        if (!detached && activeEffectScope) {
+            this.index =
+                (activeEffectScope.scopes || (activeEffectScope.scopes = [])).push(this) - 1;
+        }
+    }
+    EffectScope.prototype.run = function (fn) {
+        if (this.active) {
+            var currentEffectScope = activeEffectScope;
+            try {
+                activeEffectScope = this;
+                return fn();
+            }
+            finally {
+                activeEffectScope = currentEffectScope;
+            }
+        }
+        else if (true) {
+            warn$2("cannot run an inactive effect scope.");
+        }
+    };
+    /**
+     * This should only be called on non-detached scopes
+     * @internal
+     */
+    EffectScope.prototype.on = function () {
+        activeEffectScope = this;
+    };
+    /**
+     * This should only be called on non-detached scopes
+     * @internal
+     */
+    EffectScope.prototype.off = function () {
+        activeEffectScope = this.parent;
+    };
+    EffectScope.prototype.stop = function (fromParent) {
+        if (this.active) {
+            var i = void 0, l = void 0;
+            for (i = 0, l = this.effects.length; i < l; i++) {
+                this.effects[i].teardown();
+            }
+            for (i = 0, l = this.cleanups.length; i < l; i++) {
+                this.cleanups[i]();
+            }
+            if (this.scopes) {
+                for (i = 0, l = this.scopes.length; i < l; i++) {
+                    this.scopes[i].stop(true);
+                }
+            }
+            // nested scope, dereference from parent to avoid memory leaks
+            if (!this.detached && this.parent && !fromParent) {
+                // optimized O(1) removal
+                var last = this.parent.scopes.pop();
+                if (last && last !== this) {
+                    this.parent.scopes[this.index] = last;
+                    last.index = this.index;
+                }
+            }
+            this.parent = undefined;
+            this.active = false;
+        }
+    };
+    return EffectScope;
+}());
+function effectScope(detached) {
+    return new EffectScope(detached);
+}
+/**
+ * @internal
+ */
+function recordEffectScope(effect, scope) {
+    if (scope === void 0) { scope = activeEffectScope; }
+    if (scope && scope.active) {
+        scope.effects.push(effect);
+    }
+}
+function getCurrentScope() {
+    return activeEffectScope;
+}
+function onScopeDispose(fn) {
+    if (activeEffectScope) {
+        activeEffectScope.cleanups.push(fn);
+    }
+    else if (true) {
+        warn$2("onScopeDispose() is called when there is no active effect scope" +
+            " to be associated with.");
+    }
 }
 
 function provide(key, value) {
@@ -81698,7 +81197,7 @@ function defineAsyncComponent(source) {
     suspensible = _b === void 0 ? false : _b, // in Vue 3 default is true
     userOnError = source.onError;
     if ( true && suspensible) {
-        warn$2("The suspensible option for async components is not supported in Vue2. It is ignored.");
+        warn$2("The suspensiblbe option for async components is not supported in Vue2. It is ignored.");
     }
     var pendingRequest = null;
     var retries = 0;
@@ -81802,7 +81301,7 @@ function onErrorCaptured(hook, target) {
 /**
  * Note: also update dist/vue.runtime.mjs when adding new exports to this file.
  */
-var version = '2.7.16';
+var version = '2.7.14';
 /**
  * @internal type is manually declared in <root>/types/v3-define-component.d.ts
  */
@@ -82120,10 +81619,9 @@ function initProps$1(vm, propsOptions) {
                         "Instead, use a data or computed property based on the prop's " +
                         "value. Prop being mutated: \"".concat(key, "\""), vm);
                 }
-            }, true /* shallow */);
+            });
         }
-        else // removed by dead control flow
-{}
+        else {}
         // static props are already proxied on the component's prototype
         // during Vue.extend(). We only need to proxy props defined at
         // instantiation here.
@@ -82388,8 +81886,7 @@ function initInjections(vm) {
                         "injection being mutated: \"".concat(key, "\""), vm);
                 });
             }
-            else // removed by dead control flow
-{}
+            else {}
         });
         toggleObserving(true);
     }
@@ -82442,9 +81939,6 @@ function initMixin$1(Vue) {
         vm.__v_skip = true;
         // effect scope
         vm._scope = new EffectScope(true /* detached */);
-        // #13134 edge case where a child component is manually created during the
-        // render of a parent component
-        vm._scope.parent = undefined;
         vm._scope._vm = true;
         // merge options
         if (options && options._isComponent) {
@@ -82460,8 +81954,7 @@ function initMixin$1(Vue) {
         if (true) {
             initProxy(vm);
         }
-        else // removed by dead control flow
-{}
+        else {}
         // expose real self
         vm._self = vm;
         initLifecycle(vm);
@@ -83694,7 +83187,7 @@ function matches(pattern, name) {
     return false;
 }
 function pruneCache(keepAliveInstance, filter) {
-    var cache = keepAliveInstance.cache, keys = keepAliveInstance.keys, _vnode = keepAliveInstance._vnode, $vnode = keepAliveInstance.$vnode;
+    var cache = keepAliveInstance.cache, keys = keepAliveInstance.keys, _vnode = keepAliveInstance._vnode;
     for (var key in cache) {
         var entry = cache[key];
         if (entry) {
@@ -83704,7 +83197,6 @@ function pruneCache(keepAliveInstance, filter) {
             }
         }
     }
-    $vnode.componentOptions.children = undefined;
 }
 function pruneCacheEntry(cache, key, keys, current) {
     var entry = cache[key];
@@ -84026,7 +83518,7 @@ function isUnknownElement(tag) {
     }
     var el = document.createElement(tag);
     if (tag.indexOf('-') > -1) {
-        // https://stackoverflow.com/a/28210364/1070244
+        // http://stackoverflow.com/a/28210364/1070244
         return (unknownElementCache[tag] =
             el.constructor === window.HTMLUnknownElement ||
                 el.constructor === window.HTMLElement);
@@ -84903,11 +84395,8 @@ function createPatchFunction(backend) {
                             var insert_1 = ancestor.data.hook.insert;
                             if (insert_1.merged) {
                                 // start at index 1 to avoid re-invoking component mounted hook
-                                // clone insert hooks to avoid being mutated during iteration.
-                                // e.g. for customed directives under transition group.
-                                var cloned = insert_1.fns.slice(1);
-                                for (var i_10 = 0; i_10 < cloned.length; i_10++) {
-                                    cloned[i_10]();
+                                for (var i_10 = 1; i_10 < insert_1.fns.length; i_10++) {
+                                    insert_1.fns[i_10]();
                                 }
                             }
                         }
@@ -86046,8 +85535,10 @@ function updateStyle(oldVnode, vnode) {
     }
     for (name in newStyle) {
         cur = newStyle[name];
-        // ie9 setting to null has no effect, must use empty string
-        setProp(el, name, cur == null ? '' : cur);
+        if (cur !== oldStyle[name]) {
+            // ie9 setting to null has no effect, must use empty string
+            setProp(el, name, cur == null ? '' : cur);
+        }
     }
 }
 var style$1 = {
@@ -87296,7 +86787,7 @@ function parseHTML(html, options) {
                         return "continue";
                     }
                 }
-                // https://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
+                // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
                 if (conditionalComment.test(html)) {
                     var conditionalEnd = html.indexOf(']>');
                     if (conditionalEnd >= 0) {
@@ -89659,402 +89150,552 @@ Vue.compile = compileToFunctions;
 
 /***/ }),
 
-/***/ "./resources/admin/Bits/QEUSPlugin.js":
-/*!********************************************!*\
-  !*** ./resources/admin/Bits/QEUSPlugin.js ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ "./node_modules/@wordpress/hooks/build-module/createAddHook.mjs":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/createAddHook.mjs ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ QEUSPlugin)
+/* harmony export */   "default": () => (/* binding */ createAddHook_default)
 /* harmony export */ });
-/* harmony import */ var _Bits_elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Bits/elements */ "./resources/admin/Bits/elements.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/hooks */ "./node_modules/@wordpress/hooks/build-module/index.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-
-// import Vue from 'vue';
+/* harmony import */ var _validateNamespace_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validateNamespace.mjs */ "./node_modules/@wordpress/hooks/build-module/validateNamespace.mjs");
+/* harmony import */ var _validateHookName_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateHookName.mjs */ "./node_modules/@wordpress/hooks/build-module/validateHookName.mjs");
+// packages/hooks/src/createAddHook.ts
 
 
-_Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
-var QEUSPlugin = /*#__PURE__*/function () {
-  function QEUSPlugin() {
-    _classCallCheck(this, QEUSPlugin);
-    // this.Router = new Router({
-    //     mode: 'history',
-    //     routes: [] // Define your routes here
-    // });
-    this.Router = vue_router__WEBPACK_IMPORTED_MODULE_2__["default"];
-    this.doAction = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.doAction;
-    this.addFilter = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.addFilter;
-    this.addAction = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.addAction;
-    this.applyFilters = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.applyFilters;
-    this.removeAllActions = _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.removeAllActions;
-    this.appVars = window.QuickEnquiryUsAdminVars;
-
-    // Create a reactive data object for module status
-    // this.moduleStatus = Vue.observable({
-    //     ...window.QuickEnquiryUsAdminVars.get_active_modules
-    // });
-
-    this.Vue = this.extendVueConstructor();
-  }
-
-  // Method to update module status globally
-  // updateModuleStatus(type, status) {
-  //     Vue.set(this.moduleStatus, type, status);
-  //     // Also trigger a custom event for components that might need it
-  //     this.doAction('qeus_module_status_changed', type, status);
-  // }
-  return _createClass(QEUSPlugin, [{
-    key: "extendVueConstructor",
-    value: function extendVueConstructor() {
-      var self = this;
-      _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].mixin({
-        data: function data() {
-          return {
-            appVars: self.appVars
-          };
-        },
-        methods: {
-          addFilter: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.addFilter,
-          applyFilters: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.applyFilters,
-          doAction: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.doAction,
-          addAction: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.addAction,
-          removeAllActions: _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.removeAllActions,
-          // dateFormats: self.dateFormat,
-          ucFirst: self.ucFirst,
-          ucWords: self.ucWords,
-          slugify: self.slugify,
-          $handleSuccess: self.handleSuccess,
-          $handleError: self.handleError,
-          // nsHumanDiffTime: self.humanDiffTime,
-          // getPrefixLinkUrl(link) {
-          //     var prefixLink = this.appVars.site_url;
-          //     if (link.subdomain_name) {
-          //         return prefixLink.replace('://', '://' + link.subdomain_name + '.')
-          //     }
-          //     return prefixLink;
-          // },
-          // getCopySlugUrl(link) {
-          //     return this.getPrefixLinkUrl(link) + '/' + link.slug;
-          // },
-          getCopyUrlLink: function getCopyUrlLink(link) {
-            return link;
-          },
-          getCopyText: function getCopyText(val) {
-            return val;
-          } // $t(string) {
-          //     return window.QuickEnquiryUsAdminVars.i18n[string] || string;
-          // },
-          // Updated method to use reactive module status
-          // $getTypeModule(type) {
-          //     return self.moduleStatus[type];
-          // },
-          // Method to update module status from any component
-          // $updateModuleStatus(type, status) {
-          //     self.updateModuleStatus(type, status);
-          // }
-        },
-        computed: {}
-      });
-
-      // Vue.filter('dateFormats', self.dateFormat);
-      _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].filter('ucFirst', self.ucFirst);
-      _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].filter('ucWords', self.ucWords);
-      // Vue.filter('nsHumanDiffTime', self.humanDiffTime);
-
-      _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"].use(this.Router);
-      return _Bits_elements__WEBPACK_IMPORTED_MODULE_0__["default"];
+function createAddHook(hooks, storeKey) {
+  return function addHook(hookName, namespace, callback, priority = 10) {
+    const hooksStore = hooks[storeKey];
+    if (!(0,_validateHookName_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(hookName)) {
+      return;
     }
-  }, {
-    key: "registerBlock",
-    value: function registerBlock(blockLocation, blockName, block) {
-      this.addFilter(blockLocation, this.appVars.slug, function (components) {
-        components[blockName] = block;
-        return components;
-      });
+    if (!(0,_validateNamespace_mjs__WEBPACK_IMPORTED_MODULE_0__["default"])(namespace)) {
+      return;
     }
-  }, {
-    key: "registerTopMenu",
-    value: function registerTopMenu(title, route) {
-      if (!title || !route.name || !route.path || !route.component) {
-        return;
+    if ("function" !== typeof callback) {
+      console.error("The hook callback must be a function.");
+      return;
+    }
+    if ("number" !== typeof priority) {
+      console.error(
+        "If specified, the hook priority must be a number."
+      );
+      return;
+    }
+    const handler = { callback, priority, namespace };
+    if (hooksStore[hookName]) {
+      const handlers = hooksStore[hookName].handlers;
+      let i;
+      for (i = handlers.length; i > 0; i--) {
+        if (priority >= handlers[i - 1].priority) {
+          break;
+        }
       }
-      this.addFilter('qeus_top_menus', this.appVars.slug, function (menus) {
-        menus = menus.filter(function (m) {
-          return m.route !== route.name;
-        });
-        menus.push({
-          route: route.name,
-          title: title
-        });
-        return menus;
+      if (i === handlers.length) {
+        handlers[i] = handler;
+      } else {
+        handlers.splice(i, 0, handler);
+      }
+      hooksStore.__current.forEach((hookInfo) => {
+        if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
+          hookInfo.currentIndex++;
+        }
       });
-      this.addFilter('qeus_global_routes', this.appVars.slug, function (routes) {
-        routes = routes.filter(function (r) {
-          return r.name !== route.name;
-        });
-        routes.push(route);
-        return routes;
-      });
-    }
-  }, {
-    key: "request",
-    value: function request(method, route) {
-      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      var url = "".concat(window.QuickEnquiryUsAdminVars.rest.url, "/").concat(route);
-      var headers = {
-        'X-WP-Nonce': window.QuickEnquiryUsAdminVars.rest.nonce
+    } else {
+      hooksStore[hookName] = {
+        handlers: [handler],
+        runs: 0
       };
-      if (['PUT', 'PATCH', 'DELETE'].indexOf(method.toUpperCase()) !== -1) {
-        headers['X-HTTP-Method-Override'] = method;
-        method = 'POST';
-      }
-      data.query_timestamp = Date.now();
-      return new Promise(function (resolve, reject) {
-        window.jQuery.ajax({
-          url: url,
-          type: method,
-          data: data,
-          headers: headers
-        }).then(function (response) {
-          return resolve(response);
-        }).fail(function (errors) {
-          return reject(errors.responseJSON);
-        });
-      });
     }
-  }, {
-    key: "$get",
-    value: function $get(options) {
-      return window.jQuery.get(window.QuickEnquiryUsAdminVars.ajaxurl, options);
+    if (hookName !== "hookAdded") {
+      hooks.doAction(
+        "hookAdded",
+        hookName,
+        namespace,
+        callback,
+        priority
+      );
     }
-  }, {
-    key: "$post",
-    value: function $post(options) {
-      return window.jQuery.post(window.QuickEnquiryUsAdminVars.ajaxurl, options);
-    }
-  }, {
-    key: "$put",
-    value: function $put(options) {
-      return window.jQuery.ajax({
-        url: window.QuickEnquiryUsAdminVars.ajaxurl,
-        type: 'PUT',
-        data: options
-      });
-    }
-  }, {
-    key: "$del",
-    value: function $del(options) {
-      return window.jQuery.post(window.QuickEnquiryUsAdminVars.ajaxurl, options);
-    }
-  }, {
-    key: "ucFirst",
-    value: function ucFirst(text) {
-      return text[0].toUpperCase() + text.slice(1).toLowerCase();
-    }
-  }, {
-    key: "ucWords",
-    value: function ucWords(text) {
-      return (text + '').replace(/^(.)|\s+(.)/g, function ($1) {
-        return $1.toUpperCase();
-      });
-    }
-  }, {
-    key: "slugify",
-    value: function slugify(text) {
-      return text.toString().toLowerCase().replace(/\s+/g, '-') // Replace spaces with -
-      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-      .replace(/\-\-+/g, '-') // Replace multiple - with single -
-      .replace(/^-+/, '') // Trim - from start of text
-      .replace(/-+$/, ''); // Trim - from end of text
-    }
-  }, {
-    key: "convertToText",
-    value: function convertToText(obj) {
-      var string = [];
-      if (_typeof(obj) === 'object' && obj.join === undefined) {
-        for (var prop in obj) {
-          string.push(this.convertToText(obj[prop]));
-        }
-      } else if (_typeof(obj) === 'object' && !(obj.join === undefined)) {
-        for (var _prop in obj) {
-          string.push(this.convertToText(obj[_prop]));
-        }
-      } else if (typeof obj === 'function') {} else if (typeof obj === 'string') {
-        string.push(obj);
-      }
-      return string.join('<br />');
-    }
-  }, {
-    key: "handleSuccess",
-    value: function handleSuccess(message) {
-      this.$notify({
-        type: 'success',
-        title: 'Success',
-        message: message,
-        offset: 32,
-        dangerouslyUseHTMLString: true
-      });
-    }
-  }, {
-    key: "handleError",
-    value: function handleError(response) {
-      var _response, _response2;
-      if ((_response = response) !== null && _response !== void 0 && (_response = _response.responseJSON) !== null && _response !== void 0 && _response.data) {
-        response = response.responseJSON.data;
-      }
-      var errorMessage = '';
-      if (typeof response === 'string') {
-        errorMessage = response;
-      } else if ((_response2 = response) !== null && _response2 !== void 0 && _response2.message) {
-        errorMessage = response.message;
-      }
-      if (!errorMessage) {
-        errorMessage = 'Something went wrong!';
-      }
-      this.$notify({
-        type: 'error',
-        title: 'Error',
-        message: errorMessage,
-        offset: 32,
-        dangerouslyUseHTMLString: true,
-        position: 'top-right'
-      });
-    }
-  }]);
-}();
+  };
+}
+var createAddHook_default = createAddHook;
+
+//# sourceMappingURL=createAddHook.mjs.map
 
 
 /***/ }),
 
-/***/ "./resources/admin/Bits/elements.js":
-/*!******************************************!*\
-  !*** ./resources/admin/Bits/elements.js ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ "./node_modules/@wordpress/hooks/build-module/createCurrentHook.mjs":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/createCurrentHook.mjs ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (/* binding */ createCurrentHook_default)
 /* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var element_ui_lib_locale_lang_en__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! element-ui/lib/locale/lang/en */ "./node_modules/element-ui/lib/locale/lang/en.js");
-/* harmony import */ var element_ui_lib_locale__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! element-ui/lib/locale */ "./node_modules/element-ui/lib/locale/index.js");
-/* harmony import */ var element_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! element-ui */ "./node_modules/element-ui/lib/element-ui.common.js");
-/* harmony import */ var element_ui__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(element_ui__WEBPACK_IMPORTED_MODULE_2__);
+// packages/hooks/src/createCurrentHook.ts
+function createCurrentHook(hooks, storeKey) {
+  return function currentHook() {
+    const hooksStore = hooks[storeKey];
+    const currentArray = Array.from(hooksStore.__current);
+    return currentArray.at(-1)?.name ?? null;
+  };
+}
+var createCurrentHook_default = createCurrentHook;
 
-
-
-
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Card);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Menu);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.MenuItem);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Form);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.FormItem);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Input);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Select);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Option);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Row);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Col);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Button);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Dialog);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Divider);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.DatePicker);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Icon);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Tabs);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.TabPane);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Tooltip);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Table);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.TableColumn);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Pagination);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.ButtonGroup);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.ColorPicker);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Collapse);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.CollapseItem);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Empty);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Skeleton);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.SkeletonItem);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.InputNumber);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Switch);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Submenu);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.MenuItemGroup);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.OptionGroup);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Radio);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.RadioGroup);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.RadioButton);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Checkbox);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Popover);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Tag);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.PageHeader);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.CheckboxGroup);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Collapse);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.CollapseItem);
-// Vue.use(Calendar);
-
-// Vue.use(RadioGroup);
-// Vue.use(Cascader);
-
-// Vue.use(Dropdown);
-// Vue.use(DropdownMenu);
-// Vue.use(DropdownItem);
-
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$notify = element_ui__WEBPACK_IMPORTED_MODULE_2__.Notification;
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$message = element_ui__WEBPACK_IMPORTED_MODULE_2__.Message;
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$msgbox = element_ui__WEBPACK_IMPORTED_MODULE_2__.MessageBox;
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$confirm = element_ui__WEBPACK_IMPORTED_MODULE_2__.MessageBox.confirm;
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(element_ui__WEBPACK_IMPORTED_MODULE_2__.Loading.directive);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].prototype.$loading = element_ui__WEBPACK_IMPORTED_MODULE_2__.Loading.service;
-element_ui_lib_locale__WEBPACK_IMPORTED_MODULE_1__["default"].use(element_ui_lib_locale_lang_en__WEBPACK_IMPORTED_MODULE_0__["default"]);
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (vue__WEBPACK_IMPORTED_MODULE_3__["default"]);
-
-/***/ }),
-
-/***/ "./resources/admin/boot.js":
-/*!*********************************!*\
-  !*** ./resources/admin/boot.js ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Bits_QEUSPlugin_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Bits/QEUSPlugin.js */ "./resources/admin/Bits/QEUSPlugin.js");
-
-window.QEUSPlugin = new _Bits_QEUSPlugin_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
-
-/***/ }),
-
-/***/ "./resources/scss/admin.scss":
-/*!***********************************!*\
-  !*** ./resources/scss/admin.scss ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
+//# sourceMappingURL=createCurrentHook.mjs.map
 
 
 /***/ }),
 
-/***/ "./resources/scss/public-qeus.scss":
-/*!*****************************************!*\
-  !*** ./resources/scss/public-qeus.scss ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ "./node_modules/@wordpress/hooks/build-module/createDidHook.mjs":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/createDidHook.mjs ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ createDidHook_default)
+/* harmony export */ });
+/* harmony import */ var _validateHookName_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validateHookName.mjs */ "./node_modules/@wordpress/hooks/build-module/validateHookName.mjs");
+// packages/hooks/src/createDidHook.ts
+
+function createDidHook(hooks, storeKey) {
+  return function didHook(hookName) {
+    const hooksStore = hooks[storeKey];
+    if (!(0,_validateHookName_mjs__WEBPACK_IMPORTED_MODULE_0__["default"])(hookName)) {
+      return;
+    }
+    return hooksStore[hookName] && hooksStore[hookName].runs ? hooksStore[hookName].runs : 0;
+  };
+}
+var createDidHook_default = createDidHook;
+
+//# sourceMappingURL=createDidHook.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/hooks/build-module/createDoingHook.mjs":
+/*!************************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/createDoingHook.mjs ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ createDoingHook_default)
+/* harmony export */ });
+// packages/hooks/src/createDoingHook.ts
+function createDoingHook(hooks, storeKey) {
+  return function doingHook(hookName) {
+    const hooksStore = hooks[storeKey];
+    if ("undefined" === typeof hookName) {
+      return hooksStore.__current.size > 0;
+    }
+    return Array.from(hooksStore.__current).some(
+      (hook) => hook.name === hookName
+    );
+  };
+}
+var createDoingHook_default = createDoingHook;
+
+//# sourceMappingURL=createDoingHook.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/hooks/build-module/createHasHook.mjs":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/createHasHook.mjs ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ createHasHook_default)
+/* harmony export */ });
+// packages/hooks/src/createHasHook.ts
+function createHasHook(hooks, storeKey) {
+  return function hasHook(hookName, namespace) {
+    const hooksStore = hooks[storeKey];
+    if ("undefined" !== typeof namespace) {
+      return hookName in hooksStore && hooksStore[hookName].handlers.some(
+        (hook) => hook.namespace === namespace
+      );
+    }
+    return hookName in hooksStore;
+  };
+}
+var createHasHook_default = createHasHook;
+
+//# sourceMappingURL=createHasHook.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/hooks/build-module/createHooks.mjs":
+/*!********************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/createHooks.mjs ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "_Hooks": () => (/* binding */ _Hooks),
+/* harmony export */   "default": () => (/* binding */ createHooks_default)
+/* harmony export */ });
+/* harmony import */ var _createAddHook_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createAddHook.mjs */ "./node_modules/@wordpress/hooks/build-module/createAddHook.mjs");
+/* harmony import */ var _createRemoveHook_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createRemoveHook.mjs */ "./node_modules/@wordpress/hooks/build-module/createRemoveHook.mjs");
+/* harmony import */ var _createHasHook_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createHasHook.mjs */ "./node_modules/@wordpress/hooks/build-module/createHasHook.mjs");
+/* harmony import */ var _createRunHook_mjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./createRunHook.mjs */ "./node_modules/@wordpress/hooks/build-module/createRunHook.mjs");
+/* harmony import */ var _createCurrentHook_mjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./createCurrentHook.mjs */ "./node_modules/@wordpress/hooks/build-module/createCurrentHook.mjs");
+/* harmony import */ var _createDoingHook_mjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./createDoingHook.mjs */ "./node_modules/@wordpress/hooks/build-module/createDoingHook.mjs");
+/* harmony import */ var _createDidHook_mjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./createDidHook.mjs */ "./node_modules/@wordpress/hooks/build-module/createDidHook.mjs");
+// packages/hooks/src/createHooks.ts
+
+
+
+
+
+
+
+var _Hooks = class {
+  actions;
+  filters;
+  addAction;
+  addFilter;
+  removeAction;
+  removeFilter;
+  hasAction;
+  hasFilter;
+  removeAllActions;
+  removeAllFilters;
+  doAction;
+  doActionAsync;
+  applyFilters;
+  applyFiltersAsync;
+  currentAction;
+  currentFilter;
+  doingAction;
+  doingFilter;
+  didAction;
+  didFilter;
+  constructor() {
+    this.actions = /* @__PURE__ */ Object.create(null);
+    this.actions.__current = /* @__PURE__ */ new Set();
+    this.filters = /* @__PURE__ */ Object.create(null);
+    this.filters.__current = /* @__PURE__ */ new Set();
+    this.addAction = (0,_createAddHook_mjs__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "actions");
+    this.addFilter = (0,_createAddHook_mjs__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "filters");
+    this.removeAction = (0,_createRemoveHook_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "actions");
+    this.removeFilter = (0,_createRemoveHook_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "filters");
+    this.hasAction = (0,_createHasHook_mjs__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "actions");
+    this.hasFilter = (0,_createHasHook_mjs__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "filters");
+    this.removeAllActions = (0,_createRemoveHook_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "actions", true);
+    this.removeAllFilters = (0,_createRemoveHook_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "filters", true);
+    this.doAction = (0,_createRunHook_mjs__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "actions", false, false);
+    this.doActionAsync = (0,_createRunHook_mjs__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "actions", false, true);
+    this.applyFilters = (0,_createRunHook_mjs__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "filters", true, false);
+    this.applyFiltersAsync = (0,_createRunHook_mjs__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "filters", true, true);
+    this.currentAction = (0,_createCurrentHook_mjs__WEBPACK_IMPORTED_MODULE_4__["default"])(this, "actions");
+    this.currentFilter = (0,_createCurrentHook_mjs__WEBPACK_IMPORTED_MODULE_4__["default"])(this, "filters");
+    this.doingAction = (0,_createDoingHook_mjs__WEBPACK_IMPORTED_MODULE_5__["default"])(this, "actions");
+    this.doingFilter = (0,_createDoingHook_mjs__WEBPACK_IMPORTED_MODULE_5__["default"])(this, "filters");
+    this.didAction = (0,_createDidHook_mjs__WEBPACK_IMPORTED_MODULE_6__["default"])(this, "actions");
+    this.didFilter = (0,_createDidHook_mjs__WEBPACK_IMPORTED_MODULE_6__["default"])(this, "filters");
+  }
+};
+function createHooks() {
+  return new _Hooks();
+}
+var createHooks_default = createHooks;
+
+//# sourceMappingURL=createHooks.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/hooks/build-module/createRemoveHook.mjs":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/createRemoveHook.mjs ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ createRemoveHook_default)
+/* harmony export */ });
+/* harmony import */ var _validateNamespace_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validateNamespace.mjs */ "./node_modules/@wordpress/hooks/build-module/validateNamespace.mjs");
+/* harmony import */ var _validateHookName_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateHookName.mjs */ "./node_modules/@wordpress/hooks/build-module/validateHookName.mjs");
+// packages/hooks/src/createRemoveHook.ts
+
+
+function createRemoveHook(hooks, storeKey, removeAll = false) {
+  return function removeHook(hookName, namespace) {
+    const hooksStore = hooks[storeKey];
+    if (!(0,_validateHookName_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(hookName)) {
+      return;
+    }
+    if (!removeAll && !(0,_validateNamespace_mjs__WEBPACK_IMPORTED_MODULE_0__["default"])(namespace)) {
+      return;
+    }
+    if (!hooksStore[hookName]) {
+      return 0;
+    }
+    let handlersRemoved = 0;
+    if (removeAll) {
+      handlersRemoved = hooksStore[hookName].handlers.length;
+      hooksStore[hookName] = {
+        runs: hooksStore[hookName].runs,
+        handlers: []
+      };
+    } else {
+      const handlers = hooksStore[hookName].handlers;
+      for (let i = handlers.length - 1; i >= 0; i--) {
+        if (handlers[i].namespace === namespace) {
+          handlers.splice(i, 1);
+          handlersRemoved++;
+          hooksStore.__current.forEach((hookInfo) => {
+            if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
+              hookInfo.currentIndex--;
+            }
+          });
+        }
+      }
+    }
+    if (hookName !== "hookRemoved") {
+      hooks.doAction("hookRemoved", hookName, namespace);
+    }
+    return handlersRemoved;
+  };
+}
+var createRemoveHook_default = createRemoveHook;
+
+//# sourceMappingURL=createRemoveHook.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/hooks/build-module/createRunHook.mjs":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/createRunHook.mjs ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ createRunHook_default)
+/* harmony export */ });
+// packages/hooks/src/createRunHook.ts
+function createRunHook(hooks, storeKey, returnFirstArg, async) {
+  return function runHook(hookName, ...args) {
+    const hooksStore = hooks[storeKey];
+    if (!hooksStore[hookName]) {
+      hooksStore[hookName] = {
+        handlers: [],
+        runs: 0
+      };
+    }
+    hooksStore[hookName].runs++;
+    const handlers = hooksStore[hookName].handlers;
+    if (true) {
+      if ("hookAdded" !== hookName && hooksStore.all) {
+        handlers.push(...hooksStore.all.handlers);
+      }
+    }
+    if (!handlers || !handlers.length) {
+      return returnFirstArg ? args[0] : void 0;
+    }
+    const hookInfo = {
+      name: hookName,
+      currentIndex: 0
+    };
+    async function asyncRunner() {
+      try {
+        hooksStore.__current.add(hookInfo);
+        let result = returnFirstArg ? args[0] : void 0;
+        while (hookInfo.currentIndex < handlers.length) {
+          const handler = handlers[hookInfo.currentIndex];
+          result = await handler.callback.apply(null, args);
+          if (returnFirstArg) {
+            args[0] = result;
+          }
+          hookInfo.currentIndex++;
+        }
+        return returnFirstArg ? result : void 0;
+      } finally {
+        hooksStore.__current.delete(hookInfo);
+      }
+    }
+    function syncRunner() {
+      try {
+        hooksStore.__current.add(hookInfo);
+        let result = returnFirstArg ? args[0] : void 0;
+        while (hookInfo.currentIndex < handlers.length) {
+          const handler = handlers[hookInfo.currentIndex];
+          result = handler.callback.apply(null, args);
+          if (returnFirstArg) {
+            args[0] = result;
+          }
+          hookInfo.currentIndex++;
+        }
+        return returnFirstArg ? result : void 0;
+      } finally {
+        hooksStore.__current.delete(hookInfo);
+      }
+    }
+    return (async ? asyncRunner : syncRunner)();
+  };
+}
+var createRunHook_default = createRunHook;
+
+//# sourceMappingURL=createRunHook.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/hooks/build-module/index.mjs":
+/*!**************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/index.mjs ***!
+  \**************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "actions": () => (/* binding */ actions),
+/* harmony export */   "addAction": () => (/* binding */ addAction),
+/* harmony export */   "addFilter": () => (/* binding */ addFilter),
+/* harmony export */   "applyFilters": () => (/* binding */ applyFilters),
+/* harmony export */   "applyFiltersAsync": () => (/* binding */ applyFiltersAsync),
+/* harmony export */   "createHooks": () => (/* reexport safe */ _createHooks_mjs__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* harmony export */   "currentAction": () => (/* binding */ currentAction),
+/* harmony export */   "currentFilter": () => (/* binding */ currentFilter),
+/* harmony export */   "defaultHooks": () => (/* binding */ defaultHooks),
+/* harmony export */   "didAction": () => (/* binding */ didAction),
+/* harmony export */   "didFilter": () => (/* binding */ didFilter),
+/* harmony export */   "doAction": () => (/* binding */ doAction),
+/* harmony export */   "doActionAsync": () => (/* binding */ doActionAsync),
+/* harmony export */   "doingAction": () => (/* binding */ doingAction),
+/* harmony export */   "doingFilter": () => (/* binding */ doingFilter),
+/* harmony export */   "filters": () => (/* binding */ filters),
+/* harmony export */   "hasAction": () => (/* binding */ hasAction),
+/* harmony export */   "hasFilter": () => (/* binding */ hasFilter),
+/* harmony export */   "removeAction": () => (/* binding */ removeAction),
+/* harmony export */   "removeAllActions": () => (/* binding */ removeAllActions),
+/* harmony export */   "removeAllFilters": () => (/* binding */ removeAllFilters),
+/* harmony export */   "removeFilter": () => (/* binding */ removeFilter)
+/* harmony export */ });
+/* harmony import */ var _createHooks_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./createHooks.mjs */ "./node_modules/@wordpress/hooks/build-module/createHooks.mjs");
+// packages/hooks/src/index.ts
+
+var defaultHooks = (0,_createHooks_mjs__WEBPACK_IMPORTED_MODULE_0__["default"])();
+var {
+  addAction,
+  addFilter,
+  removeAction,
+  removeFilter,
+  hasAction,
+  hasFilter,
+  removeAllActions,
+  removeAllFilters,
+  doAction,
+  doActionAsync,
+  applyFilters,
+  applyFiltersAsync,
+  currentAction,
+  currentFilter,
+  doingAction,
+  doingFilter,
+  didAction,
+  didFilter,
+  actions,
+  filters
+} = defaultHooks;
+
+//# sourceMappingURL=index.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/hooks/build-module/validateHookName.mjs":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/validateHookName.mjs ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ validateHookName_default)
+/* harmony export */ });
+// packages/hooks/src/validateHookName.ts
+function validateHookName(hookName) {
+  if ("string" !== typeof hookName || "" === hookName) {
+    console.error("The hook name must be a non-empty string.");
+    return false;
+  }
+  if (/^__/.test(hookName)) {
+    console.error("The hook name cannot begin with `__`.");
+    return false;
+  }
+  if (!/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(hookName)) {
+    console.error(
+      "The hook name can only contain numbers, letters, dashes, periods and underscores."
+    );
+    return false;
+  }
+  return true;
+}
+var validateHookName_default = validateHookName;
+
+//# sourceMappingURL=validateHookName.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/hooks/build-module/validateNamespace.mjs":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@wordpress/hooks/build-module/validateNamespace.mjs ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ validateNamespace_default)
+/* harmony export */ });
+// packages/hooks/src/validateNamespace.ts
+function validateNamespace(namespace) {
+  if ("string" !== typeof namespace || "" === namespace) {
+    console.error("The namespace must be a non-empty string.");
+    return false;
+  }
+  if (!/^[a-zA-Z][a-zA-Z0-9_.\-\/]*$/.test(namespace)) {
+    console.error(
+      "The namespace can only contain numbers, letters, dashes, periods, underscores and slashes."
+    );
+    return false;
+  }
+  return true;
+}
+var validateNamespace_default = validateNamespace;
+
+//# sourceMappingURL=validateNamespace.mjs.map
 
 
 /***/ })
@@ -90200,7 +89841,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		var installedChunks = {
 /******/ 			"/assets/admin/js/boot": 0,
 /******/ 			"assets/admin/css/admin": 0,
-/******/ 			"assets/public/css/quick-enquiry-us": 0
+/******/ 			"assets/public/css/quick-product-enquiry-for-woocommerce": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -90235,12 +89876,12 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
+/******/ 				installedChunks[chunkIds[i]] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunkquick_enquiry_us"] = self["webpackChunkquick_enquiry_us"] || [];
+/******/ 		var chunkLoadingGlobal = self["webpackChunkquick_product_enquiry_for_woocommerce"] = self["webpackChunkquick_product_enquiry_for_woocommerce"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -90250,9 +89891,9 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["assets/admin/css/admin","assets/public/css/quick-enquiry-us"], () => (__webpack_require__("./resources/admin/boot.js")))
-/******/ 	__webpack_require__.O(undefined, ["assets/admin/css/admin","assets/public/css/quick-enquiry-us"], () => (__webpack_require__("./resources/scss/admin.scss")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["assets/admin/css/admin","assets/public/css/quick-enquiry-us"], () => (__webpack_require__("./resources/scss/public-qeus.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/admin/css/admin","assets/public/css/quick-product-enquiry-for-woocommerce"], () => (__webpack_require__("./resources/admin/boot.js")))
+/******/ 	__webpack_require__.O(undefined, ["assets/admin/css/admin","assets/public/css/quick-product-enquiry-for-woocommerce"], () => (__webpack_require__("./resources/scss/admin.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["assets/admin/css/admin","assets/public/css/quick-product-enquiry-for-woocommerce"], () => (__webpack_require__("./resources/scss/public-qpefw.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

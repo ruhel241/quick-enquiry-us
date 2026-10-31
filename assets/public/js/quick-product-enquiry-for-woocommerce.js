@@ -1,28 +1,29 @@
 /******/ (() => { // webpackBootstrap
-/*!*************************************!*\
-  !*** ./resources/public/js/qeus.js ***!
-  \*************************************/
+var __webpack_exports__ = {};
+/*!**************************************!*\
+  !*** ./resources/public/js/qpefw.js ***!
+  \**************************************/
 jQuery(document).ready(function ($) {
-  var QuickEnquiryUsPublicVarsSettings = QuickEnquiryUsPublicVars.qeus_settings.settings;
+  var QuickProductEnquiryPublicVarsSettings = QuickProductEnquiryPublicVars.qpefw_settings.settings;
   var isLoading = false;
   function showLoading() {
     isLoading = true;
-    $('#qeus-loading-view').show();
+    $('#qpefw-loading-view').show();
   }
   function hideLoading() {
     isLoading = false;
     setTimeout(function () {
       if (!isLoading) {
-        $('#qeus-loading-view').hide();
+        $('#qpefw-loading-view').hide();
       }
     }, 700);
   }
-  var qeusQuickEnquiryUs = {
+  var qpefwQuickProductEnquiry = {
     // Modal open
-    qeusQuickEnquiryUsInit: function qeusQuickEnquiryUsInit() {
+    qpefwQuickProductEnquiryInit: function qpefwQuickProductEnquiryInit() {
       var that = this;
-      $('body').addClass('qeus-addons-wrapper-home');
-      $('.qeus-addons-wrapper-home .products .product').each(function () {
+      $('body').addClass('qpefw-addons-wrapper-home');
+      $('.qpefw-addons-wrapper-home .products .product').each(function () {
         var $parentProduct = $(this);
         // Detect Add to cart button
         var $addToCart = $parentProduct.find('a.button.product_type_simple, a.button.add_to_cart_button, .wc-block-components-product-button__button').not('.qvpu-view-button, .ast-on-card-button');
@@ -32,7 +33,7 @@ jQuery(document).ready(function ($) {
         setTimeout(function () {
           var $qvpuWrapper = $parentProduct.find('.qvpu-add-to-cart-wrapper');
           var $quickCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
-          var $enquiryShopBtn = $parentProduct.find('.qeus-button');
+          var $enquiryShopBtn = $parentProduct.find('.qpefw-button');
 
           /** ---------------------------------------------
            * CASE 1: Wrapper already exists quick view
@@ -59,7 +60,7 @@ jQuery(document).ready(function ($) {
            * CASE 3: Create new wrapper
            * --------------------------------------------- */
 
-          var $newWrapper = $('<div class="qeus-add-to-cart-wrapper"></div>');
+          var $newWrapper = $('<div class="qpefw-add-to-cart-wrapper"></div>');
           if ($addToCart.length) {
             $addToCart.add($enquiryShopBtn).wrapAll($newWrapper);
           } else {
@@ -72,10 +73,10 @@ jQuery(document).ready(function ($) {
       });
 
       // Click Open modal
-      $(document).on('click', '.qeus-button', function (e) {
+      $(document).on('click', '.qpefw-button', function (e) {
         e.preventDefault();
-        $("body").addClass("qeus-modal-open");
-        $('.qeus-modal-wrapper').fadeIn();
+        $("body").addClass("qpefw-modal-open");
+        $('.qpefw-modal-wrapper').fadeIn();
         var $btn = $(this);
         var productId = $btn.data('product-id');
         var productSlug = $btn.data('product-slug') ? $btn.data('product-slug') : '';
@@ -87,30 +88,30 @@ jQuery(document).ready(function ($) {
       });
 
       // Tabs handler
-      $(document).on('click', '.qeus-tab', function () {
+      $(document).on('click', '.qpefw-tab', function () {
         var tab = $(this).data('tab');
-        var container = $(this).closest('.qeus-form-container');
+        var container = $(this).closest('.qpefw-form-container');
         // Tabs UI
-        container.find('.qeus-tab').removeClass('active');
+        container.find('.qpefw-tab').removeClass('active');
         $(this).addClass('active');
-        container.find('.qeus-tab-content').removeClass('active');
-        container.find('#qeus-tab-' + tab).addClass('active');
+        container.find('.qpefw-tab-content').removeClass('active');
+        container.find('#qpefw-tab-' + tab).addClass('active');
       });
 
       // Trigger default state
-      $('.qeus-tab.active').trigger('click');
+      $('.qpefw-tab.active').trigger('click');
     },
     enquirUsForm: function enquirUsForm(productId, productSlug) {
       showLoading();
-      $.post('/?wc-ajax=qeus_ajax_actions', {
-        route: 'qeus_form',
-        nonce: window.QuickEnquiryUsPublicVars.nonce,
+      $.post('/?wc-ajax=qpefw_ajax_actions', {
+        route: 'qpefw_form',
+        nonce: window.QuickProductEnquiryPublicVars.nonce,
         product_id: productId,
         product_slug: productSlug
       }).success(function (response) {
         if (response.success && response.data.fragments) {
           // update form HTML from PHP
-          $('.qeus-form-container').replaceWith(response.data.fragments['.qeus-form-container']);
+          $('.qpefw-form-container').replaceWith(response.data.fragments['.qpefw-form-container']);
         }
       }).always(function () {
         hideLoading();
@@ -119,31 +120,31 @@ jQuery(document).ready(function ($) {
     // Modal close
     closeModal: function closeModal() {
       // Close button
-      $(document).on('click', '.qeus-view-close', function () {
-        $('.qeus-modal-wrapper').fadeOut();
-        $("body").removeClass("qeus-modal-open");
+      $(document).on('click', '.qpefw-view-close', function () {
+        $('.qpefw-modal-wrapper').fadeOut();
+        $("body").removeClass("qpefw-modal-open");
       });
 
       // Click outside to close
-      $(document).on('click', '.qeus-modal-wrapper', function (e) {
-        if ($(e.target).hasClass('qeus-modal-wrapper')) {
-          $('.qeus-modal-wrapper').fadeOut();
-          $("body").removeClass("qeus-modal-open");
+      $(document).on('click', '.qpefw-modal-wrapper', function (e) {
+        if ($(e.target).hasClass('qpefw-modal-wrapper')) {
+          $('.qpefw-modal-wrapper').fadeOut();
+          $("body").removeClass("qpefw-modal-open");
         }
       });
 
       // Escape key close
       $(document).on('keyup', function (e) {
         if (e.key === "Escape") {
-          $('.qeus-modal-wrapper').fadeOut();
-          $("body").removeClass("qeus-modal-open");
+          $('.qpefw-modal-wrapper').fadeOut();
+          $("body").removeClass("qpefw-modal-open");
         }
       });
     },
     // Form submit handler
     enquireUsDetailsHandler: function enquireUsDetailsHandler() {
       var that = this;
-      $(document).on('click', '.qeus-form-container .qeus-submit', function (e) {
+      $(document).on('click', '.qpefw-form-container .qpefw-submit', function (e) {
         var _$form$find$val, _$form$find$val2, _$form$find$val3, _$form$find$val4;
         e.preventDefault();
         var $form = $(this).closest('form');
@@ -155,14 +156,14 @@ jQuery(document).ready(function ($) {
         var country_code = $form.find('select[name="country_code"]').val() || '';
         var subscribe = $form.find('input[name="subscribe"]').is(':checked') ? 'yes' : 'no';
         // get active tab (enquire)
-        var type = $('.qeus-tab.active').data('tab'); // enquire
+        var type = $('.qpefw-tab.active').data('tab'); // enquire
         var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         // helper function for notice
         function showError(msg) {
-          $('.qeus-notice .qeus-response-message').text(msg).css('color', 'red');
-          $('.qeus-notice').fadeIn();
+          $('.qpefw-notice .qpefw-response-message').text(msg).css('color', 'red');
+          $('.qpefw-notice').fadeIn();
           setTimeout(function () {
-            $('.qeus-notice').fadeOut();
+            $('.qpefw-notice').fadeOut();
           }, 4000);
         }
         /* ======================
@@ -204,32 +205,32 @@ jQuery(document).ready(function ($) {
     // AJAX request
     enquireUsDetailsAction: function enquireUsDetailsAction(details) {
       showLoading();
-      jQuery.post('/?wc-ajax=qeus_ajax_actions', {
-        route: 'qeus_details',
-        nonce: window.QuickEnquiryUsPublicVars.nonce,
+      jQuery.post('/?wc-ajax=qpefw_ajax_actions', {
+        route: 'qpefw_details',
+        nonce: window.QuickProductEnquiryPublicVars.nonce,
         details: JSON.stringify(details)
       }).success(function (response) {
         if (response.success) {
-          $('.qeus-notice .qeus-response-message').text(response.data.message).css({
+          $('.qpefw-notice .qpefw-response-message').text(response.data.message).css({
             'color': 'green',
             'border-left': '4px solid green'
           });
-          $('.qeus-notice').fadeIn();
+          $('.qpefw-notice').fadeIn();
           // Reset form
-          $('.qeus-form-container form')[0].reset();
+          $('.qpefw-form-container form')[0].reset();
           setTimeout(function () {
-            $('.qeus-notice').fadeOut();
-            $('.qeus-modal-wrapper').fadeOut();
-            $("body").removeClass("qeus-modal-open");
+            $('.qpefw-notice').fadeOut();
+            $('.qpefw-modal-wrapper').fadeOut();
+            $("body").removeClass("qpefw-modal-open");
           }, 6000);
         } else {
-          $('.qeus-notice .qeus-response-message').text(response.data.message).css({
+          $('.qpefw-notice .qpefw-response-message').text(response.data.message).css({
             'color': 'red',
             'border-left': '4px solid red'
           });
-          $('.qeus-notice').fadeIn();
+          $('.qpefw-notice').fadeIn();
           setTimeout(function () {
-            $('.qeus-notice').fadeOut();
+            $('.qpefw-notice').fadeOut();
           }, 4000);
         }
       }).fail(function (error) {}).always(function () {
@@ -237,13 +238,13 @@ jQuery(document).ready(function ($) {
       });
     },
     init: function init() {
-      this.qeusQuickEnquiryUsInit();
+      this.qpefwQuickProductEnquiryInit();
       this.closeModal();
       this.enquireUsDetailsHandler();
       // this.enquirUsShopButtonInit();
     }
   };
-  qeusQuickEnquiryUs.init();
+  qpefwQuickProductEnquiry.init();
 });
 /******/ })()
 ;

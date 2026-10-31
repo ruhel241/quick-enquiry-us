@@ -13,7 +13,7 @@ mix.webpackConfig({
         ]
     },
     output: {
-        publicPath: Mix.isUsing('hmr') ? '/' : '/wp-content/plugins/quick-enquiry-us/assets/',
+        publicPath: Mix.isUsing('hmr') ? '/' : '/wp-content/plugins/quick-product-enquiry-for-woocommerce/assets/',
         chunkFilename: 'admin/js/[name].js'
     },
     plugins: [
@@ -37,6 +37,6 @@ mix.sass('resources/scss/admin.scss', 'assets/admin/css/admin.css');
 mix.copy('node_modules/element-ui/lib/theme-chalk/fonts', 'assets/admin/css/fonts');
 mix.copy('resources/public/images', 'assets/public/images');
 
-// Quick Enquiry Us js
-mix.js('resources/public/js/qeus.js', 'assets/public/js/quick-enquiry-us.js');
-mix.sass('resources/scss/public-qeus.scss', 'assets/public/css/quick-enquiry-us.css');
+// Quick Product Enquiry for WooCommerce js
+mix.js('resources/public/js/qpefw.js', 'assets/public/js/quick-product-enquiry-for-woocommerce.js');
+mix.sass('resources/scss/public-qpefw.scss', 'assets/public/css/quick-product-enquiry-for-woocommerce.css');

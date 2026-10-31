@@ -1,28 +1,28 @@
 jQuery(document).ready(function ($) {
-    var QuickEnquiryUsPublicVarsSettings = QuickEnquiryUsPublicVars.qeus_settings.settings;
+    var QuickProductEnquiryPublicVarsSettings = QuickProductEnquiryPublicVars.qpefw_settings.settings;
 
     var isLoading = false;
     function showLoading() {
         isLoading = true;
-        $('#qeus-loading-view').show();
+        $('#qpefw-loading-view').show();
     }
     function hideLoading() {
         isLoading = false;
         setTimeout(function () {
             if (!isLoading) {
-                $('#qeus-loading-view').hide();
+                $('#qpefw-loading-view').hide();
             }
         }, 700);
     }
 
-    var qeusQuickEnquiryUs = {
+    var qpefwQuickProductEnquiry = {
        // Modal open
-        qeusQuickEnquiryUsInit: function () {
+        qpefwQuickProductEnquiryInit: function () {
             let that = this;
 
-            $('body').addClass('qeus-addons-wrapper-home');
+            $('body').addClass('qpefw-addons-wrapper-home');
             
-            $('.qeus-addons-wrapper-home .products .product').each(function() {
+            $('.qpefw-addons-wrapper-home .products .product').each(function() {
                 let $parentProduct      = $(this);
                 // Detect Add to cart button
                 let $addToCart = $parentProduct.find(
@@ -35,7 +35,7 @@ jQuery(document).ready(function ($) {
                 setTimeout(() => {
                     let $qvpuWrapper      = $parentProduct.find('.qvpu-add-to-cart-wrapper');
                     let $quickCheckoutBtn = $parentProduct.find('.qdc-direct-checkout-button');
-                    let $enquiryShopBtn   = $parentProduct.find('.qeus-button');
+                    let $enquiryShopBtn   = $parentProduct.find('.qpefw-button');
 
                     /** ---------------------------------------------
                      * CASE 1: Wrapper already exists quick view
@@ -62,7 +62,7 @@ jQuery(document).ready(function ($) {
                      * CASE 3: Create new wrapper
                      * --------------------------------------------- */
     
-                    let $newWrapper = $('<div class="qeus-add-to-cart-wrapper"></div>');
+                    let $newWrapper = $('<div class="qpefw-add-to-cart-wrapper"></div>');
 
                     if ($addToCart.length) {
                         $addToCart.add($enquiryShopBtn).wrapAll($newWrapper);
@@ -77,11 +77,11 @@ jQuery(document).ready(function ($) {
 
 
             // Click Open modal
-            $(document).on('click', '.qeus-button', function (e) {
+            $(document).on('click', '.qpefw-button', function (e) {
                 e.preventDefault();
 
-                $("body").addClass("qeus-modal-open");
-                $('.qeus-modal-wrapper').fadeIn();
+                $("body").addClass("qpefw-modal-open");
+                $('.qpefw-modal-wrapper').fadeIn();
 
                 let $btn = $(this);
                 let productId = $btn.data('product-id');
@@ -94,35 +94,35 @@ jQuery(document).ready(function ($) {
             });
 
             // Tabs handler
-            $(document).on('click', '.qeus-tab', function () {
+            $(document).on('click', '.qpefw-tab', function () {
                 const tab = $(this).data('tab');
-                const container = $(this).closest('.qeus-form-container');
+                const container = $(this).closest('.qpefw-form-container');
                 // Tabs UI
-                container.find('.qeus-tab').removeClass('active');
+                container.find('.qpefw-tab').removeClass('active');
                 $(this).addClass('active');
 
-                container.find('.qeus-tab-content').removeClass('active');
-                container.find('#qeus-tab-' + tab).addClass('active');
+                container.find('.qpefw-tab-content').removeClass('active');
+                container.find('#qpefw-tab-' + tab).addClass('active');
             });
 
             // Trigger default state
-            $('.qeus-tab.active').trigger('click');
+            $('.qpefw-tab.active').trigger('click');
         },
 
         enquirUsForm: function (productId, productSlug) {
             showLoading();
 
-            $.post('/?wc-ajax=qeus_ajax_actions', {
-                route: 'qeus_form',
-                nonce: window.QuickEnquiryUsPublicVars.nonce,
+            $.post('/?wc-ajax=qpefw_ajax_actions', {
+                route: 'qpefw_form',
+                nonce: window.QuickProductEnquiryPublicVars.nonce,
                 product_id: productId,
                 product_slug: productSlug
             })
             .success(function (response) {
                 if (response.success && response.data.fragments) {
                     // update form HTML from PHP
-                    $('.qeus-form-container').replaceWith(
-                        response.data.fragments['.qeus-form-container']
+                    $('.qpefw-form-container').replaceWith(
+                        response.data.fragments['.qpefw-form-container']
                     );
                 }
             })
@@ -134,24 +134,24 @@ jQuery(document).ready(function ($) {
         // Modal close
         closeModal: function () {
             // Close button
-            $(document).on('click', '.qeus-view-close', function () {
-                $('.qeus-modal-wrapper').fadeOut();
-                $("body").removeClass("qeus-modal-open");
+            $(document).on('click', '.qpefw-view-close', function () {
+                $('.qpefw-modal-wrapper').fadeOut();
+                $("body").removeClass("qpefw-modal-open");
             });
 
             // Click outside to close
-            $(document).on('click', '.qeus-modal-wrapper', function (e) {
-                if ($(e.target).hasClass('qeus-modal-wrapper')) {
-                    $('.qeus-modal-wrapper').fadeOut();
-                    $("body").removeClass("qeus-modal-open");
+            $(document).on('click', '.qpefw-modal-wrapper', function (e) {
+                if ($(e.target).hasClass('qpefw-modal-wrapper')) {
+                    $('.qpefw-modal-wrapper').fadeOut();
+                    $("body").removeClass("qpefw-modal-open");
                 }
             });
 
             // Escape key close
             $(document).on('keyup', function (e) {
                 if (e.key === "Escape") {
-                    $('.qeus-modal-wrapper').fadeOut();
-                    $("body").removeClass("qeus-modal-open");
+                    $('.qpefw-modal-wrapper').fadeOut();
+                    $("body").removeClass("qpefw-modal-open");
                 }
             });
         },
@@ -159,7 +159,7 @@ jQuery(document).ready(function ($) {
         // Form submit handler
         enquireUsDetailsHandler: function () {
             let that = this;
-            $(document).on('click', '.qeus-form-container .qeus-submit', function (e) {
+            $(document).on('click', '.qpefw-form-container .qpefw-submit', function (e) {
                 e.preventDefault();
                 let $form = $(this).closest('form');
 
@@ -171,17 +171,17 @@ jQuery(document).ready(function ($) {
                 let country_code = $form.find('select[name="country_code"]').val() || '';
                 let subscribe    = $form.find('input[name="subscribe"]').is(':checked') ? 'yes' : 'no';
                 // get active tab (enquire)
-                let type = $('.qeus-tab.active').data('tab'); // enquire
+                let type = $('.qpefw-tab.active').data('tab'); // enquire
                 let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 // helper function for notice
                 function showError(msg) {
-                    $('.qeus-notice .qeus-response-message')
+                    $('.qpefw-notice .qpefw-response-message')
                         .text(msg)
                         .css('color', 'red');
-                    $('.qeus-notice').fadeIn();
+                    $('.qpefw-notice').fadeIn();
 
                     setTimeout(function () {
-                        $('.qeus-notice').fadeOut();
+                        $('.qpefw-notice').fadeOut();
                     }, 4000);
                 }
                 /* ======================
@@ -224,27 +224,27 @@ jQuery(document).ready(function ($) {
         // AJAX request
         enquireUsDetailsAction: function (details) {
             showLoading();
-            jQuery.post('/?wc-ajax=qeus_ajax_actions', {
-                route: 'qeus_details',
-                nonce: window.QuickEnquiryUsPublicVars.nonce,
+            jQuery.post('/?wc-ajax=qpefw_ajax_actions', {
+                route: 'qpefw_details',
+                nonce: window.QuickProductEnquiryPublicVars.nonce,
                 details: JSON.stringify(details),
             })
             .success(function(response) {
                 if (response.success) {
-                    $('.qeus-notice .qeus-response-message').text(response.data.message).css({'color': 'green', 'border-left': '4px solid green'});
-                    $('.qeus-notice').fadeIn();
+                    $('.qpefw-notice .qpefw-response-message').text(response.data.message).css({'color': 'green', 'border-left': '4px solid green'});
+                    $('.qpefw-notice').fadeIn();
                     // Reset form
-                    $('.qeus-form-container form')[0].reset();
+                    $('.qpefw-form-container form')[0].reset();
                     setTimeout(function () {
-                        $('.qeus-notice').fadeOut();
-                        $('.qeus-modal-wrapper').fadeOut();
-                        $("body").removeClass("qeus-modal-open");
+                        $('.qpefw-notice').fadeOut();
+                        $('.qpefw-modal-wrapper').fadeOut();
+                        $("body").removeClass("qpefw-modal-open");
                     }, 6000);
                 } else {
-                    $('.qeus-notice .qeus-response-message').text(response.data.message).css({'color': 'red', 'border-left': '4px solid red'});
-                    $('.qeus-notice').fadeIn();
+                    $('.qpefw-notice .qpefw-response-message').text(response.data.message).css({'color': 'red', 'border-left': '4px solid red'});
+                    $('.qpefw-notice').fadeIn();
                     setTimeout(function () {
-                        $('.qeus-notice').fadeOut();
+                        $('.qpefw-notice').fadeOut();
                     }, 4000);
                 } 
             })
@@ -256,12 +256,12 @@ jQuery(document).ready(function ($) {
         },
 
         init: function () {
-            this.qeusQuickEnquiryUsInit();
+            this.qpefwQuickProductEnquiryInit();
             this.closeModal();
             this.enquireUsDetailsHandler();
             // this.enquirUsShopButtonInit();
         }
     };
 
-    qeusQuickEnquiryUs.init();
+    qpefwQuickProductEnquiry.init();
 });

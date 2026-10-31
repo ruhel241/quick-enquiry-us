@@ -1,13 +1,13 @@
 <?php
 
-namespace Ruhel241\QuickEnquiryUs;
+namespace Ruhel241\QuickProductEnquiry;
 
 class Settings
 {
     public function getConfigs()
     {
         $configs = [
-            'qeus_settings' => [
+            'qpefw_settings' => [
                 'settings' => [
                     'shop_page_enable'                     => 'yes',
                     'in_stock_shop_button_text'            => 'Enquiry Us',
@@ -37,11 +37,11 @@ class Settings
                     'sms_button_text'                      => 'Send SMS',
                     'sms_numbers'                          => [],
                     'sms_message'                          => 'Hello {receiver_name}, I would like to enquire about {title}, Product Link: {url}',
-                    'shortcode_enquiry_us_button_text'     => 'Enquiry us',
-                    'cart_page_enquiry_us_btn_enable'      => 'yes',
-                    'cart_page_enquiry_us_button_text'     => 'Enquiry us',
-                    'order_summary_enquiry_us_btn_enable'  => 'yes',
-                    'order_summary_enquiry_us_button_text' => 'Enquiry us',
+                    'shortcode_enquiry_button_text'     => 'Enquiry us',
+                    'cart_page_enquiry_btn_enable'      => 'yes',
+                    'cart_page_enquiry_button_text'     => 'Enquiry us',
+                    'order_summary_enquiry_btn_enable'  => 'yes',
+                    'order_summary_enquiry_button_text' => 'Enquiry us',
                 ],
                 'styles' => [
                     'instock_shop_button_color'             => '#0E9204',
@@ -53,37 +53,37 @@ class Settings
                     'header_background_color'               => '#FF7800',
                     'active_tab_color'                      => '#FF7800',
                     'submit_button_background_color'        => '#FF7800',
-                    'shortcode_enquiry_us_button_color'     => '#5467f8',
-                    'cart_page_enquiry_us_button_color'     => '#5467f8',
-                    'order_summary_enquiry_us_button_color' => '#5467f8',
+                    'shortcode_enquiry_button_color'     => '#5467f8',
+                    'cart_page_enquiry_button_color'     => '#5467f8',
+                    'order_summary_enquiry_button_color' => '#5467f8',
 
                 ],
-                'quick-enquiry-us' => [
+                'quick-product-enquiry-for-woocommerce' => [
                     'details' => []
                 ]
             ],
         ];
 
-        return apply_filters('qeus/configs', $configs);
+        return apply_filters('qpefw/configs', $configs);
     }
 
     public function getActiveModule() {
-        $qeusActiveModule = [
-            'qeus_module' => 'yes',
+        $qpefwActiveModule = [
+            'qpefw_module' => 'yes',
         ];
 
-        return apply_filters('qeus/active_module', $qeusActiveModule);
+        return apply_filters('qpefw/active_module', $qpefwActiveModule);
     }
 
-    public function qeusLicense() {
-        $qeusLicense = [
+    public function qpefwLicense() {
+        $qpefwLicense = [
             'license_key' => '',
             'price_id'    => '',
             'expires'     => '',
             'status'      => '',
         ];
         
-        return apply_filters('qeus/get_license', $qeusLicense);
+        return apply_filters('qpefw/get_license', $qpefwLicense);
     }
 }
 

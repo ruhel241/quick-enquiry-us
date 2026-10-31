@@ -38,11 +38,11 @@
                     selectedIds.push(selection.id);
                 });
                 this.$post({
-                    action: 'qeus_admin_ajax',
+                    action: 'qpefw_admin_ajax',
                     route: 'maybe_delete_details',
                     details_ids: selectedIds,
                     action_type: type,
-                    nonce: window.QuickEnquiryUsAdminVars.nonce
+                    nonce: window.QuickProductEnquiryAdminVars.nonce
                 })
                     .then(response => {
                         this.$notify({
