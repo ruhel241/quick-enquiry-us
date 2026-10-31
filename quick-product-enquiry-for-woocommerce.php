@@ -1,24 +1,25 @@
 <?php
 
 /*
-Plugin Name: Quick Product Enquiry For WooCommerce
+Plugin Name: Quick Product Enquiry for WooCommerce
 Description: A simple product enquiry plugin for WooCommerce with WhatsApp, SMS, and enquiry form support.
-Version: 1.0.0
+Version: 1.0.1
 Requires at least: 6.0
 Requires PHP: 7.4
 Author: ruhel241
-Author URI: https://wpcreativeidea.com/
-Plugin URI: https://wpcreativeidea.com/quick-product-enquiry-for-woocommerce-for-woocommerce/
+Author URI: https://profiles.wordpress.org/ruhel241/
+Plugin URI: https://wpcreativeidea.com/quick-product-enquiry-for-woocommerce/
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: quick-product-enquiry-for-woocommerce
 Domain Path: /languages
 */
 
+
 defined("ABSPATH") or die;
 define('QPEFW_PLUGIN_DIR_URL', plugin_dir_url(__FILE__));
 define('QPEFW_PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
-define('QPEFW_PLUGIN_VERSION', '1.0.0');
+define('QPEFW_PLUGIN_VERSION', '1.0.1');
 define('QPEFW_LITE', 'quick-product-enquiry-for-woocommerce');
 
 class QuickProductEnquiryLite
